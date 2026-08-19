@@ -1,18 +1,14 @@
-import api from './api'
+import api from "./api";
+import type {
+  CreateQuickWorkOrderInput,
+  QuickWorkOrderResponse,
+} from "../types/workOrders";
 
-export type QuickEntryPayload = {
-  [key: string]: unknown
-}
-
-export type QuickEntryResponse = {
-  [key: string]: unknown
-}
-
-export const createQuickEntry = async (payload: QuickEntryPayload) => {
-  const response = await api.post<QuickEntryResponse>(
-    '/work-orders/quick-entry',
+export const createQuickEntry = async (payload: CreateQuickWorkOrderInput) => {
+  const response = await api.post<QuickWorkOrderResponse>(
+    "/work-orders/quick-entry",
     payload,
-  )
+  );
 
-  return response.data
-}
+  return response.data;
+};

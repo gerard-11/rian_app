@@ -1,3 +1,4 @@
+import { ClipboardPlus } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const dashboardStats = [
@@ -29,6 +30,12 @@ export function DashboardPage() {
             >
               Dashboard
             </Link>
+            <Link
+              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              to="/work-orders/quick-entry"
+            >
+              Orden rapida
+            </Link>
           </nav>
         </aside>
 
@@ -49,18 +56,44 @@ export function DashboardPage() {
             </div>
           </header>
 
-          <div className="grid gap-4 p-5 sm:grid-cols-2 sm:p-8 xl:grid-cols-4">
-            {dashboardStats.map(([label, value]) => (
-              <article
-                className="rounded-md border border-slate-200 bg-white p-5 shadow-sm"
-                key={label}
-              >
-                <p className="text-sm font-medium text-slate-500">{label}</p>
-                <p className="mt-3 text-3xl font-bold text-slate-950">
-                  {value}
-                </p>
-              </article>
-            ))}
+          <div className="p-5 sm:p-8">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {dashboardStats.map(([label, value]) => (
+                <article
+                  className="rounded-md border border-slate-200 bg-white p-5 shadow-sm"
+                  key={label}
+                >
+                  <p className="text-sm font-medium text-slate-500">{label}</p>
+                  <p className="mt-3 text-3xl font-bold text-slate-950">
+                    {value}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <section className="mt-6 rounded-md border border-slate-200 bg-white p-5 shadow-sm">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold uppercase text-[#d71920]">
+                    Captura rapida
+                  </p>
+                  <h2 className="mt-1 text-xl font-bold text-slate-950">
+                    Nueva orden de trabajo
+                  </h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
+                    Abre una orden con cliente, vehiculo, items, anticipo y
+                    diagnostico inicial.
+                  </p>
+                </div>
+                <Link
+                  className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+                  to="/work-orders/quick-entry"
+                >
+                  <ClipboardPlus className="h-4 w-4" />
+                  Crear orden
+                </Link>
+              </div>
+            </section>
           </div>
         </section>
       </div>
