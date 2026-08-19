@@ -21,6 +21,9 @@ dist-ssr
 # Test / coverage
 coverage
 
+# Local notes
+PENDIENTES.md
+
 
 # Editor directories and files
 .vscode/*
