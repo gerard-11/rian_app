@@ -1,0 +1,107 @@
+import type {
+  WorkOrder,
+  WorkOrderItem,
+  WorkOrdersResponse,
+} from "../types/workOrders";
+
+const currencyFormatter = new Intl.NumberFormat("es-MX", {
+  currency: "MXN",
+  style: "currency",
+});
+
+const dateFormatter = new Intl.DateTimeFormat("es-MX", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+
+export const normalizeWorkOrdersResponse = (
+  response: WorkOrdersResponse,
+): WorkOrder[] => {
+  if (Array.isArray(response)) return response;
+
+  return response.data ?? response.items ?? response.workOrders ?? [];
+};
+
+const toNumber = (value?: number | string) => {
+  if (value === undefined || value === "") return 0;
+
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) ? parsed : 0;
+};
+
+export const getWorkOrderTotal = (workOrder: WorkOrder) => {
+  if (workOrder.totalAmount !== undefined) {
+    return toNumber(workOrder.totalAmount);
+  }
+
+  return (
+    workOrder.items?.reduce(
+      (total, item) => total + toNumber(item.saleAmount),
+      0,
+    ) ?? 0
+  );
+};
+
+export const formatMoney = (value?: number | string) =>
+  currencyFormatter.format(toNumber(value));
+
+export const formatDate = (value?: string) => {
+  if (!value) return "Sin fecha";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "Sin fecha";
+
+  return dateFormatter.format(date);
+};
+
+export const getWorkOrderCode = (workOrder: WorkOrder) => {
+  const code = workOrder.folio ?? workOrder.orderNumber ?? workOrder.id;
+
+  return "#" + code;
+};
+
+export const getCustomerName = (workOrder: WorkOrder) =>
+  workOrder.customer?.name?.trim() || "Cliente sin nombre";
+
+export const getCustomerPhone = (workOrder: WorkOrder) =>
+  workOrder.customer?.phone?.trim() || "Sin telefono";
+
+export const getVehicleLabel = (workOrder: WorkOrder) => {
+  const vehicle = workOrder.vehicle;
+
+  if (!vehicle) return "Vehiculo sin datos";
+
+  const parts = [vehicle.year, vehicle.make, vehicle.model, vehicle.color]
+    .map((part) => String(part ?? "").trim())
+    .filter(Boolean);
+  const vehicleName = parts.join(" ");
+  const plate = vehicle.plate?.trim();
+
+  if (vehicleName && plate) return vehicleName + " · " + plate;
+  if (vehicleName) return vehicleName;
+  if (plate) return plate;
+
+  return "Vehiculo sin datos";
+};
+
+export const getItemSummary = (items?: WorkOrderItem[]) => {
+  if (!items?.length) return "Sin items";
+
+  if (items.length === 1) return items[0]?.description || "1 item";
+
+  return items.length + " items";
+};
+
+export const getStatusLabel = (status?: string) => {
+  if (!status) return "Sin estado";
+
+  return status
+    .toLowerCase()
+    .split(/[ _-]+/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};

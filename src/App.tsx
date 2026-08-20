@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
+import { WorkOrdersPage } from "./pages/WorkOrdersPage";
 
 function AuthEvents() {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ function App() {
         <Route element={<Navigate replace to="/login" />} path="/" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<DashboardPage />} path="/dashboard" />
+        <Route element={<WorkOrdersPage />} path="/work-orders" />
         <Route
           element={<QuickWorkOrderPage />}
           path="/work-orders/quick-entry"

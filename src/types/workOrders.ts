@@ -37,6 +37,42 @@ export type CreateQuickWorkOrderInput = {
   items: QuickWorkOrderItemInput[];
 };
 
+export type WorkOrderCustomer = QuickCustomerInput & {
+  id?: number | string;
+};
+
+export type WorkOrderVehicle = QuickVehicleInput & {
+  id?: number | string;
+};
+
+export type WorkOrderItem = QuickWorkOrderItemInput & {
+  id?: number | string;
+};
+
+export type WorkOrder = {
+  id: number | string;
+  folio?: number | string;
+  orderNumber?: number | string;
+  status?: string;
+  customer?: WorkOrderCustomer;
+  vehicle?: WorkOrderVehicle;
+  diagnosis?: string;
+  notes?: string;
+  advanceAmount?: number | string;
+  totalAmount?: number | string;
+  items?: WorkOrderItem[];
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type WorkOrdersResponse =
+  | WorkOrder[]
+  | {
+      data?: WorkOrder[];
+      items?: WorkOrder[];
+      workOrders?: WorkOrder[];
+    };
+
 export type QuickWorkOrderResponse = {
   [key: string]: unknown;
 };

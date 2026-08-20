@@ -65,7 +65,7 @@ export function QuickWorkOrderPage() {
               R
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-950">Rian App</p>
+              <p className="text-sm font-bold text-slate-950">Rian Automotriz</p>
               <p className="text-xs font-medium text-slate-500">Admin</p>
             </div>
           </div>
@@ -76,6 +76,12 @@ export function QuickWorkOrderPage() {
               to="/dashboard"
             >
               Dashboard
+            </Link>
+            <Link
+              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              to="/work-orders"
+            >
+              Ordenes
             </Link>
             <Link
               className="flex h-10 items-center rounded-md bg-[#4169e1]/10 px-3 text-sm font-semibold text-[#4169e1]"
@@ -97,13 +103,21 @@ export function QuickWorkOrderPage() {
                   Orden rapida
                 </h1>
               </div>
-              <Link
-                className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
-                to="/dashboard"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Dashboard
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  className="flex h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                  to="/work-orders"
+                >
+                  Ver ordenes
+                </Link>
+                <Link
+                  className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                  to="/dashboard"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Dashboard
+                </Link>
+              </div>
             </div>
           </header>
 
