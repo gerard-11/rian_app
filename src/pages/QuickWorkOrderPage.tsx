@@ -65,7 +65,9 @@ export function QuickWorkOrderPage() {
               R
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-950">Rian Automotriz</p>
+              <p className="text-sm font-bold text-slate-950">
+                Rian Automotriz
+              </p>
               <p className="text-xs font-medium text-slate-500">Admin</p>
             </div>
           </div>
@@ -148,7 +150,7 @@ export function QuickWorkOrderPage() {
                         Cliente
                       </h2>
                       <p className="mt-1 text-sm text-slate-500">
-                        El nombre es requerido para crear la orden.
+                        El nombre y telefono son requeridos para crear la orden.
                       </p>
                     </div>
                   </div>
@@ -190,14 +192,21 @@ export function QuickWorkOrderPage() {
                     <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
                       <Phone className={fieldIconClass} />
                       <input
+                        aria-invalid={Boolean(errors.customer?.phone)}
                         autoComplete="tel"
                         className="h-full min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-slate-400"
                         id="customerPhone"
                         placeholder="Numero de contacto"
+                        required
                         type="tel"
                         {...register("customer.phone")}
                       />
                     </div>
+                    {errors.customer?.phone ? (
+                      <p className="mt-2 text-sm font-medium text-[#d71920]">
+                        {errors.customer.phone.message}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
               </section>

@@ -10,7 +10,7 @@ export type ItemType = (typeof ITEM_TYPES)[number];
 
 export type QuickCustomerInput = {
   name: string;
-  phone?: string;
+  phone: string;
 };
 
 export type QuickVehicleInput = {
@@ -37,8 +37,9 @@ export type CreateQuickWorkOrderInput = {
   items: QuickWorkOrderItemInput[];
 };
 
-export type WorkOrderCustomer = QuickCustomerInput & {
+export type WorkOrderCustomer = Omit<QuickCustomerInput, "phone"> & {
   id?: number | string;
+  phone?: string;
 };
 
 export type WorkOrderVehicle = QuickVehicleInput & {

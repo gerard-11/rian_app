@@ -236,23 +236,32 @@ export function WorkOrdersPage() {
                         </div>
 
                         <div>
-                          <select
-                            className="h-10 w-full rounded-md border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
-                            disabled={updateWorkOrderStatus.isPending}
-                            onChange={(event) =>
-                              handleStatusChange(
-                                workOrder.id,
-                                event.target.value as WorkOrderStatus,
-                              )
-                            }
-                            value={getEditableWorkOrderStatus(workOrder.status)}
-                          >
-                            {WORK_ORDER_STATUSES.map((status) => (
-                              <option key={status} value={status}>
-                                {getStatusLabel(status)}
-                              </option>
-                            ))}
-                          </select>
+                          {getEditableWorkOrderStatus(workOrder.status) ===
+                          "COMPLETED" ? (
+                            <span className="inline-flex h-10 w-full items-center justify-center rounded-md border border-emerald-200 bg-emerald-50 px-2 text-xs font-bold text-emerald-700">
+                              {getStatusLabel(workOrder.status)}
+                            </span>
+                          ) : (
+                            <select
+                              className="h-10 w-full rounded-md border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+                              disabled={updateWorkOrderStatus.isPending}
+                              onChange={(event) =>
+                                handleStatusChange(
+                                  workOrder.id,
+                                  event.target.value as WorkOrderStatus,
+                                )
+                              }
+                              value={getEditableWorkOrderStatus(
+                                workOrder.status,
+                              )}
+                            >
+                              {WORK_ORDER_STATUSES.map((status) => (
+                                <option key={status} value={status}>
+                                  {getStatusLabel(status)}
+                                </option>
+                              ))}
+                            </select>
+                          )}
                         </div>
                       </article>
                     ))}

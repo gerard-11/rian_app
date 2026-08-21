@@ -32,7 +32,7 @@ const quickWorkOrderItemSchema = z
 export const quickWorkOrderSchema = z.object({
   customer: z.object({
     name: z.string().trim().min(2, "Ingresa el nombre del cliente"),
-    phone: z.string().trim().optional(),
+    phone: z.string().trim().min(1, "Ingresa el telefono del cliente"),
   }),
   vehicle: z.object({
     plate: z.string().trim().optional(),

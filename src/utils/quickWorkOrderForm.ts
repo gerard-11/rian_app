@@ -55,7 +55,7 @@ export const buildQuickWorkOrderPayload = (
 ): CreateQuickWorkOrderInput => ({
   customer: {
     name: values.customer.name.trim(),
-    phone: optionalText(values.customer.phone),
+    phone: values.customer.phone.trim(),
   },
   vehicle: {
     plate: optionalText(values.vehicle.plate),
