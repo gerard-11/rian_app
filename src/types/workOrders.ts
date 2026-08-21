@@ -49,11 +49,25 @@ export type WorkOrderItem = QuickWorkOrderItemInput & {
   id?: number | string;
 };
 
+export const WORK_ORDER_STATUSES = [
+  "ACTIVE",
+  "COMPLETED",
+  "CANCELLED",
+] as const;
+
+export type WorkOrderStatus = (typeof WORK_ORDER_STATUSES)[number];
+
+export const WORK_ORDER_STATUS_LABELS: Record<WorkOrderStatus, string> = {
+  ACTIVE: "Activa",
+  COMPLETED: "Completada",
+  CANCELLED: "Cancelada",
+};
+
 export type WorkOrder = {
   id: number | string;
   folio?: number | string;
   orderNumber?: number | string;
-  status?: string;
+  status?: WorkOrderStatus;
   customer?: WorkOrderCustomer;
   vehicle?: WorkOrderVehicle;
   diagnosis?: string;
@@ -75,4 +89,9 @@ export type WorkOrdersResponse =
 
 export type QuickWorkOrderResponse = {
   [key: string]: unknown;
+};
+
+export type UpdateWorkOrderStatusInput = {
+  id: WorkOrder["id"];
+  status: WorkOrderStatus;
 };

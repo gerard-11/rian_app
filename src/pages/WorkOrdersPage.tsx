@@ -9,7 +9,15 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { useWorkOrders } from "../hooks/useWorkOrders";
+import {
+  useUpdateWorkOrderStatus,
+  useWorkOrders,
+} from "../hooks/useWorkOrders";
+import {
+  WORK_ORDER_STATUSES,
+  type WorkOrder,
+  type WorkOrderStatus,
+} from "../types/workOrders";
 import {
   formatDate,
   formatMoney,
@@ -18,14 +26,19 @@ import {
   getItemSummary,
   getStatusLabel,
   getVehicleLabel,
+  getWorkOrderStatus,
   getWorkOrderCode,
   getWorkOrderTotal,
   normalizeWorkOrdersResponse,
 } from "../utils/workOrdersList";
 
-export function             WorkOrdersPage() {
+const getEditableWorkOrderStatus = (status?: string): WorkOrderStatus =>
+  getWorkOrderStatus(status) ?? "ACTIVE";
+
+export function WorkOrdersPage() {
   const [search, setSearch] = useState("");
   const workOrdersQuery = useWorkOrders();
+  const updateWorkOrderStatus = useUpdateWorkOrderStatus();
   const workOrders = useMemo(
     () =>
       workOrdersQuery.data
@@ -53,6 +66,10 @@ export function             WorkOrdersPage() {
     });
   }, [search, workOrders]);
 
+  const handleStatusChange = (id: WorkOrder["id"], status: WorkOrderStatus) => {
+    updateWorkOrderStatus.mutate({ id, status });
+  };
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <div className="flex min-h-screen">
@@ -62,7 +79,9 @@ export function             WorkOrdersPage() {
               RA
             </div>
             <div>
-              <p className="text-sm font-bold text-slate-950">Rian Automotriz</p>
+              <p className="text-sm font-bold text-slate-950">
+                Rian Automotriz
+              </p>
               <p className="text-xs font-medium text-slate-500">Admin</p>
             </div>
           </div>
@@ -152,10 +171,17 @@ export function             WorkOrdersPage() {
               </div>
             ) : null}
 
+            {updateWorkOrderStatus.isError ? (
+              <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                No se pudo actualizar el estado de la orden. Intenta de nuevo.
+              </div>
+            ) : null}
+
             {!workOrdersQuery.isLoading && !workOrdersQuery.isError ? (
               filteredWorkOrders.length ? (
                 <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-                  <div className="hidden grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_130px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
+                  <div className="hidden grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_160px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
                     <span>Orden</span>
                     <span>Cliente</span>
                     <span>Vehiculo</span>
@@ -166,7 +192,7 @@ export function             WorkOrdersPage() {
                   <div className="divide-y divide-slate-200">
                     {filteredWorkOrders.map((workOrder) => (
                       <article
-                        className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_130px] lg:items-center"
+                        className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_160px] lg:items-center"
                         key={workOrder.id}
                       >
                         <div>
@@ -210,9 +236,23 @@ export function             WorkOrdersPage() {
                         </div>
 
                         <div>
-                          <span className="inline-flex rounded-md bg-[#4169e1]/10 px-2.5 py-1 text-xs font-bold text-[#4169e1]">
-                            {getStatusLabel(workOrder.status)}
-                          </span>
+                          <select
+                            className="h-10 w-full rounded-md border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
+                            disabled={updateWorkOrderStatus.isPending}
+                            onChange={(event) =>
+                              handleStatusChange(
+                                workOrder.id,
+                                event.target.value as WorkOrderStatus,
+                              )
+                            }
+                            value={getEditableWorkOrderStatus(workOrder.status)}
+                          >
+                            {WORK_ORDER_STATUSES.map((status) => (
+                              <option key={status} value={status}>
+                                {getStatusLabel(status)}
+                              </option>
+                            ))}
+                          </select>
                         </div>
                       </article>
                     ))}

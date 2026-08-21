@@ -1,7 +1,10 @@
-import type {
-  WorkOrder,
-  WorkOrderItem,
-  WorkOrdersResponse,
+import {
+  WORK_ORDER_STATUSES,
+  WORK_ORDER_STATUS_LABELS,
+  type WorkOrder,
+  type WorkOrderItem,
+  type WorkOrderStatus,
+  type WorkOrdersResponse,
 } from "../types/workOrders";
 
 const currencyFormatter = new Intl.NumberFormat("es-MX", {
@@ -95,7 +98,20 @@ export const getItemSummary = (items?: WorkOrderItem[]) => {
   return items.length + " items";
 };
 
+export const getWorkOrderStatus = (
+  status?: string,
+): WorkOrderStatus | undefined => {
+  const normalizedStatus = status?.toUpperCase();
+
+  return WORK_ORDER_STATUSES.find(
+    (workOrderStatus) => workOrderStatus === normalizedStatus,
+  );
+};
+
 export const getStatusLabel = (status?: string) => {
+  const workOrderStatus = getWorkOrderStatus(status);
+
+  if (workOrderStatus) return WORK_ORDER_STATUS_LABELS[workOrderStatus];
   if (!status) return "Sin estado";
 
   return status
