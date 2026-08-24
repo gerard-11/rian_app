@@ -1,29 +1,30 @@
 import {
   AlertCircle,
+  CheckCircle2,
   ClipboardList,
   ClipboardPlus,
   LoaderCircle,
   Phone,
   Search,
   Wrench,
+  XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  useUpdateWorkOrderStatus,
+  useCancelWorkOrder,
+  useCompleteWorkOrder,
   useWorkOrders,
 } from "../hooks/useWorkOrders";
-import {
-  WORK_ORDER_STATUSES,
-  type WorkOrder,
-  type WorkOrderStatus,
-} from "../types/workOrders";
+import type { WorkOrder } from "../types/workOrders";
 import {
   formatDate,
   formatMoney,
   getCustomerName,
   getCustomerPhone,
   getItemSummary,
+  getWorkOrderAdvanceAmount,
+  getWorkOrderPendingBalance,
   getStatusLabel,
   getVehicleLabel,
   getWorkOrderStatus,
@@ -32,13 +33,28 @@ import {
   normalizeWorkOrdersResponse,
 } from "../utils/workOrdersList";
 
-const getEditableWorkOrderStatus = (status?: string): WorkOrderStatus =>
-  getWorkOrderStatus(status) ?? "ACTIVE";
+const isActiveWorkOrder = (workOrder: WorkOrder) =>
+  (getWorkOrderStatus(workOrder.status) ?? "ACTIVE") === "ACTIVE";
+
+const getStatusBadgeClass = (status?: string) => {
+  const workOrderStatus = getWorkOrderStatus(status) ?? "ACTIVE";
+
+  if (workOrderStatus === "COMPLETED") {
+    return "inline-flex h-9 items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 text-xs font-bold text-emerald-700";
+  }
+
+  if (workOrderStatus === "CANCELLED") {
+    return "inline-flex h-9 items-center rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-2 text-xs font-bold text-[#a41218]";
+  }
+
+  return "inline-flex h-9 items-center rounded-md border border-slate-200 bg-slate-50 px-2 text-xs font-bold text-slate-700";
+};
 
 export function WorkOrdersPage() {
   const [search, setSearch] = useState("");
   const workOrdersQuery = useWorkOrders();
-  const updateWorkOrderStatus = useUpdateWorkOrderStatus();
+  const completeWorkOrder = useCompleteWorkOrder();
+  const cancelWorkOrder = useCancelWorkOrder();
   const workOrders = useMemo(
     () =>
       workOrdersQuery.data
@@ -66,8 +82,12 @@ export function WorkOrdersPage() {
     });
   }, [search, workOrders]);
 
-  const handleStatusChange = (id: WorkOrder["id"], status: WorkOrderStatus) => {
-    updateWorkOrderStatus.mutate({ id, status });
+  const handleComplete = (id: WorkOrder["id"]) => {
+    completeWorkOrder.mutate({ id });
+  };
+
+  const handleCancel = (id: WorkOrder["id"]) => {
+    cancelWorkOrder.mutate({ id });
   };
 
   return (
@@ -171,100 +191,126 @@ export function WorkOrdersPage() {
               </div>
             ) : null}
 
-            {updateWorkOrderStatus.isError ? (
+            {completeWorkOrder.isError ? (
               <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
                 <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-                No se pudo actualizar el estado de la orden. Intenta de nuevo.
+                No se pudo liquidar la orden. Intenta de nuevo.
+              </div>
+            ) : null}
+
+            {cancelWorkOrder.isError ? (
+              <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
+                <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                No se pudo cancelar la orden. Intenta de nuevo.
               </div>
             ) : null}
 
             {!workOrdersQuery.isLoading && !workOrdersQuery.isError ? (
               filteredWorkOrders.length ? (
                 <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-                  <div className="hidden grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_160px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
+                  <div className="hidden grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_210px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
                     <span>Orden</span>
                     <span>Cliente</span>
                     <span>Vehiculo</span>
                     <span>Total</span>
-                    <span>Estado</span>
+                    <span>Acciones</span>
                   </div>
 
                   <div className="divide-y divide-slate-200">
-                    {filteredWorkOrders.map((workOrder) => (
-                      <article
-                        className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.4fr)_minmax(0,1.2fr)_120px_160px] lg:items-center"
-                        key={workOrder.id}
-                      >
-                        <div>
-                          <p className="text-sm font-bold text-slate-950">
-                            {getWorkOrderCode(workOrder)}
-                          </p>
-                          <p className="mt-1 text-xs font-medium text-slate-500">
-                            {formatDate(workOrder.createdAt)}
-                          </p>
-                        </div>
+                    {filteredWorkOrders.map((workOrder) => {
+                      const isActive = isActiveWorkOrder(workOrder);
+                      const isMutating =
+                        completeWorkOrder.isPending ||
+                        cancelWorkOrder.isPending;
 
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-semibold text-slate-950">
-                            {getCustomerName(workOrder)}
-                          </p>
-                          <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
-                            <Phone className="h-3.5 w-3.5" />
-                            {getCustomerPhone(workOrder)}
-                          </p>
-                        </div>
-
-                        <div className="min-w-0">
-                          <p className="flex items-center gap-1 truncate text-sm font-semibold text-slate-800">
-                            <Wrench className="h-4 w-4 shrink-0 text-slate-400" />
-                            {getVehicleLabel(workOrder)}
-                          </p>
-                          <p className="mt-1 truncate text-xs font-medium text-slate-500">
-                            {getItemSummary(workOrder.items)}
-                          </p>
-                        </div>
-
-                        <div>
-                          <p className="text-sm font-bold text-slate-950">
-                            {formatMoney(getWorkOrderTotal(workOrder))}
-                          </p>
-                          {workOrder.advanceAmount !== undefined ? (
-                            <p className="mt-1 text-xs font-medium text-slate-500">
-                              Anticipo {formatMoney(workOrder.advanceAmount)}
+                      return (
+                        <article
+                          className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_210px] lg:items-center"
+                          key={workOrder.id}
+                        >
+                          <div>
+                            <p className="text-sm font-bold text-slate-950">
+                              {getWorkOrderCode(workOrder)}
                             </p>
-                          ) : null}
-                        </div>
+                            <p className="mt-1 text-xs font-medium text-slate-500">
+                              {formatDate(workOrder.createdAt)}
+                            </p>
+                          </div>
 
-                        <div>
-                          {getEditableWorkOrderStatus(workOrder.status) ===
-                          "COMPLETED" ? (
-                            <span className="inline-flex h-10 w-full items-center justify-center rounded-md border border-emerald-200 bg-emerald-50 px-2 text-xs font-bold text-emerald-700">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-slate-950">
+                              {getCustomerName(workOrder)}
+                            </p>
+                            <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
+                              <Phone className="h-3.5 w-3.5" />
+                              {getCustomerPhone(workOrder)}
+                            </p>
+                          </div>
+
+                          <div className="min-w-0">
+                            <p className="flex items-center gap-1 truncate text-sm font-semibold text-slate-800">
+                              <Wrench className="h-4 w-4 shrink-0 text-slate-400" />
+                              {getVehicleLabel(workOrder)}
+                            </p>
+                            <p className="mt-1 truncate text-xs font-medium text-slate-500">
+                              {getItemSummary(workOrder.items)}
+                            </p>
+                          </div>
+
+                          <div>
+                            <p className="text-sm font-bold text-slate-950">
+                              {formatMoney(getWorkOrderTotal(workOrder))}
+                            </p>
+                            {isActive ? (
+                              <>
+                                <p className="mt-1 text-xs font-medium text-slate-500">
+                                  Anticipo{" "}
+                                  {formatMoney(
+                                    getWorkOrderAdvanceAmount(workOrder),
+                                  )}
+                                </p>
+                                <p className="mt-1 text-xs font-bold text-[#4169e1]">
+                                  Saldo{" "}
+                                  {formatMoney(
+                                    getWorkOrderPendingBalance(workOrder),
+                                  )}
+                                </p>
+                              </>
+                            ) : null}
+                          </div>
+
+                          <div>
+                            <span
+                              className={getStatusBadgeClass(workOrder.status)}
+                            >
                               {getStatusLabel(workOrder.status)}
                             </span>
-                          ) : (
-                            <select
-                              className="h-10 w-full rounded-md border border-slate-300 bg-white px-2 text-xs font-bold text-slate-700 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400"
-                              disabled={updateWorkOrderStatus.isPending}
-                              onChange={(event) =>
-                                handleStatusChange(
-                                  workOrder.id,
-                                  event.target.value as WorkOrderStatus,
-                                )
-                              }
-                              value={getEditableWorkOrderStatus(
-                                workOrder.status,
-                              )}
-                            >
-                              {WORK_ORDER_STATUSES.map((status) => (
-                                <option key={status} value={status}>
-                                  {getStatusLabel(status)}
-                                </option>
-                              ))}
-                            </select>
-                          )}
-                        </div>
-                      </article>
-                    ))}
+                            {isActive ? (
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                <button
+                                  className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
+                                  disabled={isMutating}
+                                  onClick={() => handleComplete(workOrder.id)}
+                                  type="button"
+                                >
+                                  <CheckCircle2 className="h-4 w-4" />
+                                  Liquidar
+                                </button>
+                                <button
+                                  className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+                                  disabled={isMutating}
+                                  onClick={() => handleCancel(workOrder.id)}
+                                  type="button"
+                                >
+                                  <XCircle className="h-4 w-4" />
+                                  Cancelar
+                                </button>
+                              </div>
+                            ) : null}
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
                 </div>
               ) : (

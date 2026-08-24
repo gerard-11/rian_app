@@ -35,6 +35,10 @@ const toNumber = (value?: number | string) => {
 };
 
 export const getWorkOrderTotal = (workOrder: WorkOrder) => {
+  if (workOrder.totalSaleAmount !== undefined) {
+    return toNumber(workOrder.totalSaleAmount);
+  }
+
   if (workOrder.totalAmount !== undefined) {
     return toNumber(workOrder.totalAmount);
   }
@@ -46,6 +50,12 @@ export const getWorkOrderTotal = (workOrder: WorkOrder) => {
     ) ?? 0
   );
 };
+
+export const getWorkOrderAdvanceAmount = (workOrder: WorkOrder) =>
+  toNumber(workOrder.advanceAmount);
+
+export const getWorkOrderPendingBalance = (workOrder: WorkOrder) =>
+  getWorkOrderTotal(workOrder) - getWorkOrderAdvanceAmount(workOrder);
 
 export const formatMoney = (value?: number | string) =>
   currencyFormatter.format(toNumber(value));

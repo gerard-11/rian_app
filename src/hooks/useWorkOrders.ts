@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  cancelWorkOrder,
+  completeWorkOrder,
   createQuickEntry,
   getWorkOrders,
-  updateWorkOrderStatus,
 } from "../services/workOrdersService";
 import type {
   CreateQuickWorkOrderInput,
-  UpdateWorkOrderStatusInput,
+  WorkOrderActionInput,
 } from "../types/workOrders";
 
 export const workOrdersQueryKeys = {
@@ -34,12 +35,24 @@ export const useCreateQuickEntry = () => {
   });
 };
 
-export const useUpdateWorkOrderStatus = () => {
+export const useCompleteWorkOrder = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: UpdateWorkOrderStatusInput) =>
-      updateWorkOrderStatus(payload),
+    mutationFn: (payload: WorkOrderActionInput) => completeWorkOrder(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: workOrdersQueryKeys.all,
+      });
+    },
+  });
+};
+
+export const useCancelWorkOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: WorkOrderActionInput) => cancelWorkOrder(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,

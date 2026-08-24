@@ -75,9 +75,11 @@ export type WorkOrder = {
   notes?: string;
   advanceAmount?: number | string;
   totalAmount?: number | string;
+  totalSaleAmount?: number | string;
   items?: WorkOrderItem[];
   createdAt?: string;
   updatedAt?: string;
+  completedAt?: string;
 };
 
 export type WorkOrdersResponse =
@@ -92,7 +94,6 @@ export type QuickWorkOrderResponse = {
   [key: string]: unknown;
 };
 
-export type UpdateWorkOrderStatusInput = {
+export type WorkOrderActionInput = {
   id: WorkOrder["id"];
-  status: WorkOrderStatus;
 };
