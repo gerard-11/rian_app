@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import {
   useCancelWorkOrder,
   useCompleteWorkOrder,
@@ -52,6 +53,8 @@ const getStatusBadgeClass = (status?: string) => {
 
 export function WorkOrdersPage() {
   const [search, setSearch] = useState("");
+  const [selectedCustomerWorkOrder, setSelectedCustomerWorkOrder] =
+    useState<WorkOrder>();
   const workOrdersQuery = useWorkOrders();
   const completeWorkOrder = useCompleteWorkOrder();
   const cancelWorkOrder = useCancelWorkOrder();
@@ -238,9 +241,15 @@ export function WorkOrdersPage() {
                           </div>
 
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-slate-950">
+                            <button
+                              className="block max-w-full truncate text-left text-sm font-semibold text-slate-950 transition hover:text-[#4169e1] focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                              onClick={() =>
+                                setSelectedCustomerWorkOrder(workOrder)
+                              }
+                              type="button"
+                            >
                               {getCustomerName(workOrder)}
-                            </p>
+                            </button>
                             <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                               <Phone className="h-3.5 w-3.5" />
                               {getCustomerPhone(workOrder)}
@@ -330,6 +339,14 @@ export function WorkOrdersPage() {
           </div>
         </section>
       </div>
+
+      {selectedCustomerWorkOrder ? (
+        <CustomerDetailModal
+          onClose={() => setSelectedCustomerWorkOrder(undefined)}
+          selectedWorkOrder={selectedCustomerWorkOrder}
+          workOrders={workOrders}
+        />
+      ) : null}
     </main>
   );
 }
