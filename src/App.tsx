@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { DashboardPage } from "./pages/DashboardPage";
+import { ExpensesPage } from "./pages/ExpensesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
 import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
@@ -38,6 +39,7 @@ function App() {
           path="/work-orders/quick-entry"
         />
         <Route element={<WeeklyProfitsPage />} path="/profits/weekly" />
+        <Route element={<ExpensesPage />} path="/expenses" />
         <Route element={<Navigate replace to="/login" />} path="*" />
       </Routes>
     </>
