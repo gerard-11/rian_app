@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { ArrowLeft, ClipboardPlus } from "lucide-react";
+import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 
-type AdminLayoutPage = "dashboard" | "orders" | "profits" | "none";
+type AdminLayoutPage = "budgets" | "dashboard" | "orders" | "profits" | "none";
 
 type AdminRouteMeta = {
   actions?: ReactNode;
@@ -17,6 +17,7 @@ const navItems: Array<{
   to: string;
 }> = [
   { label: "Dashboard", page: "dashboard", to: "/dashboard" },
+  { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
   { label: "Ganancias", page: "profits", to: "/profits/weekly" },
 ];
@@ -25,6 +26,16 @@ const getNavLinkClass = (isActive: boolean) =>
   isActive
     ? "flex h-10 items-center rounded-md bg-[#4169e1]/10 px-3 text-sm font-semibold text-[#4169e1]"
     : "flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950";
+
+const budgetCreateAction = (
+  <Link
+    className="flex h-10 items-center gap-2 rounded-md bg-[#4169e1] px-3 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+    to="/budgets/quick-entry"
+  >
+    <FileText className="h-4 w-4" />
+    Crear presupuesto
+  </Link>
+);
 
 const orderCreateAction = (
   <Link
@@ -64,6 +75,12 @@ const dashboardAction = (
   </Link>
 );
 
+const budgetNoteRouteMeta: AdminRouteMeta = {
+  eyebrow: "Presupuestos",
+  page: "budgets",
+  title: "Nota de presupuesto",
+};
+
 const workOrderNoteRouteMeta: AdminRouteMeta = {
   eyebrow: "Ordenes de trabajo",
   page: "orders",
@@ -71,6 +88,18 @@ const workOrderNoteRouteMeta: AdminRouteMeta = {
 };
 
 const routeMetaByPath: Record<string, AdminRouteMeta> = {
+  "/budgets": {
+    actions: budgetCreateAction,
+    eyebrow: "Presupuestos",
+    page: "budgets",
+    title: "Presupuestos",
+  },
+  "/budgets/quick-entry": {
+    actions: dashboardAction,
+    eyebrow: "Presupuestos",
+    page: "budgets",
+    title: "Presupuesto rapido",
+  },
   "/dashboard": {
     eyebrow: "Panel principal",
     page: "dashboard",
@@ -108,6 +137,10 @@ const defaultRouteMeta: AdminRouteMeta = {
 };
 
 const getRouteMeta = (pathname: string) => {
+  if (/^\/budgets\/[^/]+\/note$/.test(pathname)) {
+    return budgetNoteRouteMeta;
+  }
+
   if (/^\/work-orders\/[^/]+\/note$/.test(pathname)) {
     return workOrderNoteRouteMeta;
   }

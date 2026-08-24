@@ -1,0 +1,300 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CheckCircle2,
+  ClipboardPlus,
+  LoaderCircle,
+  Minus,
+  Phone,
+  Plus,
+  ReceiptText,
+  User,
+  Wrench,
+} from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useCreateQuickBudget } from "../hooks/useBudgets";
+import {
+  quickBudgetSchema,
+  type QuickBudgetFormValues,
+} from "../schemas/quickBudgetSchema";
+import { ITEM_TYPES } from "../types/workOrders";
+import {
+  buildQuickBudgetPayload,
+  emptyQuickBudgetItem,
+  itemTypeLabels,
+  quickBudgetDefaultValues,
+} from "../utils/quickBudgetForm";
+
+const fieldIconClass = "h-5 w-5 shrink-0 text-slate-400";
+
+export function QuickBudgetPage() {
+  const createQuickBudget = useCreateQuickBudget();
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<QuickBudgetFormValues>({
+    defaultValues: quickBudgetDefaultValues,
+    resolver: zodResolver(quickBudgetSchema),
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "items",
+  });
+
+  const onSubmit = (values: QuickBudgetFormValues) => {
+    createQuickBudget.mutate(buildQuickBudgetPayload(values), {
+      onSuccess: () => {
+        reset(quickBudgetDefaultValues);
+      },
+    });
+  };
+
+  return (
+    <div className="w-full max-w-6xl">
+      {createQuickBudget.isSuccess ? (
+        <div className="mb-5 flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
+          El presupuesto se registro correctamente.
+        </div>
+      ) : null}
+
+      {createQuickBudget.isError ? (
+        <div className="mb-5 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
+          No se pudo registrar el presupuesto. Revisa los datos e intenta de
+          nuevo.
+        </div>
+      ) : null}
+
+      <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+        <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 px-5 py-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+                <User className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-950">Cliente</h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  El presupuesto siempre se crea con cliente nuevo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
+            <div>
+              <label
+                className="text-sm font-semibold text-slate-800"
+                htmlFor="budgetCustomerName"
+              >
+                Nombre
+              </label>
+              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+                <User className={fieldIconClass} />
+                <input
+                  aria-invalid={Boolean(errors.customer?.name)}
+                  autoComplete="name"
+                  className="h-full min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-slate-400"
+                  id="budgetCustomerName"
+                  placeholder="Nombre del cliente"
+                  {...register("customer.name")}
+                />
+              </div>
+              {errors.customer?.name ? (
+                <p className="mt-2 text-sm font-medium text-[#d71920]">
+                  {errors.customer.name.message}
+                </p>
+              ) : null}
+            </div>
+
+            <div>
+              <label
+                className="text-sm font-semibold text-slate-800"
+                htmlFor="budgetCustomerPhone"
+              >
+                Telefono
+              </label>
+              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+                <Phone className={fieldIconClass} />
+                <input
+                  aria-invalid={Boolean(errors.customer?.phone)}
+                  autoComplete="tel"
+                  className="h-full min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-slate-400"
+                  id="budgetCustomerPhone"
+                  placeholder="Numero de contacto"
+                  type="tel"
+                  {...register("customer.phone")}
+                />
+              </div>
+              {errors.customer?.phone ? (
+                <p className="mt-2 text-sm font-medium text-[#d71920]">
+                  {errors.customer.phone.message}
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+          <div className="border-b border-slate-200 px-5 py-4 sm:px-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+                <Wrench className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-950">Vehiculo</h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  El presupuesto siempre se crea con vehiculo nuevo.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 xl:grid-cols-5">
+            <input
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Placa"
+              {...register("vehicle.plate")}
+            />
+            <input
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Marca"
+              {...register("vehicle.make")}
+            />
+            <input
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Modelo"
+              {...register("vehicle.model")}
+            />
+            <div>
+              <input
+                aria-invalid={Boolean(errors.vehicle?.year)}
+                className="h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                inputMode="numeric"
+                placeholder="Ano"
+                {...register("vehicle.year")}
+              />
+              {errors.vehicle?.year ? (
+                <p className="mt-2 text-sm font-medium text-[#d71920]">
+                  {errors.vehicle.year.message}
+                </p>
+              ) : null}
+            </div>
+            <input
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Color"
+              {...register("vehicle.color")}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+          <div className="flex flex-col gap-4 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+                <ReceiptText className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-slate-950">Items</h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Agrega piezas, servicios o mano de obra del presupuesto.
+                </p>
+              </div>
+            </div>
+            <button
+              className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#4169e1] bg-white px-3 text-sm font-semibold text-[#4169e1] transition hover:bg-[#4169e1]/10 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+              onClick={() => append({ ...emptyQuickBudgetItem })}
+              type="button"
+            >
+              <Plus className="h-4 w-4" />
+              Agregar item
+            </button>
+          </div>
+
+          <div className="space-y-4 px-5 py-5 sm:px-6">
+            {fields.map((field, index) => (
+              <div
+                className="grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_minmax(0,1fr)_140px_140px_44px]"
+                key={field.id}
+              >
+                <select
+                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                  {...register(`items.${index}.type`)}
+                >
+                  {ITEM_TYPES.map((type) => (
+                    <option key={type} value={type}>
+                      {itemTypeLabels[type]}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                  placeholder="Descripcion"
+                  {...register(`items.${index}.description`)}
+                />
+                <input
+                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                  inputMode="decimal"
+                  placeholder="Venta"
+                  {...register(`items.${index}.saleAmount`)}
+                />
+                <input
+                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                  inputMode="decimal"
+                  placeholder="Costo"
+                  {...register(`items.${index}.costAmount`)}
+                />
+                <button
+                  className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
+                  disabled={fields.length === 1}
+                  onClick={() => remove(index)}
+                  type="button"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                {errors.items?.[index] ? (
+                  <p className="text-sm font-medium text-[#d71920] lg:col-span-5">
+                    {errors.items[index]?.description?.message ??
+                      errors.items[index]?.saleAmount?.message}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-md border border-slate-200 bg-white shadow-sm">
+          <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
+            <textarea
+              className="min-h-28 resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Diagnostico"
+              {...register("diagnosis")}
+            />
+            <textarea
+              className="min-h-28 resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              placeholder="Notas"
+              {...register("notes")}
+            />
+          </div>
+        </section>
+
+        <div className="flex justify-end rounded-md border border-slate-200 bg-white px-5 py-4 shadow-sm sm:px-6">
+          <button
+            className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-5 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+            disabled={createQuickBudget.isPending}
+            type="submit"
+          >
+            {createQuickBudget.isPending ? (
+              <LoaderCircle className="h-4 w-4 animate-spin" />
+            ) : (
+              <ClipboardPlus className="h-4 w-4" />
+            )}
+            {createQuickBudget.isPending ? "Guardando..." : "Crear presupuesto"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}

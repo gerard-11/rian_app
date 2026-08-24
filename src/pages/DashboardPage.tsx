@@ -1,6 +1,7 @@
 import {
   AlertCircle,
   ClipboardPlus,
+  FileText,
   LoaderCircle,
   ReceiptText,
   TrendingUp,
@@ -79,6 +80,13 @@ export function DashboardPage() {
             >
               <ClipboardPlus className="h-4 w-4" />
               Crear orden
+            </Link>
+            <Link
+              className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+              to="/budgets/quick-entry"
+            >
+              <FileText className="h-4 w-4" />
+              Crear presupuesto
             </Link>
             <Link
               className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"

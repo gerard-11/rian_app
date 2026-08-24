@@ -1,9 +1,12 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { AdminLayout } from "./layouts/AdminLayout";
+import { BudgetNotePage } from "./pages/BudgetNotePage";
+import { BudgetsPage } from "./pages/BudgetsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { ExpensesPage } from "./pages/ExpensesPage";
 import { LoginPage } from "./pages/LoginPage";
+import { QuickBudgetPage } from "./pages/QuickBudgetPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
 import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
 import { WorkOrderNotePage } from "./pages/WorkOrderNotePage";
@@ -36,6 +39,9 @@ function App() {
         <Route element={<LoginPage />} path="/login" />
         <Route element={<AdminLayout />}>
           <Route element={<DashboardPage />} path="/dashboard" />
+          <Route element={<BudgetsPage />} path="/budgets" />
+          <Route element={<QuickBudgetPage />} path="/budgets/quick-entry" />
+          <Route element={<BudgetNotePage />} path="/budgets/:id/note" />
           <Route element={<WorkOrdersPage />} path="/work-orders" />
           <Route
             element={<QuickWorkOrderPage />}
