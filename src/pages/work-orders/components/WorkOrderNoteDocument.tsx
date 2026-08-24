@@ -1,4 +1,8 @@
 import noteBackgroundImage from "../../../assets/rianimg.jpeg";
+import {
+  capitalizeDisplayText,
+  formatPlate,
+} from "../../../lib/textFormatters";
 import type { WorkOrder, WorkOrderItem } from "../../../types/workOrders";
 import {
   formatDate,
@@ -35,25 +39,8 @@ const getVehicleField = (value?: number | string) => {
   return normalizedValue || "No registrado";
 };
 
-const capitalizeText = (value: string) =>
-  value
-    .toLocaleLowerCase("es-MX")
-    .replace(
-      /(^|[\s.'-])([a-záéíóúüñ])/g,
-      (_match, separator, letter) =>
-        separator + letter.toLocaleUpperCase("es-MX"),
-    );
-
 const getCapitalizedCustomerName = (workOrder: WorkOrder) =>
-  capitalizeText(getCustomerName(workOrder));
-
-const getPlateValue = (value?: number | string) => {
-  const normalizedValue = getVehicleField(value);
-
-  return normalizedValue === "No registrado"
-    ? normalizedValue
-    : normalizedValue.toLocaleUpperCase("es-MX");
-};
+  capitalizeDisplayText(getCustomerName(workOrder));
 
 type DetailItemProps = {
   label: string;
@@ -141,10 +128,7 @@ export function WorkOrderNoteDocument({
             </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <DetailItem label="Vehiculo" value={getVehicleLabel(workOrder)} />
-              <DetailItem
-                label="Placas"
-                value={getPlateValue(vehicle?.plate)}
-              />
+              <DetailItem label="Placas" value={formatPlate(vehicle?.plate)} />
               <DetailItem
                 label="Marca"
                 value={getVehicleField(vehicle?.make)}

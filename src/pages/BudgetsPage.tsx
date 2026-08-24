@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { capitalizeDisplayText } from "../lib/textFormatters";
 import {
   useAcceptBudget,
   useBudgets,
@@ -29,15 +30,6 @@ import {
   getBudgetVehicleLabel,
   normalizeBudgetsResponse,
 } from "../utils/budgetsList";
-
-const capitalizeCustomerName = (value: string) =>
-  value
-    .toLocaleLowerCase("es-MX")
-    .replace(
-      /(^|[\s.'-])([a-záéíóúüñ])/g,
-      (_match, separator, letter) =>
-        separator + letter.toLocaleUpperCase("es-MX"),
-    );
 
 const getStatusBadgeClass = (status?: string) => {
   const budgetStatus = getBudgetStatus(status) ?? "PENDING";
@@ -179,7 +171,7 @@ export function BudgetsPage() {
 
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-slate-950">
-                        {capitalizeCustomerName(getBudgetCustomerName(budget))}
+                        {capitalizeDisplayText(getBudgetCustomerName(budget))}
                       </p>
                       <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                         <Phone className="h-3.5 w-3.5" />

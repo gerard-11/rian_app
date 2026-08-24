@@ -1,4 +1,8 @@
 import noteBackgroundImage from "../../../assets/rianimg.jpeg";
+import {
+  capitalizeDisplayText,
+  formatPlate,
+} from "../../../lib/textFormatters";
 import type { Budget, BudgetItem } from "../../../types/budgets";
 import {
   formatDate,
@@ -30,23 +34,6 @@ const getVehicleField = (value?: number | string) => {
   const normalizedValue = String(value ?? "").trim();
 
   return normalizedValue || "No registrado";
-};
-
-const capitalizeText = (value: string) =>
-  value
-    .toLocaleLowerCase("es-MX")
-    .replace(
-      /(^|[\s.'-])([a-záéíóúüñ])/g,
-      (_match, separator, letter) =>
-        separator + letter.toLocaleUpperCase("es-MX"),
-    );
-
-const getPlateValue = (value?: number | string) => {
-  const normalizedValue = getVehicleField(value);
-
-  return normalizedValue === "No registrado"
-    ? normalizedValue
-    : normalizedValue.toLocaleUpperCase("es-MX");
 };
 
 type DetailItemProps = {
@@ -112,7 +99,7 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
             <div className="mt-3 space-y-3">
               <DetailItem
                 label="Nombre"
-                value={capitalizeText(getBudgetCustomerName(budget))}
+                value={capitalizeDisplayText(getBudgetCustomerName(budget))}
               />
               <DetailItem
                 label="Telefono"
@@ -130,10 +117,7 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
                 label="Vehiculo"
                 value={getBudgetVehicleLabel(budget)}
               />
-              <DetailItem
-                label="Placas"
-                value={getPlateValue(vehicle?.plate)}
-              />
+              <DetailItem label="Placas" value={formatPlate(vehicle?.plate)} />
               <DetailItem
                 label="Marca"
                 value={getVehicleField(vehicle?.make)}
