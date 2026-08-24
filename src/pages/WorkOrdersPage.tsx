@@ -125,6 +125,12 @@ export function WorkOrdersPage() {
             >
               Orden rapida
             </Link>
+            <Link
+              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              to="/profits/weekly"
+            >
+              Ganancias
+            </Link>
           </nav>
         </aside>
 

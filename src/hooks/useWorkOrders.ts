@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { weeklyProfitsQueryKeys } from "./useWeeklyProfits";
 import {
   cancelWorkOrder,
   completeWorkOrder,
@@ -44,6 +45,9 @@ export const useCompleteWorkOrder = () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,
       });
+      void queryClient.invalidateQueries({
+        queryKey: weeklyProfitsQueryKeys.all,
+      });
     },
   });
 };
@@ -56,6 +60,9 @@ export const useCancelWorkOrder = () => {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: weeklyProfitsQueryKeys.all,
       });
     },
   });

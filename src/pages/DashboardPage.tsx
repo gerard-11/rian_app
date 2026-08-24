@@ -4,44 +4,13 @@ import {
   LoaderCircle,
   TrendingUp,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import api from "../services/api";
+import { useWeeklyProfit } from "../hooks/useWeeklyProfits";
 import { formatMoney } from "../utils/workOrdersList";
 
-type WeeklyProfitsResponse = {
-  data?: WeeklyProfitsResponse;
-  profit?: number | string;
-  totalProfit?: number | string;
-  weeklyProfit?: number | string;
-  netProfit?: number | string;
-};
-
-const getWeeklyProfits = async () => {
-  const response = await api.get<WeeklyProfitsResponse>("/profits/weekly");
-
-  return response.data;
-};
-
-const getWeeklyProfitAmount = (response?: WeeklyProfitsResponse) => {
-  const source = response?.data ?? response;
-  const value =
-    source?.totalProfit ??
-    source?.weeklyProfit ??
-    source?.netProfit ??
-    source?.profit ??
-    0;
-  const amount = Number(value);
-
-  return Number.isFinite(amount) ? amount : 0;
-};
-
 export function DashboardPage() {
-  const weeklyProfitsQuery = useQuery({
-    queryFn: getWeeklyProfits,
-    queryKey: ["profits", "weekly"],
-  });
-  const weeklyProfitAmount = getWeeklyProfitAmount(weeklyProfitsQuery.data);
+  const weeklyProfitQuery = useWeeklyProfit();
+  const weeklyProfit = weeklyProfitQuery.data?.weeklyProfit;
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
@@ -76,6 +45,12 @@ export function DashboardPage() {
             >
               Orden rapida
             </Link>
+            <Link
+              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
+              to="/profits/weekly"
+            >
+              Ganancias
+            </Link>
           </nav>
         </aside>
 
@@ -108,20 +83,28 @@ export function DashboardPage() {
                       Ganancias
                     </p>
                     <h2 className="mt-1 text-xl font-bold text-slate-950">
-                      {weeklyProfitsQuery.isLoading
+                      {weeklyProfitQuery.isLoading
                         ? "Calculando..."
-                        : formatMoney(weeklyProfitAmount)}
+                        : formatMoney(weeklyProfit?.netProfitAmount)}
                     </h2>
                   </div>
                 </div>
-                {weeklyProfitsQuery.isLoading ? (
+                {weeklyProfitQuery.isLoading ? (
                   <LoaderCircle className="h-5 w-5 animate-spin text-[#4169e1]" />
                 ) : null}
-                {weeklyProfitsQuery.isError ? (
+                {weeklyProfitQuery.isError ? (
                   <div className="flex items-center gap-2 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-3 py-2 text-sm font-medium text-[#a41218]">
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     No se pudieron cargar las ganancias semanales.
                   </div>
+                ) : null}
+                {!weeklyProfitQuery.isError ? (
+                  <Link
+                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                    to="/profits/weekly"
+                  >
+                    Ver detalle
+                  </Link>
                 ) : null}
               </div>
             </section>
