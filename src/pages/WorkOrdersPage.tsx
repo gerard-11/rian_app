@@ -2,6 +2,7 @@ import {
   AlertCircle,
   CheckCircle2,
   ClipboardList,
+  FileText,
   LoaderCircle,
   Phone,
   Search,
@@ -9,6 +10,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import {
   useCancelWorkOrder,
@@ -151,7 +153,7 @@ export function WorkOrdersPage() {
       {!workOrdersQuery.isLoading && !workOrdersQuery.isError ? (
         filteredWorkOrders.length ? (
           <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
-            <div className="hidden grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_210px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
+            <div className="hidden grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_260px] gap-4 border-b border-slate-200 bg-slate-100 px-4 py-3 text-xs font-bold uppercase text-slate-500 lg:grid">
               <span>Orden</span>
               <span>Cliente</span>
               <span>Vehiculo</span>
@@ -167,7 +169,7 @@ export function WorkOrdersPage() {
 
                 return (
                   <article
-                    className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_210px] lg:items-center"
+                    className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_260px] lg:items-center"
                     key={workOrder.id}
                   >
                     <div>
@@ -225,28 +227,37 @@ export function WorkOrdersPage() {
                       <span className={getStatusBadgeClass(workOrder.status)}>
                         {getStatusLabel(workOrder.status)}
                       </span>
-                      {isActive ? (
-                        <div className="mt-2 flex flex-wrap gap-2">
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleComplete(workOrder.id)}
-                            type="button"
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            Liquidar
-                          </button>
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleCancel(workOrder.id)}
-                            type="button"
-                          >
-                            <XCircle className="h-4 w-4" />
-                            Cancelar
-                          </button>
-                        </div>
-                      ) : null}
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <Link
+                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                          to={"/work-orders/" + workOrder.id + "/note"}
+                        >
+                          <FileText className="h-4 w-4" />
+                          Crear nota
+                        </Link>
+                        {isActive ? (
+                          <>
+                            <button
+                              className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
+                              disabled={isMutating}
+                              onClick={() => handleComplete(workOrder.id)}
+                              type="button"
+                            >
+                              <CheckCircle2 className="h-4 w-4" />
+                              Liquidar
+                            </button>
+                            <button
+                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+                              disabled={isMutating}
+                              onClick={() => handleCancel(workOrder.id)}
+                              type="button"
+                            >
+                              <XCircle className="h-4 w-4" />
+                              Cancelar
+                            </button>
+                          </>
+                        ) : null}
+                      </div>
                     </div>
                   </article>
                 );

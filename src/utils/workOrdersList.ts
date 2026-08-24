@@ -3,6 +3,7 @@ import {
   WORK_ORDER_STATUS_LABELS,
   type WorkOrder,
   type WorkOrderItem,
+  type WorkOrderResponse,
   type WorkOrderStatus,
   type WorkOrdersResponse,
 } from "../types/workOrders";
@@ -17,6 +18,14 @@ const dateFormatter = new Intl.DateTimeFormat("es-MX", {
   month: "short",
   year: "numeric",
 });
+
+export const normalizeWorkOrderResponse = (
+  response: WorkOrderResponse,
+): WorkOrder | undefined => {
+  if ("id" in response) return response;
+
+  return response.data ?? response.workOrder;
+};
 
 export const normalizeWorkOrdersResponse = (
   response: WorkOrdersResponse,

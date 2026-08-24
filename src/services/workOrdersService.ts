@@ -3,11 +3,18 @@ import type {
   CreateQuickWorkOrderInput,
   QuickWorkOrderResponse,
   WorkOrderActionInput,
+  WorkOrderResponse,
   WorkOrdersResponse,
 } from "../types/workOrders";
 
 export const getWorkOrders = async () => {
   const response = await api.get<WorkOrdersResponse>("/work-orders");
+
+  return response.data;
+};
+
+export const getWorkOrderById = async (id: WorkOrderActionInput["id"]) => {
+  const response = await api.get<WorkOrderResponse>("/work-orders/" + id);
 
   return response.data;
 };

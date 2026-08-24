@@ -64,6 +64,12 @@ const dashboardAction = (
   </Link>
 );
 
+const workOrderNoteRouteMeta: AdminRouteMeta = {
+  eyebrow: "Ordenes de trabajo",
+  page: "orders",
+  title: "Nota de servicio",
+};
+
 const routeMetaByPath: Record<string, AdminRouteMeta> = {
   "/dashboard": {
     eyebrow: "Panel principal",
@@ -101,14 +107,22 @@ const defaultRouteMeta: AdminRouteMeta = {
   title: "Rian Automotriz",
 };
 
+const getRouteMeta = (pathname: string) => {
+  if (/^\/work-orders\/[^/]+\/note$/.test(pathname)) {
+    return workOrderNoteRouteMeta;
+  }
+
+  return routeMetaByPath[pathname] ?? defaultRouteMeta;
+};
+
 export function AdminLayout() {
   const location = useLocation();
-  const meta = routeMetaByPath[location.pathname] ?? defaultRouteMeta;
+  const meta = getRouteMeta(location.pathname);
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
+    <main className="min-h-screen bg-slate-50 text-slate-950 print:bg-white">
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 lg:block">
+        <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 print:hidden lg:block">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1] text-lg font-black text-white">
               RA
@@ -135,7 +149,7 @@ export function AdminLayout() {
         </aside>
 
         <section className="flex min-w-0 flex-1 flex-col">
-          <header className="border-b border-slate-200 bg-white px-5 py-4 sm:px-8">
+          <header className="border-b border-slate-200 bg-white px-5 py-4 print:hidden sm:px-8">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p className="text-sm font-semibold uppercase text-[#d71920]">
@@ -149,7 +163,7 @@ export function AdminLayout() {
             </div>
           </header>
 
-          <div className="space-y-5 px-5 py-6 sm:px-8">
+          <div className="space-y-5 px-5 py-6 print:space-y-0 print:p-0 sm:px-8">
             <Outlet />
           </div>
         </section>

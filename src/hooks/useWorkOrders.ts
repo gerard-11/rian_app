@@ -4,6 +4,7 @@ import {
   cancelWorkOrder,
   completeWorkOrder,
   createQuickEntry,
+  getWorkOrderById,
   getWorkOrders,
 } from "../services/workOrdersService";
 import type {
@@ -14,12 +15,21 @@ import type {
 export const workOrdersQueryKeys = {
   all: ["work-orders"] as const,
   lists: () => [...workOrdersQueryKeys.all, "list"] as const,
+  detail: (id: WorkOrderActionInput["id"]) =>
+    [...workOrdersQueryKeys.all, "detail", id] as const,
 };
 
 export const useWorkOrders = () =>
   useQuery({
     queryFn: getWorkOrders,
     queryKey: workOrdersQueryKeys.lists(),
+  });
+
+export const useWorkOrder = (id?: WorkOrderActionInput["id"]) =>
+  useQuery({
+    enabled: id !== undefined && id !== "",
+    queryFn: () => getWorkOrderById(id as WorkOrderActionInput["id"]),
+    queryKey: workOrdersQueryKeys.detail(id ?? ""),
   });
 
 export const useCreateQuickEntry = () => {

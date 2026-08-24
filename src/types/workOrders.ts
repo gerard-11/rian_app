@@ -82,6 +82,13 @@ export type WorkOrder = {
   completedAt?: string;
 };
 
+export type WorkOrderResponse =
+  | WorkOrder
+  | {
+      data?: WorkOrder;
+      workOrder?: WorkOrder;
+    };
+
 export type WorkOrdersResponse =
   | WorkOrder[]
   | {
