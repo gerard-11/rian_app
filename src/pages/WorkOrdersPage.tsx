@@ -37,6 +37,15 @@ import {
 const isActiveWorkOrder = (workOrder: WorkOrder) =>
   (getWorkOrderStatus(workOrder.status) ?? "ACTIVE") === "ACTIVE";
 
+const capitalizeCustomerName = (value: string) =>
+  value
+    .toLocaleLowerCase("es-MX")
+    .replace(
+      /(^|[\s.'-])([a-záéíóúüñ])/g,
+      (_match, separator, letter) =>
+        separator + letter.toLocaleUpperCase("es-MX"),
+    );
+
 const getStatusBadgeClass = (status?: string) => {
   const workOrderStatus = getWorkOrderStatus(status) ?? "ACTIVE";
 
@@ -187,7 +196,7 @@ export function WorkOrdersPage() {
                         onClick={() => setSelectedCustomerWorkOrder(workOrder)}
                         type="button"
                       >
-                        {getCustomerName(workOrder)}
+                        {capitalizeCustomerName(getCustomerName(workOrder))}
                       </button>
                       <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                         <Phone className="h-3.5 w-3.5" />

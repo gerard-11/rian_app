@@ -49,6 +49,15 @@ const getCustomerKey = (workOrder: WorkOrder) => {
 const isSameCustomer = (selectedWorkOrder: WorkOrder, workOrder: WorkOrder) =>
   getCustomerKey(selectedWorkOrder) === getCustomerKey(workOrder);
 
+const capitalizeCustomerName = (value: string) =>
+  value
+    .toLocaleLowerCase("es-MX")
+    .replace(
+      /(^|[\s.'-])([a-záéíóúüñ])/g,
+      (_match, separator, letter) =>
+        separator + letter.toLocaleUpperCase("es-MX"),
+    );
+
 export function CustomerDetailModal({
   onClose,
   selectedWorkOrder,
@@ -75,7 +84,7 @@ export function CustomerDetailModal({
                 Cliente
               </p>
               <h2 className="mt-1 text-xl font-bold text-slate-950">
-                {getCustomerName(selectedWorkOrder)}
+                {capitalizeCustomerName(getCustomerName(selectedWorkOrder))}
               </h2>
             </div>
           </div>

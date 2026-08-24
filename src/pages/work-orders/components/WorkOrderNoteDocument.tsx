@@ -34,6 +34,26 @@ const getVehicleField = (value?: number | string) => {
   return normalizedValue || "No registrado";
 };
 
+const capitalizeText = (value: string) =>
+  value
+    .toLocaleLowerCase("es-MX")
+    .replace(
+      /(^|[\s.'-])([a-záéíóúüñ])/g,
+      (_match, separator, letter) =>
+        separator + letter.toLocaleUpperCase("es-MX"),
+    );
+
+const getCapitalizedCustomerName = (workOrder: WorkOrder) =>
+  capitalizeText(getCustomerName(workOrder));
+
+const getPlateValue = (value?: number | string) => {
+  const normalizedValue = getVehicleField(value);
+
+  return normalizedValue === "No registrado"
+    ? normalizedValue
+    : normalizedValue.toLocaleUpperCase("es-MX");
+};
+
 type DetailItemProps = {
   label: string;
   value: string;
@@ -94,7 +114,10 @@ export function WorkOrderNoteDocument({
         <div className="rounded-md border border-slate-200 p-4 print:break-inside-avoid">
           <p className="text-xs font-bold uppercase text-[#d71920]">Cliente</p>
           <div className="mt-3 space-y-3">
-            <DetailItem label="Nombre" value={getCustomerName(workOrder)} />
+            <DetailItem
+              label="Nombre"
+              value={getCapitalizedCustomerName(workOrder)}
+            />
             <DetailItem label="Telefono" value={getCustomerPhone(workOrder)} />
           </div>
         </div>
@@ -103,10 +126,7 @@ export function WorkOrderNoteDocument({
           <p className="text-xs font-bold uppercase text-[#d71920]">Vehiculo</p>
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             <DetailItem label="Vehiculo" value={getVehicleLabel(workOrder)} />
-            <DetailItem
-              label="Placas"
-              value={getVehicleField(vehicle?.plate)}
-            />
+            <DetailItem label="Placas" value={getPlateValue(vehicle?.plate)} />
             <DetailItem label="Marca" value={getVehicleField(vehicle?.make)} />
             <DetailItem
               label="Modelo"
