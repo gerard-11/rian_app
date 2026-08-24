@@ -79,6 +79,16 @@ export function ExpensesPage() {
       }));
     };
 
+  const handleDeleteExpense = (expense: Expense) => {
+    const shouldDelete = window.confirm(
+      'Eliminar el gasto "' + expense.description + '"?',
+    );
+
+    if (!shouldDelete) return;
+
+    deleteExpense.mutate(expense.id);
+  };
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -366,7 +376,7 @@ export function ExpensesPage() {
                           aria-label="Eliminar gasto"
                           className="flex h-9 w-9 items-center justify-center rounded-md border border-[#d71920]/30 bg-white text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
                           disabled={deleteExpense.isPending}
-                          onClick={() => deleteExpense.mutate(expense.id)}
+                          onClick={() => handleDeleteExpense(expense)}
                           type="button"
                         >
                           <Trash2 className="h-4 w-4" />
