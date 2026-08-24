@@ -121,21 +121,9 @@ export function WorkOrdersPage() {
             </Link>
             <Link
               className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
-              to="/work-orders/quick-entry"
-            >
-              Orden rapida
-            </Link>
-            <Link
-              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
               to="/profits/weekly"
             >
               Ganancias
-            </Link>
-            <Link
-              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
-              to="/expenses"
-            >
-              Gastos
             </Link>
           </nav>
         </aside>

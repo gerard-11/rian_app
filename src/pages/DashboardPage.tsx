@@ -2,6 +2,7 @@ import {
   AlertCircle,
   ClipboardPlus,
   LoaderCircle,
+  ReceiptText,
   TrendingUp,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -41,21 +42,9 @@ export function DashboardPage() {
             </Link>
             <Link
               className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
-              to="/work-orders/quick-entry"
-            >
-              Orden rapida
-            </Link>
-            <Link
-              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
               to="/profits/weekly"
             >
               Ganancias
-            </Link>
-            <Link
-              className="flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950"
-              to="/expenses"
-            >
-              Gastos
             </Link>
           </nav>
         </aside>
@@ -142,6 +131,13 @@ export function DashboardPage() {
                   >
                     <ClipboardPlus className="h-4 w-4" />
                     Crear orden
+                  </Link>
+                  <Link
+                    className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+                    to="/expenses"
+                  >
+                    <ReceiptText className="h-4 w-4" />
+                    Registrar gasto
                   </Link>
                 </div>
               </div>
