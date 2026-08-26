@@ -46,6 +46,8 @@ const optionalNumber = (value?: string) => {
   return trimmed === undefined ? undefined : Number(trimmed);
 };
 
+const amountOrZero = (value?: string) => optionalNumber(value) ?? 0;
+
 const getItemDescription = (
   item: QuickWorkOrderFormValues["items"][number],
 ) => {
@@ -70,12 +72,14 @@ export const buildQuickWorkOrderPayload = (
   },
   diagnosis: optionalText(values.diagnosis),
   notes: optionalText(values.notes),
-  advanceAmount: optionalNumber(values.advanceAmount),
+  advanceAmount: amountOrZero(values.advanceAmount),
   items: values.items.map((item) => ({
     type: item.type,
     description: getItemDescription(item),
     saleAmount: Number(item.saleAmount.trim()),
     costAmount:
-      item.type === "LABOR" ? undefined : optionalNumber(item.costAmount),
+      item.type === "PART" || item.type === "TIRE"
+        ? Number(item.costAmount?.trim())
+        : amountOrZero(item.costAmount),
   })),
 });

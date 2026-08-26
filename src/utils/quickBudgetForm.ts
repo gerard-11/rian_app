@@ -46,6 +46,8 @@ const optionalNumber = (value?: string) => {
   return trimmed === undefined ? undefined : Number(trimmed);
 };
 
+const amountOrZero = (value?: string) => optionalNumber(value) ?? 0;
+
 const getItemDescription = (item: QuickBudgetFormValues["items"][number]) => {
   if (item.type === "LABOR") return itemTypeLabels.LABOR;
 
@@ -62,7 +64,9 @@ export const buildQuickBudgetPayload = (
   diagnosis: optionalText(values.diagnosis),
   items: values.items.map((item) => ({
     costAmount:
-      item.type === "LABOR" ? undefined : optionalNumber(item.costAmount),
+      item.type === "PART" || item.type === "TIRE"
+        ? Number(item.costAmount?.trim())
+        : amountOrZero(item.costAmount),
     description: getItemDescription(item),
     saleAmount: Number(item.saleAmount.trim()),
     type: item.type,

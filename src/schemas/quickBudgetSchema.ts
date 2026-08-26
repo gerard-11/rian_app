@@ -10,12 +10,15 @@ const numericStringSchema = z
 
 const optionalAmountSchema = numericStringSchema.optional();
 
+const isPositiveAmount = (value: string | undefined) =>
+  value !== undefined && value !== "" && Number(value) > 0;
+
 const quickBudgetItemSchema = z
   .object({
     type: z.enum(ITEM_TYPES),
     description: z.string().trim(),
-    saleAmount: numericStringSchema.refine((value) => value !== "", {
-      message: "Ingresa el precio de venta",
+    saleAmount: numericStringSchema.refine(isPositiveAmount, {
+      message: "El precio de venta debe ser mayor que 0",
     }),
     costAmount: optionalAmountSchema,
   })
@@ -25,6 +28,17 @@ const quickBudgetItemSchema = z
         code: "custom",
         message: "Ingresa la descripcion del item",
         path: ["description"],
+      });
+    }
+
+    if (
+      (item.type === "PART" || item.type === "TIRE") &&
+      !isPositiveAmount(item.costAmount)
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "El costo debe ser mayor que 0",
+        path: ["costAmount"],
       });
     }
   });
