@@ -11,8 +11,27 @@ export type LoginResponse = {
   [key: string]: unknown
 }
 
+export type AuthenticatedUser = Record<string, unknown>
+
+export type CurrentUserResponse = {
+  user?: AuthenticatedUser
+  [key: string]: unknown
+}
+
 export const login = async (payload: LoginPayload) => {
   const response = await api.post<LoginResponse>('/auth/login', payload)
+
+  return response.data
+}
+
+export const logout = async () => {
+  const response = await api.post('/auth/logout')
+
+  return response.data
+}
+
+export const getCurrentUser = async () => {
+  const response = await api.get<CurrentUserResponse>('/auth/me')
 
   return response.data
 }

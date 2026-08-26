@@ -1,20 +1,12 @@
 import axios, { AxiosError } from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
-
 export const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 10000,
   withCredentials: true,
-})
-
-api.interceptors.request.use((config) => {
-  config.withCredentials = true
-
-  return config
 })
 
 api.interceptors.response.use(
