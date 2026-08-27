@@ -1,5 +1,6 @@
 import { Minus, Plus, ReceiptText } from "lucide-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import { TireCatalogPicker } from "../../../components/TireCatalogPicker";
 import type { EditWorkOrderFormValues } from "../../../schemas/editWorkOrderSchema";
 import { ITEM_TYPES } from "../../../types/workOrders";
 import {
@@ -17,6 +18,7 @@ export function WorkOrderItemsFields({
   const {
     control,
     register,
+    setValue,
     formState: { errors },
   } = useFormContext<EditWorkOrderFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
@@ -54,6 +56,7 @@ export function WorkOrderItemsFields({
         ) : null}
         {fields.map((field, index) => {
           const isLabor = items?.[index]?.type === "LABOR";
+          const isTire = items?.[index]?.type === "TIRE";
 
           return (
             <div
@@ -88,6 +91,25 @@ export function WorkOrderItemsFields({
                   </select>
                 </div>
                 {!isLabor ? <div>
+                  {isTire ? (
+                    <TireCatalogPicker
+                      onSelect={(tire) => {
+                        setValue(`items.${index}.description`, tire.description, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue(`items.${index}.costAmount`, tire.cost, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue(
+                          `items.${index}.saleAmount`,
+                          tire.suggestedPrice,
+                          { shouldDirty: true, shouldValidate: true },
+                        );
+                      }}
+                    />
+                  ) : null}
                   <label className="text-sm font-semibold text-slate-800">Descripción</label>
                   <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" {...register(`items.${index}.description`)} />
                   {errors.items?.[index]?.description ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.description?.message}</p> : null}

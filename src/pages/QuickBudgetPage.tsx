@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { TireCatalogPicker } from "../components/TireCatalogPicker";
 import { useCreateQuickBudget } from "../hooks/useBudgets";
 import {
   quickBudgetSchema,
@@ -33,6 +34,7 @@ export function QuickBudgetPage() {
     control,
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<QuickBudgetFormValues>({
     defaultValues: quickBudgetDefaultValues,
@@ -210,6 +212,7 @@ export function QuickBudgetPage() {
           <div className="space-y-4 px-5 py-5 sm:px-6">
             {fields.map((field, index) => {
               const isLabor = items?.[index]?.type === "LABOR";
+              const isTire = items?.[index]?.type === "TIRE";
               const itemErrors = errors.items?.[index];
 
               return (
@@ -243,6 +246,25 @@ export function QuickBudgetPage() {
 
                   {!isLabor ? (
                     <div>
+                      {isTire ? (
+                        <TireCatalogPicker
+                          onSelect={(tire) => {
+                            setValue(`items.${index}.description`, tire.description, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue(`items.${index}.costAmount`, tire.cost, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue(
+                              `items.${index}.saleAmount`,
+                              tire.suggestedPrice,
+                              { shouldDirty: true, shouldValidate: true },
+                            );
+                          }}
+                        />
+                      ) : null}
                       <label
                         className="text-sm font-semibold text-slate-800"
                         htmlFor={`budget-item-${field.id}-description`}
