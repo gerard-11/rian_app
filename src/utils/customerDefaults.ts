@@ -1,0 +1,1 @@
+export const DEFAULT_PUBLIC_PHONE = "0000000000";

@@ -77,7 +77,7 @@ export function QuickBudgetPage() {
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Cliente</h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  El presupuesto siempre se crea con cliente nuevo.
+                  El telefono es opcional para clientes de mostrador.
                 </p>
               </div>
             </div>
@@ -123,7 +123,7 @@ export function QuickBudgetPage() {
                   autoComplete="tel"
                   className="h-full min-w-0 flex-1 bg-transparent px-3 text-base outline-none placeholder:text-slate-400"
                   id="budgetCustomerPhone"
-                  placeholder="Numero de contacto"
+                  placeholder="Numero de contacto opcional"
                   type="tel"
                   {...register("customer.phone")}
                 />
@@ -146,7 +146,7 @@ export function QuickBudgetPage() {
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Vehiculo</h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  El presupuesto siempre se crea con vehiculo nuevo.
+                  Placa, marca, modelo, ano y color son opcionales.
                 </p>
               </div>
             </div>

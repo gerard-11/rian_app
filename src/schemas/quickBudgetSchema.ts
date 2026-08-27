@@ -46,7 +46,7 @@ const quickBudgetItemSchema = z
 export const quickBudgetSchema = z.object({
   customer: z.object({
     name: z.string().trim().min(2, "Ingresa el nombre del cliente"),
-    phone: z.string().trim().min(1, "Ingresa el telefono del cliente"),
+    phone: z.string().trim(),
   }),
   vehicle: z.object({
     plate: z.string().trim().optional(),

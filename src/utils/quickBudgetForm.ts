@@ -1,6 +1,7 @@
 import type { QuickBudgetFormValues } from "../schemas/quickBudgetSchema";
 import type { CreateQuickBudgetInput } from "../types/budgets";
 import type { ItemType } from "../types/workOrders";
+import { DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
 
 export const emptyQuickBudgetItem = {
   type: "SERVICE" as ItemType,
@@ -59,7 +60,7 @@ export const buildQuickBudgetPayload = (
 ): CreateQuickBudgetInput => ({
   customer: {
     name: values.customer.name.trim(),
-    phone: values.customer.phone.trim(),
+    phone: values.customer.phone.trim() || DEFAULT_PUBLIC_PHONE,
   },
   diagnosis: optionalText(values.diagnosis),
   items: values.items.map((item) => ({
