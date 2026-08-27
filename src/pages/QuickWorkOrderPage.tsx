@@ -344,7 +344,7 @@ export function QuickWorkOrderPage() {
 
                       <div>
                         <label
-                          className="text-sm font-semibold text-slate-800"
+                          className="text-sm font-semibold text-emerald-700"
                           htmlFor={`item-${field.id}-sale`}
                         >
                           Venta
@@ -353,7 +353,7 @@ export function QuickWorkOrderPage() {
                           aria-invalid={Boolean(
                             errors.items?.[index]?.saleAmount,
                           )}
-                          className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                          className="mt-2 h-12 w-full rounded-md border border-emerald-300 bg-emerald-50/60 px-3 text-base font-semibold text-emerald-900 outline-none transition placeholder:text-emerald-700/45 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/15"
                           id={`item-${field.id}-sale`}
                           inputMode="decimal"
                           placeholder="0.00"
@@ -368,7 +368,7 @@ export function QuickWorkOrderPage() {
                       {!isLabor ? (
                         <div>
                           <label
-                            className="text-sm font-semibold text-slate-800"
+                            className="text-sm font-semibold text-[#a41218]"
                             htmlFor={`item-${field.id}-cost`}
                           >
                             Costo
@@ -377,14 +377,17 @@ export function QuickWorkOrderPage() {
                             aria-invalid={Boolean(
                               errors.items?.[index]?.costAmount,
                             )}
-                            className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                            className="mt-2 h-12 w-full rounded-md border border-[#d71920]/40 bg-[#d71920]/5 px-3 text-base font-semibold text-[#8f1116] outline-none transition placeholder:text-[#a41218]/45 focus:border-[#d71920] focus:ring-4 focus:ring-[#d71920]/15"
                             id={`item-${field.id}-cost`}
                             inputMode="decimal"
                             placeholder="0.00"
                             {...register(`items.${index}.costAmount`)}
                           />
                           {errors.items?.[index]?.costAmount ? (
-                            <p className="mt-2 text-sm font-medium text-[#d71920]">
+                            <p
+                              className="mt-2 text-sm font-medium text-[#d71920]"
+                              role="alert"
+                            >
                               {errors.items[index]?.costAmount?.message}
                             </p>
                           ) : null}

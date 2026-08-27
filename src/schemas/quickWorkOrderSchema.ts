@@ -13,6 +13,14 @@ const optionalAmountSchema = numericStringSchema.optional();
 const isPositiveAmount = (value: string | undefined) =>
   value !== undefined && value !== "" && Number(value) > 0;
 
+const toAmount = (value: string | undefined) => {
+  if (value === undefined || value === "") return undefined;
+
+  const amount = Number(value);
+
+  return Number.isFinite(amount) ? amount : undefined;
+};
+
 const quickWorkOrderItemSchema = z
   .object({
     type: z.enum(ITEM_TYPES),
@@ -38,6 +46,21 @@ const quickWorkOrderItemSchema = z
       context.addIssue({
         code: "custom",
         message: "El costo debe ser mayor que 0",
+        path: ["costAmount"],
+      });
+    }
+
+    const saleAmount = toAmount(item.saleAmount);
+    const costAmount = toAmount(item.costAmount);
+
+    if (
+      saleAmount !== undefined &&
+      costAmount !== undefined &&
+      costAmount > saleAmount
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Alerta: el costo no puede ser mayor que la venta",
         path: ["costAmount"],
       });
     }
