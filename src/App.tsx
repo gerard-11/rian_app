@@ -6,6 +6,7 @@ import { BudgetsPage } from "./pages/BudgetsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { ExpensesPage } from "./pages/ExpensesPage";
 import { LoginPage } from "./pages/LoginPage";
+import { PersonalExpensesPage } from "./pages/PersonalExpensesPage";
 import { QuickBudgetPage } from "./pages/QuickBudgetPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
 import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
@@ -50,6 +51,10 @@ function App() {
           <Route element={<WorkOrderNotePage />} path="/work-orders/:id/note" />
           <Route element={<WeeklyProfitsPage />} path="/profits/weekly" />
           <Route element={<ExpensesPage />} path="/expenses" />
+          <Route
+            element={<PersonalExpensesPage />}
+            path="/personal-expenses"
+          />
         </Route>
         <Route element={<Navigate replace to="/login" />} path="*" />
       </Routes>

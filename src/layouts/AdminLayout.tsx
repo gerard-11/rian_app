@@ -3,7 +3,13 @@ import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { ThemeToggle } from "../components/ThemeToggle";
 
-type AdminLayoutPage = "budgets" | "dashboard" | "orders" | "profits" | "none";
+type AdminLayoutPage =
+  | "budgets"
+  | "dashboard"
+  | "orders"
+  | "personal-expenses"
+  | "profits"
+  | "none";
 
 type AdminRouteMeta = {
   actions?: ReactNode;
@@ -21,6 +27,11 @@ const navItems: Array<{
   { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
   { label: "Ganancias", page: "profits", to: "/profits/weekly" },
+  {
+    label: "Gastos personales",
+    page: "personal-expenses",
+    to: "/personal-expenses",
+  },
 ];
 
 const getNavLinkClass = (isActive: boolean) =>
@@ -110,6 +121,11 @@ const routeMetaByPath: Record<string, AdminRouteMeta> = {
     eyebrow: "Gastos",
     page: "none",
     title: "Gastos",
+  },
+  "/personal-expenses": {
+    eyebrow: "Gastos personales",
+    page: "personal-expenses",
+    title: "Gastos personales",
   },
   "/profits/weekly": {
     actions: dashboardAction,
