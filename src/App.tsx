@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { ProfitsAccessGuard } from "./components/ProfitsAccessGuard";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { BudgetNotePage } from "./pages/BudgetNotePage";
 import { BudgetsPage } from "./pages/BudgetsPage";
@@ -49,12 +50,16 @@ function App() {
             path="/work-orders/quick-entry"
           />
           <Route element={<WorkOrderNotePage />} path="/work-orders/:id/note" />
-          <Route element={<WeeklyProfitsPage />} path="/profits/weekly" />
-          <Route element={<ExpensesPage />} path="/expenses" />
           <Route
-            element={<PersonalExpensesPage />}
-            path="/personal-expenses"
+            element={
+              <ProfitsAccessGuard>
+                <WeeklyProfitsPage />
+              </ProfitsAccessGuard>
+            }
+            path="/profits/weekly"
           />
+          <Route element={<ExpensesPage />} path="/expenses" />
+          <Route element={<PersonalExpensesPage />} path="/personal-expenses" />
         </Route>
         <Route element={<Navigate replace to="/login" />} path="*" />
       </Routes>

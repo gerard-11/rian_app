@@ -1,15 +1,11 @@
 import type { ReactNode } from "react";
 import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
 
 type AdminLayoutPage =
-  | "budgets"
-  | "dashboard"
-  | "orders"
-  | "personal-expenses"
-  | "profits"
-  | "none";
+  "budgets" | "dashboard" | "orders" | "personal-expenses" | "profits" | "none";
 
 type AdminRouteMeta = {
   actions?: ReactNode;
@@ -87,6 +83,13 @@ const dashboardAction = (
   </Link>
 );
 
+const profitsActions = (
+  <div className="flex flex-wrap gap-3">
+    <ProfitsLockButton />
+    {dashboardAction}
+  </div>
+);
+
 const budgetNoteRouteMeta: AdminRouteMeta = {
   eyebrow: "Presupuestos",
   page: "budgets",
@@ -128,7 +131,7 @@ const routeMetaByPath: Record<string, AdminRouteMeta> = {
     title: "Gastos personales",
   },
   "/profits/weekly": {
-    actions: dashboardAction,
+    actions: profitsActions,
     eyebrow: "Ganancias",
     page: "profits",
     title: "Ganancias semanales",

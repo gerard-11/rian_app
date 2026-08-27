@@ -4,17 +4,20 @@ import { BrowserRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+import { ProfitsAccessProvider } from "./contexts/ProfitsAccessContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { queryClient } from "./lib/queryClient";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </QueryClientProvider>
+      <ProfitsAccessProvider>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </QueryClientProvider>
+      </ProfitsAccessProvider>
     </ThemeProvider>
   </StrictMode>,
 );
