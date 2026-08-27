@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import logoRian from "../assets/logo-rian.jpeg";
 import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { ProfitsLockButton } from "../components/ProfitsLockButton";
@@ -183,16 +184,12 @@ export function AdminLayout() {
     <main className="min-h-screen bg-slate-50 text-slate-950 print:bg-white">
       <div className="flex min-h-screen">
         <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 print:hidden lg:block">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1] text-lg font-black text-white">
-              RA
-            </div>
-            <div>
-              <p className="text-sm font-bold text-slate-950">
-                Rian Automotriz
-              </p>
-              <p className="text-xs font-medium text-slate-500">Admin</p>
-            </div>
+          <div className="px-1">
+            <img
+              alt="Rian Automotriz"
+              className="h-auto w-full rounded-2xl object-cover opacity-100 [mask-image:radial-gradient(circle_at_center,black_88%,transparent_100%)] [-webkit-mask-image:radial-gradient(circle_at_center,black_88%,transparent_100%)]"
+              src={logoRian}
+            />
           </div>
 
           <nav className="mt-8 space-y-1">
