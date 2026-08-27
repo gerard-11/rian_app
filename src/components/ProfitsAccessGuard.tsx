@@ -59,7 +59,7 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
               aria-invalid={Boolean(error)}
               className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 pr-12 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
               id="profitsAccessCode"
-              inputMode="numeric"
+              inputMode="text"
               onChange={(event) => {
                 setCode(event.target.value);
                 setError("");
