@@ -5,7 +5,13 @@ import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
 
 type AdminLayoutPage =
-  "budgets" | "dashboard" | "orders" | "personal-expenses" | "profits" | "none";
+  | "budgets"
+  | "dashboard"
+  | "expenses"
+  | "orders"
+  | "personal-expenses"
+  | "profits"
+  | "none";
 
 type AdminRouteMeta = {
   actions?: ReactNode;
@@ -22,6 +28,7 @@ const navItems: Array<{
   { label: "Dashboard", page: "dashboard", to: "/dashboard" },
   { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
+  { label: "Gastos del negocio", page: "expenses", to: "/expenses" },
   { label: "Ganancias", page: "profits", to: "/profits/weekly" },
   {
     label: "Gastos personales",
@@ -121,9 +128,9 @@ const routeMetaByPath: Record<string, AdminRouteMeta> = {
     title: "Dashboard",
   },
   "/expenses": {
-    eyebrow: "Gastos",
-    page: "none",
-    title: "Gastos",
+    eyebrow: "Gastos del negocio",
+    page: "expenses",
+    title: "Gastos del negocio",
   },
   "/personal-expenses": {
     eyebrow: "Gastos personales",

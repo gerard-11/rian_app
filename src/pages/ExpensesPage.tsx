@@ -124,12 +124,18 @@ export function ExpensesPage() {
             </div>
             <div>
               <p className="text-sm font-bold text-slate-950">
-                Registrar gasto
+                Registrar gasto del negocio
               </p>
               <p className="mt-1 text-sm text-slate-500">
-                Los gastos registrados afectan la utilidad semanal.
+                Registra aqui solo gastos de operacion del taller. No incluye
+                gastos personales.
               </p>
             </div>
+          </div>
+
+          <div className="rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
+            Esta seccion es exclusiva para gastos operativos del negocio, como
+            insumos, compras o pagos relacionados con el taller.
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_160px_180px]">
@@ -229,10 +235,10 @@ export function ExpensesPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-sm font-bold text-slate-950">
-              {expenses.length} gastos
+              {expenses.length} gastos del negocio
             </p>
             <p className="mt-1 text-sm text-slate-500">
-              Total filtrado {formatMoney(expensesTotal)}
+              Total filtrado de operacion {formatMoney(expensesTotal)}
             </p>
           </div>
 
@@ -271,14 +277,14 @@ export function ExpensesPage() {
       {expensesQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
           <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
-          Cargando gastos...
+          Cargando gastos del negocio...
         </div>
       ) : null}
 
       {expensesQuery.isError ? (
         <div className="flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-          No se pudieron cargar los gastos.
+          No se pudieron cargar los gastos del negocio.
         </div>
       ) : null}
 
@@ -338,10 +344,11 @@ export function ExpensesPage() {
             <div>
               <ReceiptText className="mx-auto h-10 w-10 text-slate-300" />
               <p className="mt-3 text-sm font-bold text-slate-950">
-                No hay gastos para mostrar
+                No hay gastos del negocio para mostrar
               </p>
               <p className="mt-1 text-sm text-slate-500">
-                Registra un gasto para verlo en este listado.
+                Registra un gasto operativo del taller para verlo en este
+                listado.
               </p>
             </div>
           </div>
