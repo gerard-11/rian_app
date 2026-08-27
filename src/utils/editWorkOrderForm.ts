@@ -2,7 +2,6 @@ import type { EditWorkOrderFormValues } from "../schemas/editWorkOrderSchema";
 import type { UpdateWorkOrderInput, WorkOrder } from "../types/workOrders";
 import { itemTypeLabels } from "./quickWorkOrderForm";
 
-const text = (value?: string) => value?.trim() || undefined;
 const amount = (value?: string) => Number(value?.trim() || 0);
 
 export const getEditWorkOrderValues = (
@@ -30,7 +29,7 @@ export const buildUpdateWorkOrderPayload = (
   values: EditWorkOrderFormValues,
 ): UpdateWorkOrderInput => ({
   diagnosis: values.diagnosis.trim(),
-  notes: text(values.notes),
+  notes: values.notes?.trim() ?? "",
   advanceAmount: amount(values.advanceAmount),
   items: values.items.map((item) => ({
     type: item.type,
@@ -38,6 +37,6 @@ export const buildUpdateWorkOrderPayload = (
       item.type === "LABOR" ? itemTypeLabels.LABOR : item.description.trim(),
     saleAmount: amount(item.saleAmount),
     costAmount: amount(item.costAmount),
-    notes: text(item.notes),
+    notes: item.notes?.trim() ?? "",
   })),
 });
