@@ -409,7 +409,7 @@ export function QuickWorkOrderPage() {
                 <div>
                   <h2 className="text-lg font-bold text-slate-950">Orden</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Diagnostico, anticipo opcional y notas generales.
+                    Diagnóstico requerido, anticipo opcional y notas generales.
                   </p>
                 </div>
               </div>
@@ -446,14 +446,23 @@ export function QuickWorkOrderPage() {
                   className="text-sm font-semibold text-slate-800"
                   htmlFor="diagnosis"
                 >
-                  Diagnostico
+                  Diagnóstico
                 </label>
                 <textarea
+                  aria-invalid={Boolean(errors.diagnosis)}
                   className="mt-2 min-h-24 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
                   id="diagnosis"
                   placeholder="Falla reportada, revision inicial o diagnostico preliminar"
                   {...register("diagnosis")}
                 />
+                {errors.diagnosis ? (
+                  <p
+                    className="mt-2 text-sm font-medium text-[#d71920]"
+                    role="alert"
+                  >
+                    {errors.diagnosis.message}
+                  </p>
+                ) : null}
               </div>
 
               <div className="lg:col-span-2">

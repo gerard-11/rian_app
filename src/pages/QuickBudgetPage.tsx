@@ -10,7 +10,7 @@ import {
   User,
   Wrench,
 } from "lucide-react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useCreateQuickBudget } from "../hooks/useBudgets";
 import {
   quickBudgetSchema,
@@ -42,6 +42,7 @@ export function QuickBudgetPage() {
     control,
     name: "items",
   });
+  const items = useWatch({ control, name: "items" });
 
   const onSubmit = (values: QuickBudgetFormValues) => {
     createQuickBudget.mutate(buildQuickBudgetPayload(values), {
@@ -214,69 +215,171 @@ export function QuickBudgetPage() {
           </div>
 
           <div className="space-y-4 px-5 py-5 sm:px-6">
-            {fields.map((field, index) => (
-              <div
-                className="grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_minmax(0,1fr)_140px_140px_44px]"
-                key={field.id}
-              >
-                <select
-                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-                  {...register(`items.${index}.type`)}
+            {fields.map((field, index) => {
+              const isLabor = items?.[index]?.type === "LABOR";
+              const itemErrors = errors.items?.[index];
+
+              return (
+                <div
+                  className={
+                    isLabor
+                      ? "grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_140px_44px]"
+                      : "grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_minmax(0,1fr)_140px_140px_44px]"
+                  }
+                  key={field.id}
                 >
-                  {ITEM_TYPES.map((type) => (
-                    <option key={type} value={type}>
-                      {itemTypeLabels[type]}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-                  placeholder="Descripcion"
-                  {...register(`items.${index}.description`)}
-                />
-                <input
-                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-                  inputMode="decimal"
-                  placeholder="Venta"
-                  {...register(`items.${index}.saleAmount`)}
-                />
-                <input
-                  className="h-11 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-                  inputMode="decimal"
-                  placeholder="Costo"
-                  {...register(`items.${index}.costAmount`)}
-                />
-                <button
-                  className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
-                  disabled={fields.length === 1}
-                  onClick={() => remove(index)}
-                  type="button"
-                >
-                  <Minus className="h-4 w-4" />
-                </button>
-                {errors.items?.[index] ? (
-                  <p className="text-sm font-medium text-[#d71920] lg:col-span-5">
-                    {errors.items[index]?.description?.message ??
-                      errors.items[index]?.saleAmount?.message}
-                  </p>
-                ) : null}
-              </div>
-            ))}
+                  <div>
+                    <label
+                      className="text-sm font-semibold text-slate-800"
+                      htmlFor={`budget-item-${field.id}-type`}
+                    >
+                      Tipo
+                    </label>
+                    <select
+                      className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                      id={`budget-item-${field.id}-type`}
+                      {...register(`items.${index}.type`)}
+                    >
+                      {ITEM_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {itemTypeLabels[type]}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {!isLabor ? (
+                    <div>
+                      <label
+                        className="text-sm font-semibold text-slate-800"
+                        htmlFor={`budget-item-${field.id}-description`}
+                      >
+                        Descripción
+                      </label>
+                      <input
+                        aria-invalid={Boolean(itemErrors?.description)}
+                        className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                        id={`budget-item-${field.id}-description`}
+                        placeholder="Servicio o producto"
+                        {...register(`items.${index}.description`)}
+                      />
+                      {itemErrors?.description ? (
+                        <p
+                          className="mt-2 text-sm font-medium text-[#d71920]"
+                          role="alert"
+                        >
+                          {itemErrors.description.message}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  <div>
+                    <label
+                      className="text-sm font-semibold text-emerald-700"
+                      htmlFor={`budget-item-${field.id}-sale`}
+                    >
+                      Venta
+                    </label>
+                    <input
+                      aria-invalid={Boolean(itemErrors?.saleAmount)}
+                      className="mt-2 h-11 w-full rounded-md border border-emerald-300 bg-emerald-50/60 px-3 text-sm font-semibold text-emerald-900 outline-none transition placeholder:text-emerald-700/45 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/15"
+                      id={`budget-item-${field.id}-sale`}
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      {...register(`items.${index}.saleAmount`)}
+                    />
+                    {itemErrors?.saleAmount ? (
+                      <p
+                        className="mt-2 text-sm font-medium text-[#d71920]"
+                        role="alert"
+                      >
+                        {itemErrors.saleAmount.message}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  {!isLabor ? (
+                    <div>
+                      <label
+                        className="text-sm font-semibold text-[#a41218]"
+                        htmlFor={`budget-item-${field.id}-cost`}
+                      >
+                        Costo
+                      </label>
+                      <input
+                        aria-invalid={Boolean(itemErrors?.costAmount)}
+                        className="mt-2 h-11 w-full rounded-md border border-[#d71920]/40 bg-[#d71920]/5 px-3 text-sm font-semibold text-[#8f1116] outline-none transition placeholder:text-[#a41218]/45 focus:border-[#d71920] focus:ring-4 focus:ring-[#d71920]/15"
+                        id={`budget-item-${field.id}-cost`}
+                        inputMode="decimal"
+                        placeholder="0.00"
+                        {...register(`items.${index}.costAmount`)}
+                      />
+                      {itemErrors?.costAmount ? (
+                        <p
+                          className="mt-2 text-sm font-medium text-[#d71920]"
+                          role="alert"
+                        >
+                          {itemErrors.costAmount.message}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : null}
+
+                  <button
+                    aria-label="Eliminar item"
+                    className="flex h-11 w-11 items-center justify-center self-end rounded-md border border-slate-300 bg-white text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-300"
+                    disabled={fields.length === 1}
+                    onClick={() => remove(index)}
+                    type="button"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </section>
 
         <section className="rounded-md border border-slate-200 bg-white shadow-sm">
           <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
-            <textarea
-              className="min-h-28 resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-              placeholder="Diagnostico"
-              {...register("diagnosis")}
-            />
-            <textarea
-              className="min-h-28 resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-              placeholder="Notas"
-              {...register("notes")}
-            />
+            <div>
+              <label
+                className="text-sm font-semibold text-slate-800"
+                htmlFor="budgetDiagnosis"
+              >
+                Diagnóstico
+              </label>
+              <textarea
+                aria-invalid={Boolean(errors.diagnosis)}
+                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                id="budgetDiagnosis"
+                placeholder="Falla reportada, revision inicial o diagnostico preliminar"
+                {...register("diagnosis")}
+              />
+              {errors.diagnosis ? (
+                <p
+                  className="mt-2 text-sm font-medium text-[#d71920]"
+                  role="alert"
+                >
+                  {errors.diagnosis.message}
+                </p>
+              ) : null}
+            </div>
+            <div>
+              <label
+                className="text-sm font-semibold text-slate-800"
+                htmlFor="budgetNotes"
+              >
+                Notas
+              </label>
+              <textarea
+                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                id="budgetNotes"
+                placeholder="Notas"
+                {...register("notes")}
+              />
+            </div>
           </div>
         </section>
 

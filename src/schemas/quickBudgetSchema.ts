@@ -1,47 +1,5 @@
 import { z } from "zod";
-import { ITEM_TYPES } from "../types/workOrders";
-
-const numericStringSchema = z
-  .string()
-  .trim()
-  .refine((value) => value === "" || Number.isFinite(Number(value)), {
-    message: "Ingresa un numero valido",
-  });
-
-const optionalAmountSchema = numericStringSchema.optional();
-
-const isPositiveAmount = (value: string | undefined) =>
-  value !== undefined && value !== "" && Number(value) > 0;
-
-const quickBudgetItemSchema = z
-  .object({
-    type: z.enum(ITEM_TYPES),
-    description: z.string().trim(),
-    saleAmount: numericStringSchema.refine(isPositiveAmount, {
-      message: "El precio de venta debe ser mayor que 0",
-    }),
-    costAmount: optionalAmountSchema,
-  })
-  .superRefine((item, context) => {
-    if (item.type !== "LABOR" && item.description.length < 2) {
-      context.addIssue({
-        code: "custom",
-        message: "Ingresa la descripcion del item",
-        path: ["description"],
-      });
-    }
-
-    if (
-      (item.type === "PART" || item.type === "TIRE") &&
-      !isPositiveAmount(item.costAmount)
-    ) {
-      context.addIssue({
-        code: "custom",
-        message: "El costo debe ser mayor que 0",
-        path: ["costAmount"],
-      });
-    }
-  });
+import { numericStringSchema, quickItemSchema } from "./quickItemSchema";
 
 export const quickBudgetSchema = z.object({
   customer: z.object({
@@ -64,9 +22,9 @@ export const quickBudgetSchema = z.object({
     ),
     color: z.string().trim().optional(),
   }),
-  diagnosis: z.string().trim().optional(),
+  diagnosis: z.string().trim().min(2, "Ingresa el diagnóstico"),
   notes: z.string().trim().optional(),
-  items: z.array(quickBudgetItemSchema).min(1, "Agrega al menos un item"),
+  items: z.array(quickItemSchema).min(1, "Agrega al menos un item"),
 });
 
 export type QuickBudgetFormValues = z.infer<typeof quickBudgetSchema>;
