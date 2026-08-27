@@ -26,6 +26,20 @@ export type QuickWorkOrderItemInput = {
   description: string;
   saleAmount: number | string;
   costAmount?: number | string;
+  notes?: string;
+};
+
+export type UpdateWorkOrderInput = {
+  diagnosis?: string;
+  notes?: string;
+  status?: WorkOrderStatus;
+  advanceAmount?: number | string;
+  items?: QuickWorkOrderItemInput[];
+};
+
+export type UpdateWorkOrderActionInput = {
+  id: number | string;
+  payload: UpdateWorkOrderInput;
 };
 
 export type CreateQuickWorkOrderInput = {

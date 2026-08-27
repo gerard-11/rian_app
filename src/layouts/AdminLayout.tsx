@@ -166,13 +166,21 @@ const defaultRouteMeta: AdminRouteMeta = {
   title: "Rian Automotriz",
 };
 
-const getRouteMeta = (pathname: string) => {
+const getRouteMeta = (pathname: string): AdminRouteMeta => {
   if (/^\/budgets\/[^/]+\/note$/.test(pathname)) {
     return budgetNoteRouteMeta;
   }
 
   if (/^\/work-orders\/[^/]+\/note$/.test(pathname)) {
     return workOrderNoteRouteMeta;
+  }
+
+  if (/^\/work-orders\/[^/]+\/edit$/.test(pathname)) {
+    return {
+      eyebrow: "Ordenes de trabajo",
+      page: "orders",
+      title: "Editar orden",
+    };
   }
 
   return routeMetaByPath[pathname] ?? defaultRouteMeta;

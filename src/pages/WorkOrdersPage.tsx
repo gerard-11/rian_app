@@ -3,6 +3,7 @@ import {
   CheckCircle2,
   ClipboardList,
   FileText,
+  Pencil,
   LoaderCircle,
   Phone,
   Search,
@@ -40,6 +41,7 @@ const isActiveWorkOrder = (workOrder: WorkOrder) =>
 
 type WorkOrdersLocationState = {
   workOrderCreated?: boolean;
+  workOrderUpdated?: boolean;
 };
 
 const getStatusBadgeClass = (status?: string) => {
@@ -59,8 +61,13 @@ const getStatusBadgeClass = (status?: string) => {
 export function WorkOrdersPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [showCreatedMessage, setShowCreatedMessage] = useState(
-    Boolean((location.state as WorkOrdersLocationState | null)?.workOrderCreated),
+  const locationState = location.state as WorkOrdersLocationState | null;
+  const [successMessage, setSuccessMessage] = useState<string | undefined>(
+    locationState?.workOrderCreated
+      ? "La orden se creó correctamente."
+      : locationState?.workOrderUpdated
+        ? "La orden se actualizó correctamente."
+        : undefined,
   );
   const [search, setSearch] = useState("");
   const [selectedCustomerWorkOrder, setSelectedCustomerWorkOrder] =
@@ -70,16 +77,16 @@ export function WorkOrdersPage() {
   const cancelWorkOrder = useCancelWorkOrder();
 
   useEffect(() => {
-    if (!showCreatedMessage) return;
+    if (!successMessage) return;
 
     navigate(location.pathname, { replace: true, state: null });
 
     const timeout = window.setTimeout(() => {
-      setShowCreatedMessage(false);
+      setSuccessMessage(undefined);
     }, 5000);
 
     return () => window.clearTimeout(timeout);
-  }, [location.pathname, navigate, showCreatedMessage]);
+  }, [location.pathname, navigate, successMessage]);
   const workOrders = useMemo(
     () =>
       workOrdersQuery.data
@@ -259,6 +266,13 @@ export function WorkOrdersPage() {
                         </Link>
                         {isActive ? (
                           <>
+                            <Link
+                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#4169e1]/40 bg-white px-2.5 text-xs font-bold text-[#4169e1] transition hover:bg-[#4169e1]/10 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                              to={"/work-orders/" + workOrder.id + "/edit"}
+                            >
+                              <Pencil className="h-4 w-4" />
+                              Editar
+                            </Link>
                             <button
                               className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                               disabled={isMutating}
@@ -307,18 +321,18 @@ export function WorkOrdersPage() {
           workOrders={workOrders}
         />
       ) : null}
-      {showCreatedMessage ? (
+      {successMessage ? (
         <div
           aria-live="polite"
           className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-center gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 shadow-lg sm:inset-x-auto sm:right-6 sm:bottom-6"
           role="status"
         >
           <CheckCircle2 className="h-5 w-5 shrink-0" />
-          <span className="flex-1">La orden se creó correctamente.</span>
+          <span className="flex-1">{successMessage}</span>
           <button
             aria-label="Cerrar mensaje"
             className="rounded p-1 text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-600"
-            onClick={() => setShowCreatedMessage(false)}
+            onClick={() => setSuccessMessage(undefined)}
             type="button"
           >
             <XCircle className="h-4 w-4" />

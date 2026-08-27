@@ -13,6 +13,7 @@ import { QuickBudgetPage } from "./pages/QuickBudgetPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
 import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
 import { WorkOrderNotePage } from "./pages/WorkOrderNotePage";
+import { EditWorkOrderPage } from "./pages/EditWorkOrderPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
 
 function AuthEvents() {
@@ -52,6 +53,7 @@ function App() {
             path="/work-orders/quick-entry"
           />
           <Route element={<WorkOrderNotePage />} path="/work-orders/:id/note" />
+          <Route element={<EditWorkOrderPage />} path="/work-orders/:id/edit" />
           <Route
             element={
               <ProfitsAccessGuard>

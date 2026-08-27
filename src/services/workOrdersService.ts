@@ -5,6 +5,7 @@ import type {
   WorkOrderActionInput,
   WorkOrderResponse,
   WorkOrdersResponse,
+  UpdateWorkOrderActionInput,
 } from "../types/workOrders";
 
 export const getWorkOrders = async () => {
@@ -22,6 +23,18 @@ export const getWorkOrderById = async (id: WorkOrderActionInput["id"]) => {
 export const createQuickEntry = async (payload: CreateQuickWorkOrderInput) => {
   const response = await api.post<QuickWorkOrderResponse>(
     "/work-orders/quick-entry",
+    payload,
+  );
+
+  return response.data;
+};
+
+export const updateWorkOrder = async ({
+  id,
+  payload,
+}: UpdateWorkOrderActionInput) => {
+  const response = await api.patch<WorkOrderResponse>(
+    "/work-orders/" + id,
     payload,
   );
 

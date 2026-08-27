@@ -6,10 +6,12 @@ import {
   createQuickEntry,
   getWorkOrderById,
   getWorkOrders,
+  updateWorkOrder,
 } from "../services/workOrdersService";
 import type {
   CreateQuickWorkOrderInput,
   WorkOrderActionInput,
+  UpdateWorkOrderActionInput,
 } from "../types/workOrders";
 
 export const workOrdersQueryKeys = {
@@ -41,6 +43,20 @@ export const useCreateQuickEntry = () => {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,
+      });
+    },
+  });
+};
+
+export const useUpdateWorkOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateWorkOrderActionInput) => updateWorkOrder(payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({ queryKey: workOrdersQueryKeys.all });
+      void queryClient.invalidateQueries({
+        queryKey: workOrdersQueryKeys.detail(variables.id),
       });
     },
   });
