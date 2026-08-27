@@ -245,7 +245,11 @@ export function WorkOrderNoteDocument({
         </section>
 
         <footer className="mt-8 border-t border-slate-200 pt-4 text-center text-xs font-medium text-slate-500">
-          Gracias por confiar en Rian Automotriz.
+          <p className="font-semibold text-slate-700">
+            Garantía: 1 semana solo en mano de obra, alineación y balanceo. En
+            refacciones o llantas no aplica.
+          </p>
+          <p className="mt-2">Gracias por confiar en Rian Automotriz.</p>
         </footer>
       </div>
     </article>
