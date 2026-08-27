@@ -4,6 +4,7 @@ import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { queryClient } from "../lib/queryClient";
 import { logout } from "../services/authService";
 
 type AdminLayoutPage =
@@ -190,6 +191,7 @@ export function AdminLayout() {
       setIsLoggingOut(true);
       await logout();
     } finally {
+      queryClient.clear();
       setIsLoggingOut(false);
       navigate("/login", { replace: true });
     }
@@ -218,7 +220,6 @@ export function AdminLayout() {
               </Link>
             ))}
           </nav>
-
         </aside>
 
         <section className="flex min-w-0 flex-1 flex-col">
