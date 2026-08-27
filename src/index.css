@@ -5,3 +5,79 @@ body {
   min-width: 320px;
   min-height: 100vh;
 }
+
+@media screen {
+  html[data-theme="dark"] body {
+    background: #0f172a;
+    color: #f8fafc;
+  }
+
+  html[data-theme="dark"] .bg-slate-50 {
+    background-color: #0f172a;
+  }
+
+  html[data-theme="dark"] .bg-white {
+    background-color: #111827;
+  }
+
+  html[data-theme="dark"] .bg-slate-100 {
+    background-color: #1f2937;
+  }
+
+  html[data-theme="dark"] .bg-emerald-50 {
+    background-color: #052e24;
+  }
+
+  html[data-theme="dark"] .border-slate-200 {
+    border-color: #334155;
+  }
+
+  html[data-theme="dark"] .border-slate-300 {
+    border-color: #475569;
+  }
+
+  html[data-theme="dark"] .text-slate-950,
+  html[data-theme="dark"] .text-slate-900,
+  html[data-theme="dark"] .text-slate-800 {
+    color: #f8fafc;
+  }
+
+  html[data-theme="dark"] .text-slate-700,
+  html[data-theme="dark"] .text-slate-600 {
+    color: #cbd5e1;
+  }
+
+  html[data-theme="dark"] .text-slate-500,
+  html[data-theme="dark"] .text-slate-400 {
+    color: #94a3b8;
+  }
+
+  html[data-theme="dark"] .text-slate-300 {
+    color: #64748b;
+  }
+
+  html[data-theme="dark"] .placeholder\:text-slate-400::placeholder {
+    color: #64748b;
+  }
+
+  html[data-theme="dark"] .hover\:bg-slate-100:hover,
+  html[data-theme="dark"] .hover\:bg-white:hover {
+    background-color: #1f2937;
+  }
+
+  html[data-theme="dark"] .hover\:text-slate-950:hover {
+    color: #f8fafc;
+  }
+
+  html[data-theme="dark"] .shadow-sm,
+  html[data-theme="dark"] .shadow-lg,
+  html[data-theme="dark"] .shadow-2xl {
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.35);
+  }
+
+  html[data-theme="dark"] input,
+  html[data-theme="dark"] textarea,
+  html[data-theme="dark"] select {
+    color-scheme: dark;
+  }
+}

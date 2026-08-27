@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 type AdminLayoutPage = "budgets" | "dashboard" | "orders" | "profits" | "none";
 
@@ -192,7 +193,10 @@ export function AdminLayout() {
                   {meta.title}
                 </h1>
               </div>
-              {meta.actions}
+              <div className="flex flex-wrap items-center gap-3">
+                {meta.actions}
+                <ThemeToggle />
+              </div>
             </div>
           </header>
 
