@@ -52,3 +52,9 @@ export const cancelWorkOrder = async ({ id }: WorkOrderActionInput) => {
 
   return response.data;
 };
+
+export const deleteWorkOrder = async ({ id }: WorkOrderActionInput) => {
+  const response = await api.delete("/work-orders/" + id);
+
+  return response.data;
+};

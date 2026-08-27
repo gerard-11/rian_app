@@ -4,6 +4,7 @@ import {
   cancelWorkOrder,
   completeWorkOrder,
   createQuickEntry,
+  deleteWorkOrder,
   getWorkOrderById,
   getWorkOrders,
   updateWorkOrder,
@@ -86,6 +87,26 @@ export const useCancelWorkOrder = () => {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: weeklyProfitsQueryKeys.all,
+      });
+    },
+  });
+};
+
+export const useDeleteWorkOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: WorkOrderActionInput) => deleteWorkOrder(payload),
+    onSuccess: (_data, variables) => {
+      queryClient.removeQueries({
+        exact: true,
+        queryKey: workOrdersQueryKeys.detail(variables.id),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: workOrdersQueryKeys.lists(),
       });
       void queryClient.invalidateQueries({
         queryKey: weeklyProfitsQueryKeys.all,

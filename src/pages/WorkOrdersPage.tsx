@@ -7,6 +7,7 @@ import {
   LoaderCircle,
   Phone,
   Search,
+  Trash2,
   Wrench,
   XCircle,
 } from "lucide-react";
@@ -17,6 +18,7 @@ import { capitalizeDisplayText } from "../lib/textFormatters";
 import {
   useCancelWorkOrder,
   useCompleteWorkOrder,
+  useDeleteWorkOrder,
   useWorkOrders,
 } from "../hooks/useWorkOrders";
 import type { WorkOrder } from "../types/workOrders";
@@ -75,6 +77,7 @@ export function WorkOrdersPage() {
   const workOrdersQuery = useWorkOrders();
   const completeWorkOrder = useCompleteWorkOrder();
   const cancelWorkOrder = useCancelWorkOrder();
+  const deleteWorkOrder = useDeleteWorkOrder();
 
   useEffect(() => {
     if (!successMessage) return;
@@ -120,6 +123,24 @@ export function WorkOrdersPage() {
 
   const handleCancel = (id: WorkOrder["id"]) => {
     cancelWorkOrder.mutate({ id });
+  };
+
+  const handleDelete = (workOrder: WorkOrder) => {
+    const code = getWorkOrderCode(workOrder);
+    const confirmed = window.confirm(
+      `¿Eliminar permanentemente la orden ${code}? Esta acción no se puede deshacer.`,
+    );
+
+    if (!confirmed) return;
+
+    deleteWorkOrder.mutate(
+      { id: workOrder.id },
+      {
+        onSuccess: () => {
+          setSuccessMessage(`La orden ${code} se eliminó correctamente.`);
+        },
+      },
+    );
   };
 
   return (
@@ -179,6 +200,13 @@ export function WorkOrdersPage() {
         </div>
       ) : null}
 
+      {deleteWorkOrder.isError ? (
+        <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+          No se pudo eliminar la orden cancelada. Intenta de nuevo.
+        </div>
+      ) : null}
+
       {!workOrdersQuery.isLoading && !workOrdersQuery.isError ? (
         filteredWorkOrders.length ? (
           <div className="overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm">
@@ -193,8 +221,12 @@ export function WorkOrdersPage() {
             <div className="divide-y divide-slate-200">
               {filteredWorkOrders.map((workOrder) => {
                 const isActive = isActiveWorkOrder(workOrder);
+                const isCancelled =
+                  getWorkOrderStatus(workOrder.status) === "CANCELLED";
                 const isMutating =
-                  completeWorkOrder.isPending || cancelWorkOrder.isPending;
+                  completeWorkOrder.isPending ||
+                  cancelWorkOrder.isPending ||
+                  deleteWorkOrder.isPending;
 
                 return (
                   <article
@@ -292,6 +324,22 @@ export function WorkOrdersPage() {
                               Cancelar
                             </button>
                           </>
+                        ) : null}
+                        {isCancelled ? (
+                          <button
+                            className="flex h-9 items-center gap-1.5 rounded-md bg-[#d71920] px-2.5 text-xs font-bold text-white transition hover:bg-[#b9151b] focus:outline-none focus:ring-4 focus:ring-[#d71920]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
+                            disabled={isMutating}
+                            onClick={() => handleDelete(workOrder)}
+                            type="button"
+                          >
+                            {deleteWorkOrder.isPending &&
+                            deleteWorkOrder.variables?.id === workOrder.id ? (
+                              <LoaderCircle className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
+                            Eliminar
+                          </button>
                         ) : null}
                       </div>
                     </div>
