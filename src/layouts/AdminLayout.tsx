@@ -1,9 +1,10 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import logoRian from "../assets/logo-rian.jpeg";
 import { ArrowLeft, ClipboardPlus, FileText } from "lucide-react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { logout } from "../services/authService";
 
 type AdminLayoutPage =
   | "budgets"
@@ -178,7 +179,21 @@ const getRouteMeta = (pathname: string) => {
 
 export function AdminLayout() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const meta = getRouteMeta(location.pathname);
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    try {
+      setIsLoggingOut(true);
+      await logout();
+    } finally {
+      setIsLoggingOut(false);
+      navigate("/login", { replace: true });
+    }
+  };
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950 print:bg-white">
@@ -203,6 +218,7 @@ export function AdminLayout() {
               </Link>
             ))}
           </nav>
+
         </aside>
 
         <section className="flex min-w-0 flex-1 flex-col">
@@ -218,6 +234,16 @@ export function AdminLayout() {
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 {meta.actions}
+                {meta.page === "dashboard" ? (
+                  <button
+                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={isLoggingOut}
+                    onClick={handleLogout}
+                    type="button"
+                  >
+                    {isLoggingOut ? "Cerrando sesion..." : "Cerrar sesion"}
+                  </button>
+                ) : null}
                 <ThemeToggle />
               </div>
             </div>
