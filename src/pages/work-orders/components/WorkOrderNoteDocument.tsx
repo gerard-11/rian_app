@@ -68,8 +68,9 @@ export function WorkOrderNoteDocument({
 }: WorkOrderNoteDocumentProps) {
   const vehicle = workOrder.vehicle;
   const items = workOrder.items ?? [];
-  const isActive =
-    (getWorkOrderStatus(workOrder.status) ?? "ACTIVE") === "ACTIVE";
+  const workOrderStatus = getWorkOrderStatus(workOrder.status) ?? "ACTIVE";
+  const isActive = workOrderStatus === "ACTIVE";
+  const isCompleted = workOrderStatus === "COMPLETED";
 
   return (
     <article className="relative mx-auto max-w-4xl overflow-hidden rounded-md border border-slate-200 bg-white p-6 text-slate-950 shadow-sm print:max-w-none print:rounded-none print:border-0 print:p-0 print:shadow-none">
@@ -79,6 +80,16 @@ export function WorkOrderNoteDocument({
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-10 print:opacity-15"
         src={noteBackgroundImage}
       />
+      {isCompleted ? (
+        <div
+          aria-label="Pagado"
+          className="pointer-events-none absolute right-8 top-28 z-20 rotate-[-12deg] rounded-md border-4 border-emerald-600 px-5 py-2 text-3xl font-black uppercase tracking-normal text-emerald-700 opacity-80 print:right-10 print:top-24"
+          role="img"
+        >
+          PAGADO
+        </div>
+      ) : null}
+
       <div className="relative z-10">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
