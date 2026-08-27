@@ -146,7 +146,7 @@ export function QuickBudgetPage() {
               <div>
                 <h2 className="text-lg font-bold text-slate-950">Vehiculo</h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  Placa, marca, modelo, ano y color son opcionales.
+                  Placa, marca, modelo, año y color son opcionales.
                 </p>
               </div>
             </div>
@@ -173,7 +173,7 @@ export function QuickBudgetPage() {
                 aria-invalid={Boolean(errors.vehicle?.year)}
                 className="h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
                 inputMode="numeric"
-                placeholder="Ano"
+                placeholder="Año"
                 {...register("vehicle.year")}
               />
               {errors.vehicle?.year ? (

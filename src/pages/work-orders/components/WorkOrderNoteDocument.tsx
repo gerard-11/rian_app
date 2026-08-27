@@ -10,7 +10,6 @@ import {
   getCustomerName,
   getCustomerPhone,
   getStatusLabel,
-  getVehicleLabel,
   getWorkOrderAdvanceAmount,
   getWorkOrderCode,
   getWorkOrderPendingBalance,
@@ -37,6 +36,12 @@ const getVehicleField = (value?: number | string) => {
   const normalizedValue = String(value ?? "").trim();
 
   return normalizedValue || "No registrado";
+};
+
+const getVehicleDescription = (value?: number | string) => {
+  const normalizedValue = String(value ?? "").trim();
+
+  return normalizedValue || "Vehiculo sin datos";
 };
 
 const getCapitalizedCustomerName = (workOrder: WorkOrder) =>
@@ -127,7 +132,10 @@ export function WorkOrderNoteDocument({
               Vehiculo
             </p>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <DetailItem label="Vehiculo" value={getVehicleLabel(workOrder)} />
+              <DetailItem
+                label="Vehiculo"
+                value={getVehicleDescription(vehicle?.model)}
+              />
               <DetailItem label="Placas" value={formatPlate(vehicle?.plate)} />
               <DetailItem
                 label="Marca"
@@ -137,7 +145,7 @@ export function WorkOrderNoteDocument({
                 label="Modelo"
                 value={getVehicleField(vehicle?.model)}
               />
-              <DetailItem label="Ano" value={getVehicleField(vehicle?.year)} />
+              <DetailItem label="Año" value={getVehicleField(vehicle?.year)} />
               <DetailItem
                 label="Color"
                 value={getVehicleField(vehicle?.color)}
