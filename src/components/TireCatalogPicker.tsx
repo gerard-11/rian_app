@@ -1,5 +1,10 @@
 import { LoaderCircle, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import {
+  filterTires,
+  formatTireMoney,
+  normalizeTireSearch,
+} from "../features/tires/tireCatalogUtils";
 import { useTireCatalog } from "../hooks/useTireCatalog";
 import type { TireCatalogItem } from "../types/tireCatalog";
 
@@ -7,37 +12,14 @@ type TireCatalogPickerProps = {
   onSelect: (tire: TireCatalogItem) => void;
 };
 
-const normalizeSearch = (value: string) =>
-  value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("es-MX")
-    .replace(/\s+/g, " ")
-    .trim();
-
-const currencyFormatter = new Intl.NumberFormat("es-MX", {
-  style: "currency",
-  currency: "MXN",
-  maximumFractionDigits: 2,
-});
-
 export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
   const [query, setQuery] = useState("");
   const catalog = useTireCatalog();
-  const normalizedQuery = normalizeSearch(query);
+  const normalizedQuery = normalizeTireSearch(query);
 
   const matches = useMemo(() => {
     if (!catalog.data || normalizedQuery.length < 2) return [];
-    const terms = normalizedQuery.split(" ");
-
-    return catalog.data
-      .filter((tire) => {
-        const searchable = normalizeSearch(
-          `${tire.sku} ${tire.rim} ${tire.size} ${tire.description}`,
-        );
-        return terms.every((term) => searchable.includes(term));
-      })
-      .slice(0, 12);
+    return filterTires(catalog.data, normalizedQuery).slice(0, 12);
   }, [catalog.data, normalizedQuery]);
 
   return (
@@ -83,7 +65,7 @@ export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
                   {tire.size} · {tire.description}
                 </span>
                 <span className="mt-1 block text-xs text-slate-500">
-                  SKU {tire.sku} · Costo {currencyFormatter.format(Number(tire.cost))} · Venta {currencyFormatter.format(Number(tire.suggestedPrice))}
+                  SKU {tire.sku} · Costo {formatTireMoney(tire.cost)} · Venta {formatTireMoney(tire.suggestedPrice)}
                 </span>
               </button>
             ))

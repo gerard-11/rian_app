@@ -14,6 +14,7 @@ type AdminLayoutPage =
   | "orders"
   | "personal-expenses"
   | "profits"
+  | "tires"
   | "none";
 
 type AdminRouteMeta = {
@@ -31,6 +32,7 @@ const navItems: Array<{
   { label: "Dashboard", page: "dashboard", to: "/dashboard" },
   { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
+  { label: "Llantas", page: "tires", to: "/tires" },
   { label: "Gastos del negocio", page: "expenses", to: "/expenses" },
   { label: "Ganancias", page: "profits", to: "/profits/weekly" },
   {
@@ -145,6 +147,11 @@ const routeMetaByPath: Record<string, AdminRouteMeta> = {
     eyebrow: "Ganancias",
     page: "profits",
     title: "Ganancias semanales",
+  },
+  "/tires": {
+    eyebrow: "Catálogo",
+    page: "tires",
+    title: "Llantas",
   },
   "/work-orders": {
     actions: orderCreateAction,

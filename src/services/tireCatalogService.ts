@@ -3,6 +3,15 @@ import type { TireCatalogItem } from "../types/tireCatalog";
 const catalogUrl =
   import.meta.env.VITE_TIRE_CATALOG_URL?.trim() || "/data/llantas.csv";
 
+const requiredHeaders = [
+  "SKU",
+  "Rin",
+  "Medida",
+  "Descripcion",
+  "Costo",
+  "PrecioSugerido",
+] as const;
+
 const parseCsvRows = (csv: string) => {
   const rows: string[][] = [];
   let row: string[] = [];
@@ -47,16 +56,42 @@ export const getTireCatalog = async (): Promise<TireCatalogItem[]> => {
     throw new Error("No se pudo descargar el catálogo de llantas");
   }
 
-  const [, ...rows] = parseCsvRows(await response.text());
+  const [rawHeaders, ...rows] = parseCsvRows(await response.text());
+  const headers = rawHeaders?.map((header) => header.replace(/^\uFEFF/, "").trim());
 
-  return rows
-    .filter((row) => row.length >= 6 && row[0] && row[3])
-    .map(([sku, rim, size, description, cost, suggestedPrice]) => ({
-      cost,
-      description,
-      rim,
-      size,
-      sku,
-      suggestedPrice,
-    }));
+  if (!headers || requiredHeaders.some((header) => !headers.includes(header))) {
+    throw new Error("El catálogo no contiene las columnas requeridas");
+  }
+
+  const column = (row: string[], header: (typeof requiredHeaders)[number]) =>
+    row[headers.indexOf(header)]?.trim() ?? "";
+  const uniqueTires = new Map<string, TireCatalogItem>();
+
+  for (const row of rows) {
+    const tire = {
+      cost: column(row, "Costo"),
+      description: column(row, "Descripcion"),
+      rim: column(row, "Rin"),
+      size: column(row, "Medida"),
+      sku: column(row, "SKU"),
+      suggestedPrice: column(row, "PrecioSugerido"),
+    };
+    const cost = Number(tire.cost);
+    const suggestedPrice = Number(tire.suggestedPrice);
+
+    if (
+      tire.sku &&
+      tire.description &&
+      tire.size &&
+      Number.isFinite(cost) &&
+      cost > 0 &&
+      Number.isFinite(suggestedPrice) &&
+      suggestedPrice > 0 &&
+      !uniqueTires.has(tire.sku)
+    ) {
+      uniqueTires.set(tire.sku, tire);
+    }
+  }
+
+  return [...uniqueTires.values()];
 };
