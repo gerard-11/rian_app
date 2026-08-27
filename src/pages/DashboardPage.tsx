@@ -1,54 +1,112 @@
-import { ClipboardPlus, FileText, ReceiptText } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { ClipboardCheck, ClipboardList, FileText, Wrench } from "lucide-react";
+import { DashboardMetricCard } from "./dashboard/components/DashboardMetricCard";
+import { DashboardQuickActions } from "./dashboard/components/DashboardQuickActions";
+import { DashboardRecentWorkOrders } from "./dashboard/components/DashboardRecentWorkOrders";
+import { DashboardStatusCard } from "./dashboard/components/DashboardStatusCard";
+import {
+  getBudgetCounts,
+  getRecentWorkOrders,
+  getWorkOrderCounts,
+} from "./dashboard/dashboardUtils";
+import { useBudgets } from "../hooks/useBudgets";
+import { useWorkOrders } from "../hooks/useWorkOrders";
+import { normalizeBudgetsResponse } from "../utils/budgetsList";
+import { normalizeWorkOrdersResponse } from "../utils/workOrdersList";
 
 export function DashboardPage() {
+  const workOrdersQuery = useWorkOrders();
+  const budgetsQuery = useBudgets();
+
+  const workOrders = useMemo(
+    () =>
+      workOrdersQuery.data
+        ? normalizeWorkOrdersResponse(workOrdersQuery.data)
+        : [],
+    [workOrdersQuery.data],
+  );
+  const budgets = useMemo(
+    () =>
+      budgetsQuery.data ? normalizeBudgetsResponse(budgetsQuery.data) : [],
+    [budgetsQuery.data],
+  );
+  const workOrderCounts = useMemo(
+    () => getWorkOrderCounts(workOrders),
+    [workOrders],
+  );
+  const budgetCounts = useMemo(() => getBudgetCounts(budgets), [budgets]);
+  const recentWorkOrders = useMemo(
+    () => getRecentWorkOrders(workOrders),
+    [workOrders],
+  );
+
+  const isWorkOrdersLoading = workOrdersQuery.isLoading;
+  const isBudgetsLoading = budgetsQuery.isLoading;
+
   return (
-    <>
-      <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm font-semibold uppercase text-[#d71920]">
-              Captura rapida
-            </p>
-            <h2 className="mt-1 text-xl font-bold text-slate-950">
-              Nueva orden de trabajo
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600">
-              Abre una orden con cliente, vehiculo, items, anticipo y
-              diagnostico inicial.
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link
-              className="flex h-11 items-center justify-center rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
-              to="/work-orders"
-            >
-              Ver ordenes
-            </Link>
-            <Link
-              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
-              to="/work-orders/quick-entry"
-            >
-              <ClipboardPlus className="h-4 w-4" />
-              Crear orden
-            </Link>
-            <Link
-              className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
-              to="/budgets/quick-entry"
-            >
-              <FileText className="h-4 w-4" />
-              Crear presupuesto
-            </Link>
-            <Link
-              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
-              to="/expenses"
-            >
-              <ReceiptText className="h-4 w-4" />
-              Registrar gasto
-            </Link>
-          </div>
-        </div>
+    <div className="space-y-5">
+      <DashboardQuickActions />
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <DashboardMetricCard
+          icon={<Wrench className="h-5 w-5" />}
+          label="Ordenes activas"
+          tone="blue"
+          value={isWorkOrdersLoading ? "..." : workOrderCounts.active}
+        />
+        <DashboardMetricCard
+          icon={<ClipboardCheck className="h-5 w-5" />}
+          label="Ordenes completadas"
+          tone="green"
+          value={isWorkOrdersLoading ? "..." : workOrderCounts.completed}
+        />
+        <DashboardMetricCard
+          icon={<ClipboardList className="h-5 w-5" />}
+          label="Ordenes totales"
+          tone="slate"
+          value={isWorkOrdersLoading ? "..." : workOrderCounts.total}
+        />
+        <DashboardMetricCard
+          icon={<FileText className="h-5 w-5" />}
+          label="Presupuestos"
+          tone="red"
+          value={isBudgetsLoading ? "..." : budgetCounts.total}
+        />
       </section>
-    </>
+
+      <section className="grid gap-5 xl:grid-cols-2">
+        <DashboardStatusCard
+          errorText="No se pudieron cargar las ordenes."
+          isError={workOrdersQuery.isError}
+          isLoading={workOrdersQuery.isLoading}
+          items={[
+            { label: "Activas", value: workOrderCounts.active },
+            { label: "Completadas", value: workOrderCounts.completed },
+            { label: "Canceladas", value: workOrderCounts.cancelled },
+          ]}
+          loadingText="Cargando estado de ordenes..."
+          title="Estado de ordenes"
+        />
+        <DashboardStatusCard
+          errorText="No se pudieron cargar los presupuestos."
+          isError={budgetsQuery.isError}
+          isLoading={budgetsQuery.isLoading}
+          items={[
+            { label: "Pendientes", value: budgetCounts.pending },
+            { label: "Aceptados", value: budgetCounts.accepted },
+            { label: "Convertidos", value: budgetCounts.converted },
+            { label: "Cancelados o rechazados", value: budgetCounts.rejected },
+          ]}
+          loadingText="Cargando estado de presupuestos..."
+          title="Estado de presupuestos"
+        />
+      </section>
+
+      <DashboardRecentWorkOrders
+        isError={workOrdersQuery.isError}
+        isLoading={workOrdersQuery.isLoading}
+        workOrders={recentWorkOrders}
+      />
+    </div>
   );
 }
