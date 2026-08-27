@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, LockKeyhole, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, LockKeyhole, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useProfitsAccess } from "../hooks/useProfitsAccess";
 
@@ -11,6 +11,7 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
   const { isProfitsUnlocked, unlockProfits } = useProfitsAccess();
   const [code, setCode] = useState("");
   const [error, setError] = useState("");
+  const [showCode, setShowCode] = useState(false);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -53,18 +54,33 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
           >
             Clave
           </label>
-          <input
-            aria-invalid={Boolean(error)}
-            className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
-            id="profitsAccessCode"
-            inputMode="numeric"
-            onChange={(event) => {
-              setCode(event.target.value);
-              setError("");
-            }}
-            type="password"
-            value={code}
-          />
+          <div className="relative mt-2">
+            <input
+              aria-invalid={Boolean(error)}
+              className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 pr-12 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              id="profitsAccessCode"
+              inputMode="numeric"
+              onChange={(event) => {
+                setCode(event.target.value);
+                setError("");
+              }}
+              type={showCode ? "text" : "password"}
+              value={code}
+            />
+            <button
+              aria-label={showCode ? "Ocultar clave" : "Mostrar clave"}
+              className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#4169e1]/30"
+              onClick={() => setShowCode((currentValue) => !currentValue)}
+              title={showCode ? "Ocultar clave" : "Mostrar clave"}
+              type="button"
+            >
+              {showCode ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
+            </button>
+          </div>
           {error ? (
             <p
               className="mt-2 text-sm font-semibold text-[#d71920]"
