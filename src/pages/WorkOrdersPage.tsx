@@ -9,8 +9,8 @@ import {
   Wrench,
   XCircle,
 } from "lucide-react";
-import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import { capitalizeDisplayText } from "../lib/textFormatters";
 import {
@@ -38,6 +38,10 @@ import {
 const isActiveWorkOrder = (workOrder: WorkOrder) =>
   (getWorkOrderStatus(workOrder.status) ?? "ACTIVE") === "ACTIVE";
 
+type WorkOrdersLocationState = {
+  workOrderCreated?: boolean;
+};
+
 const getStatusBadgeClass = (status?: string) => {
   const workOrderStatus = getWorkOrderStatus(status) ?? "ACTIVE";
 
@@ -53,12 +57,29 @@ const getStatusBadgeClass = (status?: string) => {
 };
 
 export function WorkOrdersPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [showCreatedMessage, setShowCreatedMessage] = useState(
+    Boolean((location.state as WorkOrdersLocationState | null)?.workOrderCreated),
+  );
   const [search, setSearch] = useState("");
   const [selectedCustomerWorkOrder, setSelectedCustomerWorkOrder] =
     useState<WorkOrder>();
   const workOrdersQuery = useWorkOrders();
   const completeWorkOrder = useCompleteWorkOrder();
   const cancelWorkOrder = useCancelWorkOrder();
+
+  useEffect(() => {
+    if (!showCreatedMessage) return;
+
+    navigate(location.pathname, { replace: true, state: null });
+
+    const timeout = window.setTimeout(() => {
+      setShowCreatedMessage(false);
+    }, 5000);
+
+    return () => window.clearTimeout(timeout);
+  }, [location.pathname, navigate, showCreatedMessage]);
   const workOrders = useMemo(
     () =>
       workOrdersQuery.data
@@ -285,6 +306,24 @@ export function WorkOrdersPage() {
           selectedWorkOrder={selectedCustomerWorkOrder}
           workOrders={workOrders}
         />
+      ) : null}
+      {showCreatedMessage ? (
+        <div
+          aria-live="polite"
+          className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-md items-center gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 shadow-lg sm:inset-x-auto sm:right-6 sm:bottom-6"
+          role="status"
+        >
+          <CheckCircle2 className="h-5 w-5 shrink-0" />
+          <span className="flex-1">La orden se creó correctamente.</span>
+          <button
+            aria-label="Cerrar mensaje"
+            className="rounded p-1 text-emerald-700 transition hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-600"
+            onClick={() => setShowCreatedMessage(false)}
+            type="button"
+          >
+            <XCircle className="h-4 w-4" />
+          </button>
+        </div>
       ) : null}
     </>
   );

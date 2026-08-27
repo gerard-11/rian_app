@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CalendarClock,
-  CheckCircle2,
   ClipboardPlus,
   FileText,
   LoaderCircle,
@@ -13,6 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useCreateQuickEntry } from "../hooks/useWorkOrders";
 import {
   quickWorkOrderSchema,
@@ -30,6 +30,7 @@ const fieldIconClass = "h-5 w-5 shrink-0 text-slate-400";
 
 export function QuickWorkOrderPage() {
   const createQuickEntry = useCreateQuickEntry();
+  const navigate = useNavigate();
   const {
     control,
     register,
@@ -49,7 +50,10 @@ export function QuickWorkOrderPage() {
   const onSubmit = (values: QuickWorkOrderFormValues) => {
     createQuickEntry.mutate(buildQuickWorkOrderPayload(values), {
       onSuccess: () => {
-        reset(quickWorkOrderDefaultValues);
+        navigate("/work-orders", {
+          replace: true,
+          state: { workOrderCreated: true },
+        });
       },
     });
   };
@@ -57,13 +61,6 @@ export function QuickWorkOrderPage() {
   return (
     <>
       <div className="w-full max-w-6xl">
-        {createQuickEntry.isSuccess ? (
-          <div className="mb-5 flex items-start gap-3 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">
-            <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
-            La orden rapida se registro correctamente.
-          </div>
-        ) : null}
-
         {createQuickEntry.isError ? (
           <div className="mb-5 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
             No se pudo registrar la orden. Revisa los datos e intenta de nuevo.
