@@ -91,6 +91,9 @@ export const getCustomerName = (workOrder: WorkOrder) =>
 export const getCustomerPhone = (workOrder: WorkOrder) =>
   workOrder.customer?.phone?.trim() || "Sin telefono";
 
+export const getWorkOrderCreatedBy = (workOrder: WorkOrder) =>
+  workOrder.createdBy?.trim() || "Sin registro";
+
 export const getVehicleLabel = (workOrder: WorkOrder) => {
   const vehicle = workOrder.vehicle;
 

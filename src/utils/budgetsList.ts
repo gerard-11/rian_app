@@ -62,6 +62,9 @@ export const getBudgetCustomerName = (budget: Budget) =>
 export const getBudgetCustomerPhone = (budget: Budget) =>
   budget.customer?.phone?.trim() || "Sin telefono";
 
+export const getBudgetCreatedBy = (budget: Budget) =>
+  budget.createdBy?.trim() || "Sin registro";
+
 export const getBudgetVehicleLabel = (budget: Budget) => {
   const vehicle = budget.vehicle;
 

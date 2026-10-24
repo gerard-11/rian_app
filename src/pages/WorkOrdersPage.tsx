@@ -27,6 +27,7 @@ import {
   formatMoney,
   getCustomerName,
   getCustomerPhone,
+  getWorkOrderCreatedBy,
   getItemSummary,
   getWorkOrderAdvanceAmount,
   getWorkOrderPendingBalance,
@@ -239,6 +240,9 @@ export function WorkOrdersPage() {
                       </p>
                       <p className="mt-1 text-xs font-medium text-slate-500">
                         {formatDate(workOrder.createdAt)}
+                      </p>
+                      <p className="mt-1 truncate text-xs font-medium text-slate-500">
+                        Creado por: {getWorkOrderCreatedBy(workOrder)}
                       </p>
                     </div>
 

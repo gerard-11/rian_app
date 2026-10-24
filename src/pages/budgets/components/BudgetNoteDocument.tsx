@@ -8,6 +8,7 @@ import {
   formatDate,
   formatMoney,
   getBudgetCode,
+  getBudgetCreatedBy,
   getBudgetCustomerName,
   getBudgetCustomerPhone,
   getBudgetStatusLabel,
@@ -89,6 +90,9 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
             </p>
             <p className="mt-1 text-sm text-slate-500">
               Fecha {formatDate(budget.createdAt)}
+            </p>
+            <p className="mt-1 text-sm text-slate-500">
+              Creado por {getBudgetCreatedBy(budget)}
             </p>
             <p className="mt-1 text-sm font-semibold text-[#4169e1]">
               {getBudgetStatusLabel(budget.status)}

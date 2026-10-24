@@ -60,6 +60,7 @@ export type Budget = {
   notes?: string;
   totalAmount?: number | string;
   totalSaleAmount?: number | string;
+  createdBy?: string;
   items?: BudgetItem[];
   createdAt?: string;
   updatedAt?: string;

@@ -23,6 +23,7 @@ import {
   getBudgetCode,
   getBudgetCustomerName,
   getBudgetCustomerPhone,
+  getBudgetCreatedBy,
   getBudgetItemSummary,
   getBudgetStatus,
   getBudgetStatusLabel,
@@ -166,6 +167,9 @@ export function BudgetsPage() {
                       </p>
                       <p className="mt-1 text-xs font-medium text-slate-500">
                         {formatDate(budget.createdAt)}
+                      </p>
+                      <p className="mt-1 truncate text-xs font-medium text-slate-500">
+                        Creado por: {getBudgetCreatedBy(budget)}
                       </p>
                     </div>
 

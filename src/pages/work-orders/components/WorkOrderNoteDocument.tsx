@@ -9,6 +9,7 @@ import {
   formatMoney,
   getCustomerName,
   getCustomerPhone,
+  getWorkOrderCreatedBy,
   getStatusLabel,
   getWorkOrderAdvanceAmount,
   getWorkOrderCode,
@@ -114,6 +115,9 @@ export function WorkOrderNoteDocument({
             </p>
             <p className="mt-1 text-sm text-slate-500">
               Fecha {formatDate(workOrder.createdAt)}
+            </p>
+            <p className="mt-1 text-sm text-slate-500">
+              Creado por {getWorkOrderCreatedBy(workOrder)}
             </p>
             <p className="mt-1 text-sm font-semibold text-[#4169e1]">
               {getStatusLabel(workOrder.status)}
