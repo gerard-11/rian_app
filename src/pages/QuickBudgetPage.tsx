@@ -12,6 +12,7 @@ import {
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { TireCatalogPicker } from "../components/TireCatalogPicker";
+import { PartSelector } from "../components/PartSelector";
 import { useCreateQuickBudget } from "../hooks/useBudgets";
 import {
   quickBudgetSchema,
@@ -213,6 +214,7 @@ export function QuickBudgetPage() {
             {fields.map((field, index) => {
               const isLabor = items?.[index]?.type === "LABOR";
               const isTire = items?.[index]?.type === "TIRE";
+              const isPart = items?.[index]?.type === "PART";
               const itemErrors = errors.items?.[index];
 
               return (
@@ -246,6 +248,25 @@ export function QuickBudgetPage() {
 
                   {!isLabor ? (
                     <div>
+                      {isPart ? (
+                        <PartSelector
+                          idPrefix={`budget-part-${field.id}`}
+                          onAdd={(part) => {
+                            setValue(`items.${index}.description`, part.description, {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue(`items.${index}.costAmount`, String(part.costBase), {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue(`items.${index}.saleAmount`, String(part.finalPrice), {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                          }}
+                        />
+                      ) : null}
                       {isTire ? (
                         <TireCatalogPicker
                           onSelect={(tire) => {
@@ -298,9 +319,10 @@ export function QuickBudgetPage() {
                     </label>
                     <input
                       aria-invalid={Boolean(itemErrors?.saleAmount)}
-                      className="mt-2 h-11 w-full rounded-md border border-emerald-300 bg-emerald-50/60 px-3 text-sm font-semibold text-emerald-900 outline-none transition placeholder:text-emerald-700/45 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/15"
                       id={`budget-item-${field.id}-sale`}
                       inputMode="decimal"
+                        readOnly={isPart}
+                        className={`mt-2 h-11 w-full rounded-md border px-3 text-sm font-semibold outline-none transition placeholder:text-emerald-700/45 focus:ring-4 focus:ring-emerald-600/15 ${isPart ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`}
                       placeholder="0.00"
                       {...register(`items.${index}.saleAmount`)}
                     />

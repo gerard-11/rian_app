@@ -1,6 +1,7 @@
 import { Minus, Plus, ReceiptText } from "lucide-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { TireCatalogPicker } from "../../../components/TireCatalogPicker";
+import { PartSelector } from "../../../components/PartSelector";
 import type { EditWorkOrderFormValues } from "../../../schemas/editWorkOrderSchema";
 import { ITEM_TYPES } from "../../../types/workOrders";
 import {
@@ -57,6 +58,7 @@ export function WorkOrderItemsFields({
         {fields.map((field, index) => {
           const isLabor = items?.[index]?.type === "LABOR";
           const isTire = items?.[index]?.type === "TIRE";
+          const isPart = items?.[index]?.type === "PART";
 
           return (
             <div
@@ -91,6 +93,25 @@ export function WorkOrderItemsFields({
                   </select>
                 </div>
                 {!isLabor ? <div>
+                  {isPart ? (
+                    <PartSelector
+                      idPrefix={`work-order-part-${field.id}`}
+                      onAdd={(part) => {
+                        setValue(`items.${index}.description`, part.description, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue(`items.${index}.costAmount`, String(part.costBase), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue(`items.${index}.saleAmount`, String(part.finalPrice), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}
+                    />
+                  ) : null}
                   {isTire ? (
                     <TireCatalogPicker
                       onSelect={(tire) => {
@@ -116,7 +137,7 @@ export function WorkOrderItemsFields({
                 </div> : null}
                 <div>
                   <label className="text-sm font-semibold text-emerald-700">Venta</label>
-                  <input className="mt-2 h-12 w-full rounded-md border border-emerald-300 bg-emerald-50/60 px-3 text-base font-semibold text-emerald-900 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-600/15" inputMode="decimal" {...register(`items.${index}.saleAmount`)} />
+                  <input className={`mt-2 h-12 w-full rounded-md border px-3 text-base font-semibold outline-none focus:ring-4 focus:ring-emerald-600/15 ${isPart ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`} inputMode="decimal" readOnly={isPart} {...register(`items.${index}.saleAmount`)} />
                   {errors.items?.[index]?.saleAmount ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.saleAmount?.message}</p> : null}
                 </div>
                 {!isLabor ? <div>
