@@ -74,7 +74,7 @@ export function QuickWorkOrderPage() {
               </div>
             </div>
 
-            <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
+            <div className="grid min-w-0 gap-5 px-5 py-5 sm:px-6 [&>*]:min-w-0 lg:grid-cols-2">
               <div>
                 <label
                   className="text-sm font-semibold text-slate-800"
@@ -143,7 +143,7 @@ export function QuickWorkOrderPage() {
               </div>
             </div>
 
-            <div className="grid gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 xl:grid-cols-5">
+            <div className="grid min-w-0 gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 [&>*]:min-w-0 xl:grid-cols-5">
               <div>
                 <label
                   className="text-sm font-semibold text-slate-800"
@@ -245,7 +245,7 @@ export function QuickWorkOrderPage() {
               </div>
             </div>
 
-            <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)]">
+            <div className="grid min-w-0 gap-5 px-5 py-5 sm:px-6 [&>*]:min-w-0 lg:grid-cols-[220px_minmax(0,1fr)]">
               <div>
                 <label
                   className="text-sm font-semibold text-slate-800"

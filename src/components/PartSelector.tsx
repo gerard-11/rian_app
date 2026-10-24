@@ -163,13 +163,13 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
           </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label className="text-xs font-semibold text-slate-700" htmlFor={`${idPrefix}-custom`}>
             Refacción personalizada
           </label>
-          <div className="mt-2 flex gap-2">
+          <div className="mt-2 flex w-full min-w-0 max-w-full gap-2">
             <input
-              className="h-11 min-w-0 flex-1 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-11 w-0 min-w-0 max-w-full flex-1 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
               id={`${idPrefix}-custom`}
               onChange={(event) => setCustomPart(event.target.value)}
               onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addCustomPart(); } }}

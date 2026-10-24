@@ -80,7 +80,7 @@ export function QuickBudgetPage() {
             </div>
           </div>
 
-          <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
+          <div className="grid min-w-0 gap-5 px-5 py-5 sm:px-6 [&>*]:min-w-0 lg:grid-cols-2">
             <div>
               <label
                 className="text-sm font-semibold text-slate-800"
@@ -149,7 +149,7 @@ export function QuickBudgetPage() {
             </div>
           </div>
 
-          <div className="grid gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 xl:grid-cols-5">
+          <div className="grid min-w-0 gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 [&>*]:min-w-0 xl:grid-cols-5">
             <input
               className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
               placeholder="Placa"
@@ -221,8 +221,8 @@ export function QuickBudgetPage() {
                 <div
                   className={
                     isLabor
-                      ? "grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_140px_44px]"
-                      : "grid gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 lg:grid-cols-[160px_minmax(0,1fr)_140px_140px_44px]"
+                      ? "grid min-w-0 gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 [&>*]:min-w-0 lg:grid-cols-[160px_140px_44px]"
+                      : "grid min-w-0 gap-4 rounded-md border border-slate-200 bg-slate-50 p-4 [&>*]:min-w-0 lg:grid-cols-[160px_minmax(0,1fr)_140px_140px_44px]"
                   }
                   key={field.id}
                 >
@@ -234,7 +234,7 @@ export function QuickBudgetPage() {
                       Tipo
                     </label>
                     <select
-                      className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                      className="mt-2 h-11 w-full min-w-0 max-w-full rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
                       id={`budget-item-${field.id}-type`}
                       {...register(`items.${index}.type`)}
                     >
@@ -379,7 +379,7 @@ export function QuickBudgetPage() {
         </section>
 
         <section className="rounded-md border border-slate-200 bg-white shadow-sm">
-          <div className="grid gap-5 px-5 py-5 sm:px-6 lg:grid-cols-2">
+          <div className="grid min-w-0 gap-5 px-5 py-5 sm:px-6 [&>*]:min-w-0 lg:grid-cols-2">
             <div>
               <label
                 className="text-sm font-semibold text-slate-800"

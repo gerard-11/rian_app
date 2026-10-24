@@ -82,13 +82,13 @@ export function WorkOrderItemsFields({
               <div
                 className={
                   isLabor
-                    ? "grid gap-4 lg:grid-cols-[180px_160px]"
-                    : "grid gap-4 lg:grid-cols-[180px_minmax(0,1fr)_160px_160px]"
+                    ? "grid min-w-0 gap-4 [&>*]:min-w-0 lg:grid-cols-[180px_160px]"
+                    : "grid min-w-0 gap-4 [&>*]:min-w-0 lg:grid-cols-[180px_minmax(0,1fr)_160px_160px]"
                 }
               >
                 <div>
                   <label className="text-sm font-semibold text-slate-800">Tipo</label>
-                  <select className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" {...register(`items.${index}.type`)}>
+                  <select className="mt-2 h-12 w-full min-w-0 max-w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" {...register(`items.${index}.type`)}>
                     {ITEM_TYPES.map((type) => <option key={type} value={type}>{itemTypeLabels[type]}</option>)}
                   </select>
                 </div>
