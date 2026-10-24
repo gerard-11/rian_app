@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { ProfitsAccessGuard } from "./components/ProfitsAccessGuard";
 import { RequireAuth } from "./components/RequireAuth";
+import { RequireRole } from "./components/RequireRole";
 import { queryClient } from "./lib/queryClient";
 import { BudgetNotePage } from "./pages/BudgetNotePage";
 import { BudgetsPage } from "./pages/BudgetsPage";
@@ -16,6 +17,7 @@ import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
 import { WorkOrderNotePage } from "./pages/WorkOrderNotePage";
 import { EditWorkOrderPage } from "./pages/EditWorkOrderPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
+import { UsersPage } from "./pages/UsersPage";
 
 function AuthEvents() {
   const navigate = useNavigate();
@@ -56,16 +58,19 @@ function App() {
           />
           <Route element={<WorkOrderNotePage />} path="/work-orders/:id/note" />
           <Route element={<EditWorkOrderPage />} path="/work-orders/:id/edit" />
-          <Route
-            element={
-              <ProfitsAccessGuard>
-                <WeeklyProfitsPage />
-              </ProfitsAccessGuard>
-            }
-            path="/profits/weekly"
-          />
-          <Route element={<ExpensesPage />} path="/expenses" />
-          <Route element={<PersonalExpensesPage />} path="/personal-expenses" />
+          <Route element={<RequireRole role="ADMIN" />}>
+            <Route
+              element={
+                <ProfitsAccessGuard>
+                  <WeeklyProfitsPage />
+                </ProfitsAccessGuard>
+              }
+              path="/profits/weekly"
+            />
+            <Route element={<ExpensesPage />} path="/expenses" />
+            <Route element={<PersonalExpensesPage />} path="/personal-expenses" />
+            <Route element={<UsersPage />} path="/users" />
+          </Route>
         </Route>
         <Route element={<Navigate replace to="/login" />} path="*" />
       </Routes>

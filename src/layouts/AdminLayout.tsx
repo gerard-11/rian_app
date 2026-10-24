@@ -6,6 +6,7 @@ import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
 import { queryClient } from "../lib/queryClient";
 import { logout } from "../services/authService";
+import { useAuthUser } from "../hooks/useAuthUser";
 
 type AdminLayoutPage =
   | "budgets"
@@ -15,6 +16,7 @@ type AdminLayoutPage =
   | "personal-expenses"
   | "profits"
   | "tires"
+  | "users"
   | "none";
 
 type AdminRouteMeta = {
@@ -28,18 +30,21 @@ const navItems: Array<{
   label: string;
   page: Exclude<AdminLayoutPage, "none">;
   to: string;
+  adminOnly?: boolean;
 }> = [
   { label: "Dashboard", page: "dashboard", to: "/dashboard" },
   { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
   { label: "Llantas", page: "tires", to: "/tires" },
-  { label: "Gastos del negocio", page: "expenses", to: "/expenses" },
-  { label: "Ganancias", page: "profits", to: "/profits/weekly" },
+  { adminOnly: true, label: "Gastos del negocio", page: "expenses", to: "/expenses" },
+  { adminOnly: true, label: "Ganancias", page: "profits", to: "/profits/weekly" },
   {
     label: "Gastos personales",
     page: "personal-expenses",
     to: "/personal-expenses",
+    adminOnly: true,
   },
+  { adminOnly: true, label: "Usuarios", page: "users", to: "/users" },
 ];
 
 const getNavLinkClass = (isActive: boolean) =>
@@ -148,6 +153,11 @@ const routeMetaByPath: Record<string, AdminRouteMeta> = {
     page: "profits",
     title: "Ganancias semanales",
   },
+  "/users": {
+    eyebrow: "Administracion",
+    page: "users",
+    title: "Usuarios",
+  },
   "/tires": {
     eyebrow: "Catálogo",
     page: "tires",
@@ -198,6 +208,9 @@ export function AdminLayout() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
+  const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdmin);
   const meta = getRouteMeta(location.pathname);
 
   useEffect(() => {
@@ -230,7 +243,7 @@ export function AdminLayout() {
           </div>
 
           <nav className="mt-8 space-y-1">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 className={getNavLinkClass(item.page === meta.page)}
                 key={item.to}
@@ -320,7 +333,7 @@ export function AdminLayout() {
                 </div>
 
                 <nav className="mt-8 space-y-1">
-                  {navItems.map((item) => (
+                  {visibleNavItems.map((item) => (
                     <Link
                       className={getNavLinkClass(item.page === meta.page)}
                       key={item.to}

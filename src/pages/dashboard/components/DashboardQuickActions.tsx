@@ -3,10 +3,15 @@ import {
   ClipboardPlus,
   FileText,
   ReceiptText,
+  UserPlus,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuthUser } from "../../../hooks/useAuthUser";
 
 export function DashboardQuickActions() {
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
+
   return (
     <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
@@ -23,7 +28,7 @@ export function DashboardQuickActions() {
           </p>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <Link
             className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
             to="/work-orders/quick-entry"
@@ -45,13 +50,24 @@ export function DashboardQuickActions() {
             <ClipboardList className="h-4 w-4" />
             Ver ordenes
           </Link>
-          <Link
-            className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
-            to="/expenses"
-          >
-            <ReceiptText className="h-4 w-4" />
-            Registrar gasto
-          </Link>
+          {isAdmin ? (
+            <>
+              <Link
+                className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                to="/expenses"
+              >
+                <ReceiptText className="h-4 w-4" />
+                Registrar gasto
+              </Link>
+              <Link
+                className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                to="/users"
+              >
+                <UserPlus className="h-4 w-4" />
+                Usuarios
+              </Link>
+            </>
+          ) : null}
         </div>
       </div>
     </section>

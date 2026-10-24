@@ -6,12 +6,19 @@ export type LoginPayload = {
   [key: string]: unknown
 }
 
+export type UserRole = 'ADMIN' | 'EMPLOYEE'
+
 export type LoginResponse = {
   user?: unknown
   [key: string]: unknown
 }
 
-export type AuthenticatedUser = Record<string, unknown>
+export type AuthenticatedUser = {
+  id?: number | string
+  name?: string
+  email?: string
+  role?: UserRole
+}
 
 export type CurrentUserResponse = {
   user?: AuthenticatedUser
