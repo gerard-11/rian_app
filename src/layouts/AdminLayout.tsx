@@ -233,7 +233,7 @@ export function AdminLayout() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950 print:bg-white">
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 print:hidden lg:block">
+        <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 print:hidden md:block">
           <div className="px-1">
             <img
               alt="Rian Automotriz"
@@ -257,7 +257,7 @@ export function AdminLayout() {
 
         <section className="flex min-w-0 flex-1 flex-col">
           <header className="border-b border-slate-200 bg-white px-5 py-4 print:hidden sm:px-8">
-            <div className="mb-4 flex items-center justify-between gap-3 sm:hidden">
+            <div className="mb-4 flex items-center justify-between gap-3 md:hidden">
               <button
                 aria-controls="mobile-admin-menu"
                 aria-expanded={isMobileMenuOpen}
@@ -305,7 +305,7 @@ export function AdminLayout() {
           </header>
 
           {isMobileMenuOpen ? (
-            <div className="fixed inset-0 z-40 bg-slate-950/35 sm:hidden print:hidden">
+            <div className="fixed inset-0 z-40 bg-slate-950/35 md:hidden print:hidden">
               <button
                 aria-label="Cerrar menu"
                 className="absolute inset-0"
