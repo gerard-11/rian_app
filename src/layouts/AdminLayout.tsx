@@ -344,18 +344,16 @@ export function AdminLayout() {
                   ))}
                 </nav>
 
-                <div className="mt-6 flex flex-wrap gap-3 border-t border-slate-200 pt-6">
+                <div className="mt-auto flex flex-wrap gap-3 border-t border-slate-200 pt-6">
                   {meta.actions}
-                  {meta.page === "dashboard" ? (
-                    <button
-                      className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                      disabled={isLoggingOut}
-                      onClick={handleLogout}
-                      type="button"
-                    >
-                      {isLoggingOut ? "Cerrando sesion..." : "Cerrar sesion"}
-                    </button>
-                  ) : null}
+                  <button
+                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={isLoggingOut}
+                    onClick={handleLogout}
+                    type="button"
+                  >
+                    {isLoggingOut ? "Cerrando sesion..." : "Cerrar sesion"}
+                  </button>
                   <ThemeToggle />
                 </div>
               </aside>
