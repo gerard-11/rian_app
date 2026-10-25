@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { capitalizeDisplayText } from "../lib/textFormatters";
+import { BudgetPreviewModal } from "./budgets/components/BudgetPreviewModal";
 import {
   useAcceptBudget,
   useBudgets,
@@ -55,6 +56,8 @@ const getStatusBadgeClass = (status?: string) => {
 
 export function BudgetsPage() {
   const [search, setSearch] = useState("");
+  const [selectedRejectedBudget, setSelectedRejectedBudget] =
+    useState<Budget>();
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const budgetsQuery = useBudgets();
@@ -171,6 +174,7 @@ export function BudgetsPage() {
                 const status = getBudgetStatus(budget.status) ?? "PENDING";
                 const canAccept = status === "PENDING";
                 const canConvert = status === "ACCEPTED";
+                const isRejected = status === "REJECTED";
                 const canReject = isAdmin && status === "PENDING";
                 const isMutating =
                   acceptBudget.isPending ||
@@ -225,13 +229,24 @@ export function BudgetsPage() {
                         {getBudgetStatusLabel(budget.status)}
                       </span>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        <Link
-                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                          to={"/budgets/" + budget.id + "/note"}
-                        >
-                          <FileText className="h-4 w-4" />
-                          Crear nota
-                        </Link>
+                        {isRejected ? (
+                          <button
+                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
+                            onClick={() => setSelectedRejectedBudget(budget)}
+                            type="button"
+                          >
+                            <FileText className="h-4 w-4" />
+                            Ver presupuesto
+                          </button>
+                        ) : (
+                          <Link
+                            className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
+                            to={"/budgets/" + budget.id + "/note"}
+                          >
+                            <FileText className="h-4 w-4" />
+                            Crear nota
+                          </Link>
+                        )}
                         {canAccept ? (
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
@@ -285,6 +300,12 @@ export function BudgetsPage() {
             </div>
           </div>
         )
+      ) : null}
+      {selectedRejectedBudget ? (
+        <BudgetPreviewModal
+          budget={selectedRejectedBudget}
+          onClose={() => setSelectedRejectedBudget(undefined)}
+        />
       ) : null}
     </>
   );
