@@ -157,9 +157,6 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
               className={`${inputClass} pl-9`}
               id={`${idPrefix}-search`}
               onFocus={() => setIsMenuOpen(true)}
-              onBlur={() => {
-                window.setTimeout(() => setIsMenuOpen(false), 0);
-              }}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Ej. rótula"
               value={search}
