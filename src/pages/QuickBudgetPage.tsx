@@ -13,16 +13,15 @@ import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { TireCatalogPicker } from "../components/TireCatalogPicker";
 import { PartSelector } from "../components/PartSelector";
+import { ItemTypeSelect } from "../components/ItemTypeSelect";
 import { useCreateQuickBudget } from "../hooks/useBudgets";
 import {
   quickBudgetSchema,
   type QuickBudgetFormValues,
 } from "../schemas/quickBudgetSchema";
-import { ITEM_TYPES } from "../types/workOrders";
 import {
   buildQuickBudgetPayload,
   emptyQuickBudgetItem,
-  itemTypeLabels,
   quickBudgetDefaultValues,
 } from "../utils/quickBudgetForm";
 
@@ -68,7 +67,7 @@ export function QuickBudgetPage() {
         <section className="rounded-md border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 px-5 py-4 sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
                 <User className="h-5 w-5" />
               </div>
               <div>
@@ -88,7 +87,7 @@ export function QuickBudgetPage() {
               >
                 Nombre
               </label>
-              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
                 <User className={fieldIconClass} />
                 <input
                   aria-invalid={Boolean(errors.customer?.name)}
@@ -113,7 +112,7 @@ export function QuickBudgetPage() {
               >
                 Telefono
               </label>
-              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+              <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
                 <Phone className={fieldIconClass} />
                 <input
                   aria-invalid={Boolean(errors.customer?.phone)}
@@ -137,7 +136,7 @@ export function QuickBudgetPage() {
         <section className="rounded-md border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-200 px-5 py-4 sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
                 <Wrench className="h-5 w-5" />
               </div>
               <div>
@@ -151,24 +150,24 @@ export function QuickBudgetPage() {
 
           <div className="grid min-w-0 gap-5 px-5 py-5 sm:grid-cols-2 sm:px-6 [&>*]:min-w-0 xl:grid-cols-5">
             <input
-              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               placeholder="Placa"
               {...register("vehicle.plate")}
             />
             <input
-              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               placeholder="Marca"
               {...register("vehicle.make")}
             />
             <input
-              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               placeholder="Modelo"
               {...register("vehicle.model")}
             />
             <div>
               <input
                 aria-invalid={Boolean(errors.vehicle?.year)}
-                className="h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 inputMode="numeric"
                 placeholder="Año"
                 {...register("vehicle.year")}
@@ -180,7 +179,7 @@ export function QuickBudgetPage() {
               ) : null}
             </div>
             <input
-              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-12 rounded-md border border-slate-300 bg-white px-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               placeholder="Color"
               {...register("vehicle.color")}
             />
@@ -190,7 +189,7 @@ export function QuickBudgetPage() {
         <section className="rounded-md border border-slate-200 bg-white shadow-sm">
           <div className="flex flex-col gap-4 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
                 <ReceiptText className="h-5 w-5" />
               </div>
               <div>
@@ -201,7 +200,7 @@ export function QuickBudgetPage() {
               </div>
             </div>
             <button
-              className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#4169e1] bg-white px-3 text-sm font-semibold text-[#4169e1] transition hover:bg-[#4169e1]/10 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+              className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
               onClick={() => append({ ...emptyQuickBudgetItem })}
               type="button"
             >
@@ -233,17 +232,12 @@ export function QuickBudgetPage() {
                     >
                       Tipo
                     </label>
-                    <select
-                      className="mt-2 h-11 w-full min-w-0 max-w-full rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-800 outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                    <input type="hidden" {...register(`items.${index}.type`)} />
+                    <ItemTypeSelect
                       id={`budget-item-${field.id}-type`}
-                      {...register(`items.${index}.type`)}
-                    >
-                      {ITEM_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                          {itemTypeLabels[type]}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(type) => setValue(`items.${index}.type`, type, { shouldDirty: true, shouldValidate: true })}
+                      value={items?.[index]?.type ?? "SERVICE"}
+                    />
                   </div>
 
                   {!isLabor ? (
@@ -294,7 +288,7 @@ export function QuickBudgetPage() {
                       </label>
                       <input
                         aria-invalid={Boolean(itemErrors?.description)}
-                        className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                        className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                         id={`budget-item-${field.id}-description`}
                         placeholder="Servicio o producto"
                         {...register(`items.${index}.description`)}
@@ -389,7 +383,7 @@ export function QuickBudgetPage() {
               </label>
               <textarea
                 aria-invalid={Boolean(errors.diagnosis)}
-                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="budgetDiagnosis"
                 placeholder="Falla reportada, revision inicial o diagnostico preliminar"
                 {...register("diagnosis")}
@@ -411,7 +405,7 @@ export function QuickBudgetPage() {
                 Notas
               </label>
               <textarea
-                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 min-h-28 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-base outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="budgetNotes"
                 placeholder="Notas"
                 {...register("notes")}
@@ -422,7 +416,7 @@ export function QuickBudgetPage() {
 
         <div className="flex justify-end rounded-md border border-slate-200 bg-white px-5 py-4 shadow-sm sm:px-6">
           <button
-            className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-5 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+            className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-5 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
             disabled={createQuickBudget.isPending}
             type="submit"
           >

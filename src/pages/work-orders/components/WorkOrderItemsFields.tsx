@@ -2,11 +2,10 @@ import { Minus, Plus, ReceiptText } from "lucide-react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { TireCatalogPicker } from "../../../components/TireCatalogPicker";
 import { PartSelector } from "../../../components/PartSelector";
+import { ItemTypeSelect } from "../../../components/ItemTypeSelect";
 import type { EditWorkOrderFormValues } from "../../../schemas/editWorkOrderSchema";
-import { ITEM_TYPES } from "../../../types/workOrders";
 import {
   emptyQuickWorkOrderItem,
-  itemTypeLabels,
 } from "../../../utils/quickWorkOrderForm";
 
 type WorkOrderItemsFieldsProps = {
@@ -29,7 +28,7 @@ export function WorkOrderItemsFields({
     <section className="rounded-md border border-slate-200 bg-white shadow-sm">
       <div className="flex flex-col gap-4 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
             <ReceiptText className="h-5 w-5" />
           </div>
           <div>
@@ -41,7 +40,7 @@ export function WorkOrderItemsFields({
           </div>
         </div>
         <button
-          className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#4169e1] bg-white px-3 text-sm font-semibold text-[#4169e1] transition hover:bg-[#4169e1]/10 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+          className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
           onClick={() => append({ ...emptyQuickWorkOrderItem, notes: "" })}
           type="button"
         >
@@ -88,9 +87,11 @@ export function WorkOrderItemsFields({
               >
                 <div>
                   <label className="text-sm font-semibold text-slate-800">Tipo</label>
-                  <select className="mt-2 h-12 w-full min-w-0 max-w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" {...register(`items.${index}.type`)}>
-                    {ITEM_TYPES.map((type) => <option key={type} value={type}>{itemTypeLabels[type]}</option>)}
-                  </select>
+                  <input type="hidden" {...register(`items.${index}.type`)} />
+                  <ItemTypeSelect
+                    onChange={(type) => setValue(`items.${index}.type`, type, { shouldDirty: true, shouldValidate: true })}
+                    value={items?.[index]?.type ?? "SERVICE"}
+                  />
                 </div>
                 {!isLabor ? <div>
                   {isPart ? (
@@ -132,7 +133,7 @@ export function WorkOrderItemsFields({
                     />
                   ) : null}
                   <label className="text-sm font-semibold text-slate-800">Descripción</label>
-                  <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" {...register(`items.${index}.description`)} />
+                  <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" {...register(`items.${index}.description`)} />
                   {errors.items?.[index]?.description ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.description?.message}</p> : null}
                 </div> : null}
                 <div>
@@ -147,7 +148,7 @@ export function WorkOrderItemsFields({
                 </div> : null}
                 {showItemNotes && !isLabor ? <div className="lg:col-span-4">
                   <label className="text-sm font-semibold text-slate-800">Notas del item</label>
-                  <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15" placeholder="Marca, especificaciones u observaciones" {...register(`items.${index}.notes`)} />
+                  <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" placeholder="Marca, especificaciones u observaciones" {...register(`items.${index}.notes`)} />
                 </div> : null}
               </div>
             </div>

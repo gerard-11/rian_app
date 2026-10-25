@@ -1,5 +1,5 @@
 import { Check, Plus, Search, Wrench, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   calculateFinalPrice,
   formatPartDescription,
@@ -16,7 +16,7 @@ type PartSelectorProps = {
 };
 
 const inputClass =
-  "mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15";
+  "mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15";
 
 export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
   const [customParts, setCustomParts] = useState(readCustomParts);
@@ -29,6 +29,21 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
   const [submitted, setSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const searchMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    const handleOutsidePointer = (event: PointerEvent) => {
+      if (!searchMenuRef.current?.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePointer);
+
+    return () => document.removeEventListener("pointerdown", handleOutsidePointer);
+  }, [isMenuOpen]);
 
   const availableParts = useMemo(
     () => [...SUGGESTED_PARTS, ...customParts],
@@ -88,17 +103,17 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
   return (
     <>
       <button
-        className="mb-3 flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-[#4169e1]/40 bg-[#4169e1]/5 px-3 py-2 text-left transition hover:border-[#4169e1] hover:bg-[#4169e1]/10"
+        className="mb-3 flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-[#B3262D]/40 bg-[#B3262D]/5 px-3 py-2 text-left transition hover:border-[#B3262D] hover:bg-[#B3262D]/10"
         onClick={() => setIsModalOpen(true)}
         type="button"
       >
         <span className="flex min-w-0 items-center gap-2">
-          <Wrench className="h-4 w-4 shrink-0 text-[#4169e1]" />
+          <Wrench className="h-4 w-4 shrink-0 text-[#B3262D]" />
           <span className="truncate text-sm font-semibold text-slate-800">
             {hasSelection ? selectedDescription : "Seleccionar refacción"}
           </span>
         </span>
-        <span className="shrink-0 text-xs font-bold text-[#4169e1]">
+        <span className="shrink-0 text-xs font-bold text-[#B3262D]">
           {hasSelection ? "Editar" : "Abrir selector"}
         </span>
       </button>
@@ -114,7 +129,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
             <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
               <div>
                 <div className="flex items-center gap-2 text-lg font-bold text-slate-950">
-                  <Wrench className="h-5 w-5 text-[#4169e1]" />
+                  <Wrench className="h-5 w-5 text-[#B3262D]" />
                   Agregar refacción
                 </div>
                 <p className="mt-1 text-sm text-slate-500">
@@ -136,12 +151,15 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
           <label className="text-xs font-semibold text-slate-700" htmlFor={`${idPrefix}-search`}>
             Buscar refacción
           </label>
-          <div className="relative">
+          <div className="relative" ref={searchMenuRef}>
             <Search className="pointer-events-none absolute left-3 top-5 h-4 w-4 text-slate-400" />
             <input
               className={`${inputClass} pl-9`}
               id={`${idPrefix}-search`}
               onFocus={() => setIsMenuOpen(true)}
+              onBlur={() => {
+                window.setTimeout(() => setIsMenuOpen(false), 0);
+              }}
               onChange={(event) => setSearch(event.target.value)}
               placeholder="Ej. rótula"
               value={search}
@@ -150,7 +168,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
               <div className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-md border border-slate-300 bg-white p-1 shadow-lg" role="listbox" aria-label="Sugerencias de refacciones">
                 {filteredParts.length ? filteredParts.map((part) => (
                   <button
-                    className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-[#4169e1]/10 hover:text-[#4169e1]"
+                    className="block w-full rounded px-3 py-2 text-left text-sm text-slate-700 hover:bg-[#B3262D]/10 hover:text-[#B3262D]"
                     key={part}
                     onClick={() => selectPart(part)}
                     type="button"
@@ -169,7 +187,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
           </label>
           <div className="mt-2 flex w-full min-w-0 max-w-full gap-2">
             <input
-              className="h-11 w-0 min-w-0 max-w-full flex-1 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-11 w-0 min-w-0 max-w-full flex-1 rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               id={`${idPrefix}-custom`}
               onChange={(event) => setCustomPart(event.target.value)}
               onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); addCustomPart(); } }}
@@ -178,7 +196,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
             />
             <button
               aria-label="Guardar refacción personalizada"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#4169e1] text-white transition hover:bg-[#3658c9] disabled:bg-slate-300"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-[#B3262D] text-white transition hover:bg-[#8F1D24] disabled:bg-slate-300"
               disabled={customPart.trim().length < 2}
               onClick={addCustomPart}
               type="button"
@@ -191,7 +209,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
       </div>
 
       {hasSelection ? (
-        <div className="mt-4 border-t border-[#4169e1]/15 pt-4">
+        <div className="mt-4 border-t border-[#B3262D]/15 pt-4">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <div className="lg:col-span-2">
               <label className="text-xs font-semibold text-slate-700" htmlFor={`${idPrefix}-description`}>Descripción</label>
@@ -225,7 +243,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
               <div><dt className="text-slate-500">Precio final</dt><dd className="font-semibold text-emerald-700">${finalPrice.toFixed(2)}</dd></div>
             </dl>
             {!costIsValid || !marginIsValid || !quantityIsValid ? <p className="mt-2 text-xs font-medium text-[#d71920]">Ingresa costo base, margen y cantidad válidos para agregar.</p> : null}
-            <button className="mt-3 inline-flex h-10 items-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white transition hover:bg-[#3658c9] disabled:cursor-not-allowed disabled:bg-slate-300" disabled={!canAdd} onClick={addToDetail} type="button">
+            <button className="mt-3 inline-flex h-10 items-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white transition hover:bg-[#8F1D24] disabled:cursor-not-allowed disabled:bg-slate-300" disabled={!canAdd} onClick={addToDetail} type="button">
               <Check className="h-4 w-4" />
               {submitted ? "Refacción agregada al detalle" : "Agregar refacción al detalle"}
             </button>
