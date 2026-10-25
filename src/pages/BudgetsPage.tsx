@@ -7,6 +7,7 @@ import {
   Phone,
   Search,
   Wrench,
+  XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -15,7 +16,9 @@ import {
   useAcceptBudget,
   useBudgets,
   useConvertBudget,
+  useRejectBudget,
 } from "../hooks/useBudgets";
+import { useAuthUser } from "../hooks/useAuthUser";
 import type { Budget } from "../types/budgets";
 import {
   formatDate,
@@ -52,9 +55,12 @@ const getStatusBadgeClass = (status?: string) => {
 
 export function BudgetsPage() {
   const [search, setSearch] = useState("");
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
   const budgetsQuery = useBudgets();
   const acceptBudget = useAcceptBudget();
   const convertBudget = useConvertBudget();
+  const rejectBudget = useRejectBudget();
   const budgets = useMemo(
     () =>
       budgetsQuery.data ? normalizeBudgetsResponse(budgetsQuery.data) : [],
@@ -86,6 +92,18 @@ export function BudgetsPage() {
 
   const handleConvert = (id: Budget["id"]) => {
     convertBudget.mutate({ id });
+  };
+
+  const handleReject = (budget: Budget) => {
+    if (!isAdmin) return;
+
+    const confirmed = window.confirm(
+      `¿Rechazar el presupuesto ${getBudgetCode(budget)}? Se conservará en el historial.`,
+    );
+
+    if (!confirmed) return;
+
+    rejectBudget.mutate({ id: budget.id });
   };
 
   return (
@@ -130,7 +148,7 @@ export function BudgetsPage() {
         </div>
       ) : null}
 
-      {acceptBudget.isError || convertBudget.isError ? (
+      {acceptBudget.isError || convertBudget.isError || rejectBudget.isError ? (
         <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
           No se pudo actualizar el presupuesto. Intenta de nuevo.
@@ -153,8 +171,11 @@ export function BudgetsPage() {
                 const status = getBudgetStatus(budget.status) ?? "PENDING";
                 const canAccept = status === "PENDING";
                 const canConvert = status === "ACCEPTED";
+                const canReject = isAdmin && status === "PENDING";
                 const isMutating =
-                  acceptBudget.isPending || convertBudget.isPending;
+                  acceptBudget.isPending ||
+                  convertBudget.isPending ||
+                  rejectBudget.isPending;
 
                 return (
                   <article
@@ -220,6 +241,17 @@ export function BudgetsPage() {
                           >
                             <CheckCircle2 className="h-4 w-4" />
                             Aceptar
+                          </button>
+                        ) : null}
+                        {canReject ? (
+                          <button
+                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
+                            disabled={isMutating}
+                            onClick={() => handleReject(budget)}
+                            type="button"
+                          >
+                            <XCircle className="h-4 w-4" />
+                            Rechazar
                           </button>
                         ) : null}
                         {canConvert ? (

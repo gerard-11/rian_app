@@ -3,6 +3,7 @@ import type {
   BudgetActionInput,
   BudgetResponse,
   BudgetsResponse,
+  BudgetStatus,
   CreateQuickBudgetInput,
 } from "../types/budgets";
 
@@ -29,6 +30,18 @@ export const createQuickBudget = async (payload: CreateQuickBudgetInput) => {
 
 export const acceptBudget = async ({ id }: BudgetActionInput) => {
   const response = await api.post<BudgetResponse>("/budgets/" + id + "/accept");
+
+  return response.data;
+};
+
+export const updateBudgetStatus = async ({
+  id,
+  status,
+}: BudgetActionInput & { status: BudgetStatus }) => {
+  const response = await api.patch<BudgetResponse>(
+    "/budgets/" + id + "/status",
+    { status },
+  );
 
   return response.data;
 };
