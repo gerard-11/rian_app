@@ -34,8 +34,8 @@ const navItems: Array<{
   adminOnly?: boolean;
 }> = [
   { label: "Dashboard", page: "dashboard", to: "/dashboard" },
-  { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Ordenes", page: "orders", to: "/work-orders" },
+  { label: "Presupuestos", page: "budgets", to: "/budgets" },
   { label: "Llantas", page: "tires", to: "/tires" },
   { adminOnly: true, label: "Gastos del negocio", page: "expenses", to: "/expenses" },
   { adminOnly: true, label: "Ganancias", page: "profits", to: "/profits/weekly" },
@@ -307,6 +307,9 @@ export function AdminLayout() {
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#d71920]">
                   {isAdmin ? "Administrador" : "Mecánico"}
                 </p>
+              </div>
+              <div className="flex w-full flex-wrap gap-3 md:hidden">
+                {meta.actions}
               </div>
               <div className="hidden flex-wrap items-center gap-3 sm:flex">
                 {meta.actions}
