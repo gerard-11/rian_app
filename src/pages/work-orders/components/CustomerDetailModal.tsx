@@ -15,6 +15,7 @@ import {
 } from "../../../utils/workOrdersList";
 
 type CustomerDetailModalProps = {
+  isAdmin: boolean;
   onClose: () => void;
   selectedWorkOrder: WorkOrder;
   workOrders: WorkOrder[];
@@ -51,6 +52,7 @@ const isSameCustomer = (selectedWorkOrder: WorkOrder, workOrder: WorkOrder) =>
   getCustomerKey(selectedWorkOrder) === getCustomerKey(workOrder);
 
 export function CustomerDetailModal({
+  isAdmin,
   onClose,
   selectedWorkOrder,
   workOrders,
@@ -137,9 +139,18 @@ export function CustomerDetailModal({
                         {formatDate(workOrder.createdAt)}
                       </p>
                     </div>
-                    <p className="text-sm font-bold text-slate-950">
-                      {formatMoney(getWorkOrderTotal(workOrder))}
-                    </p>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-slate-950">
+                        {formatMoney(getWorkOrderTotal(workOrder))}
+                      </p>
+                      {isAdmin ? (
+                        <p className="mt-1 text-xs font-bold text-emerald-700">
+                          Ganancia total: {workOrder.grossProfitAmount !== undefined
+                            ? formatMoney(workOrder.grossProfitAmount)
+                            : "No disponible"}
+                        </p>
+                      ) : null}
+                    </div>
                   </div>
 
                   {workOrder.diagnosis ? (

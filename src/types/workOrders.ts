@@ -90,6 +90,7 @@ export type WorkOrder = {
   advanceAmount?: number | string;
   totalAmount?: number | string;
   totalSaleAmount?: number | string;
+  grossProfitAmount?: number | string;
   createdBy?: string;
   items?: WorkOrderItem[];
   createdAt?: string;

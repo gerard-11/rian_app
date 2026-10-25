@@ -373,6 +373,7 @@ export function WorkOrdersPage() {
       ) : null}
       {selectedCustomerWorkOrder ? (
         <CustomerDetailModal
+          isAdmin={isAdmin}
           onClose={() => setSelectedCustomerWorkOrder(undefined)}
           selectedWorkOrder={selectedCustomerWorkOrder}
           workOrders={workOrders}
