@@ -257,7 +257,7 @@ export function AdminLayout() {
                 >
                   {item.label}
                 </Link>
-                {item.to === "/tires" ? (
+                {item.to === (isAdmin ? "/users" : "/tires") ? (
                   <button
                     className="mt-2 flex h-10 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                     disabled={isLoggingOut}
@@ -356,7 +356,6 @@ export function AdminLayout() {
                 </nav>
 
                 <div className="mt-auto flex flex-wrap gap-3 border-t border-slate-200 pt-6">
-                  {meta.actions}
                   <button
                     className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                     disabled={isLoggingOut}
