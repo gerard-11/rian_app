@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import { capitalizeDisplayText } from "../lib/textFormatters";
+import { useAuthUser } from "../hooks/useAuthUser";
 import {
   useCancelWorkOrder,
   useCompleteWorkOrder,
@@ -75,6 +76,8 @@ export function WorkOrdersPage() {
   const [search, setSearch] = useState("");
   const [selectedCustomerWorkOrder, setSelectedCustomerWorkOrder] =
     useState<WorkOrder>();
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
   const workOrdersQuery = useWorkOrders();
   const completeWorkOrder = useCompleteWorkOrder();
   const cancelWorkOrder = useCancelWorkOrder();
@@ -127,6 +130,8 @@ export function WorkOrdersPage() {
   };
 
   const handleDelete = (workOrder: WorkOrder) => {
+    if (!isAdmin) return;
+
     const code = getWorkOrderCode(workOrder);
     const confirmed = window.confirm(
       `¿Eliminar permanentemente la orden ${code}? Esta acción no se puede deshacer.`,
@@ -148,7 +153,7 @@ export function WorkOrdersPage() {
     <>
       <div className="mb-5 flex flex-col gap-3 rounded-md border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
             <ClipboardList className="h-5 w-5" />
           </div>
           <div>
@@ -161,7 +166,7 @@ export function WorkOrdersPage() {
           </div>
         </div>
 
-        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15 sm:max-w-sm">
+        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15 sm:max-w-sm">
           <Search className="h-4 w-4 shrink-0 text-slate-400" />
           <input
             className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
@@ -174,7 +179,7 @@ export function WorkOrdersPage() {
 
       {workOrdersQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando ordenes...
         </div>
       ) : null}
@@ -248,7 +253,7 @@ export function WorkOrdersPage() {
 
                     <div className="min-w-0">
                       <button
-                        className="block max-w-full truncate text-left text-sm font-semibold text-slate-950 transition hover:text-[#4169e1] focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                        className="block max-w-full truncate text-left text-sm font-semibold text-slate-950 transition hover:text-[#B3262D] focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                         onClick={() => setSelectedCustomerWorkOrder(workOrder)}
                         type="button"
                       >
@@ -280,7 +285,7 @@ export function WorkOrdersPage() {
                             Anticipo{" "}
                             {formatMoney(getWorkOrderAdvanceAmount(workOrder))}
                           </p>
-                          <p className="mt-1 text-xs font-bold text-[#4169e1]">
+                          <p className="mt-1 text-xs font-bold text-[#B3262D]">
                             Saldo{" "}
                             {formatMoney(getWorkOrderPendingBalance(workOrder))}
                           </p>
@@ -294,7 +299,7 @@ export function WorkOrdersPage() {
                       </span>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Link
-                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
                           to={"/work-orders/" + workOrder.id + "/note"}
                         >
                           <FileText className="h-4 w-4" />
@@ -303,7 +308,7 @@ export function WorkOrdersPage() {
                         {isActive ? (
                           <>
                             <Link
-                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#4169e1]/40 bg-white px-2.5 text-xs font-bold text-[#4169e1] transition hover:bg-[#4169e1]/10 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
                               to={"/work-orders/" + workOrder.id + "/edit"}
                             >
                               <Pencil className="h-4 w-4" />
@@ -329,7 +334,7 @@ export function WorkOrdersPage() {
                             </button>
                           </>
                         ) : null}
-                        {isCancelled ? (
+                        {isCancelled && isAdmin ? (
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md bg-[#d71920] px-2.5 text-xs font-bold text-white transition hover:bg-[#b9151b] focus:outline-none focus:ring-4 focus:ring-[#d71920]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                             disabled={isMutating}
