@@ -104,9 +104,13 @@ export function WorkOrdersPage() {
   const filteredWorkOrders = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    if (!normalizedSearch) return workOrders;
+    const visibleWorkOrders = isAdmin
+      ? workOrders
+      : workOrders.filter(isActiveWorkOrder);
 
-    return workOrders.filter((workOrder) => {
+    if (!normalizedSearch) return visibleWorkOrders;
+
+    return visibleWorkOrders.filter((workOrder) => {
       const searchableText = [
         getWorkOrderCode(workOrder),
         getCustomerName(workOrder),
@@ -119,7 +123,11 @@ export function WorkOrdersPage() {
 
       return searchableText.includes(normalizedSearch);
     });
-  }, [search, workOrders]);
+  }, [isAdmin, search, workOrders]);
+
+  const visibleWorkOrders = isAdmin
+    ? workOrders
+    : workOrders.filter(isActiveWorkOrder);
 
   const handleComplete = (id: WorkOrder["id"]) => {
     completeWorkOrder.mutate({ id });
@@ -158,7 +166,7 @@ export function WorkOrdersPage() {
           </div>
           <div>
             <p className="text-sm font-bold text-slate-950">
-              {workOrders.length} ordenes registradas
+              {visibleWorkOrders.length} ordenes registradas
             </p>
             <p className="mt-1 text-sm text-slate-500">
               Creacion por orden rapida y consulta general.
@@ -376,7 +384,7 @@ export function WorkOrdersPage() {
           isAdmin={isAdmin}
           onClose={() => setSelectedCustomerWorkOrder(undefined)}
           selectedWorkOrder={selectedCustomerWorkOrder}
-          workOrders={workOrders}
+          workOrders={visibleWorkOrders}
         />
       ) : null}
       {successMessage ? (

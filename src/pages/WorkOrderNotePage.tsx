@@ -1,15 +1,23 @@
 import { AlertCircle, ArrowLeft, LoaderCircle, Printer } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { WorkOrderNoteDocument } from "./work-orders/components/WorkOrderNoteDocument";
+import { useAuthUser } from "../hooks/useAuthUser";
 import { useWorkOrder } from "../hooks/useWorkOrders";
-import { normalizeWorkOrderResponse } from "../utils/workOrdersList";
+import {
+  getWorkOrderStatus,
+  normalizeWorkOrderResponse,
+} from "../utils/workOrdersList";
 
 export function WorkOrderNotePage() {
   const { id } = useParams<{ id: string }>();
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
   const workOrderQuery = useWorkOrder(id);
   const workOrder = workOrderQuery.data
     ? normalizeWorkOrderResponse(workOrderQuery.data)
     : undefined;
+  const canViewNote = Boolean(workOrder) &&
+    (isAdmin || getWorkOrderStatus(workOrder?.status) === "ACTIVE");
 
   const handlePrint = () => {
     window.print();
@@ -58,7 +66,14 @@ export function WorkOrderNotePage() {
         </div>
       ) : null}
 
-      {workOrder ? <WorkOrderNoteDocument workOrder={workOrder} /> : null}
+      {!workOrderQuery.isLoading && !workOrderQuery.isError && workOrder && !canViewNote ? (
+        <div className="flex items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-900">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+          Los técnicos solo pueden consultar notas de órdenes activas.
+        </div>
+      ) : null}
+
+      {workOrder && canViewNote ? <WorkOrderNoteDocument workOrder={workOrder} /> : null}
     </>
   );
 }

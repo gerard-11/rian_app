@@ -10,6 +10,7 @@ import {
   getStatusLabel,
   getVehicleLabel,
   getWorkOrderCode,
+  getWorkOrderPendingBalance,
   getWorkOrderStatus,
   getWorkOrderTotal,
 } from "../../../utils/workOrdersList";
@@ -143,6 +144,9 @@ export function CustomerDetailModal({
                       <p className="text-sm font-bold text-slate-950">
                         {formatMoney(getWorkOrderTotal(workOrder))}
                       </p>
+                      <p className="mt-1 text-xs font-semibold text-slate-500">
+                        Saldo: {formatMoney(getWorkOrderPendingBalance(workOrder))}
+                      </p>
                       {isAdmin ? (
                         <p className="mt-1 text-xs font-bold text-emerald-700">
                           Ganancia total: {workOrder.grossProfitAmount !== undefined
@@ -183,7 +187,7 @@ export function CustomerDetailModal({
                       <div className="mt-2 divide-y divide-slate-200 rounded-md border border-slate-200">
                         {workOrder.items.map((item, index) => (
                           <div
-                            className="grid gap-2 px-3 py-3 sm:grid-cols-[80px_minmax(0,1fr)_110px_110px] sm:items-center"
+                            className={`grid gap-2 px-3 py-3 sm:items-center ${isAdmin ? "sm:grid-cols-[80px_minmax(0,1fr)_110px_110px]" : "sm:grid-cols-[80px_minmax(0,1fr)_110px]"}`}
                             key={item.id ?? index}
                           >
                             <p className="text-xs font-bold uppercase text-slate-500">
@@ -195,9 +199,11 @@ export function CustomerDetailModal({
                             <p className="text-sm font-bold text-slate-950">
                               {formatMoney(item.saleAmount)}
                             </p>
-                            <p className="text-xs font-semibold text-slate-500">
-                              Costo {formatMoney(item.costAmount)}
-                            </p>
+                            {isAdmin ? (
+                              <p className="text-xs font-semibold text-slate-500">
+                                Costo {formatMoney(item.costAmount)}
+                              </p>
+                            ) : null}
                           </div>
                         ))}
                       </div>
