@@ -235,7 +235,7 @@ export function PersonalExpensesPage() {
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
                 <ReceiptText className="h-5 w-5" />
               </div>
               <div>
@@ -250,7 +250,7 @@ export function PersonalExpensesPage() {
 
             {editingExpense ? (
               <button
-                className="flex h-10 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                className="flex h-10 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                 onClick={clearForm}
                 type="button"
               >
@@ -270,7 +270,7 @@ export function PersonalExpensesPage() {
               </label>
               <input
                 aria-invalid={Boolean(errors.description)}
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="personalExpenseDescription"
                 placeholder="Comida"
                 {...register("description")}
@@ -294,7 +294,7 @@ export function PersonalExpensesPage() {
               </label>
               <input
                 aria-invalid={Boolean(errors.amount)}
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="personalExpenseAmount"
                 inputMode="decimal"
                 placeholder="0.00"
@@ -319,7 +319,7 @@ export function PersonalExpensesPage() {
               </label>
               <input
                 aria-invalid={Boolean(errors.spentAt)}
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="personalExpenseSpentAt"
                 type="date"
                 {...register("spentAt")}
@@ -343,7 +343,7 @@ export function PersonalExpensesPage() {
               Notas
             </label>
             <textarea
-              className="mt-2 min-h-20 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="mt-2 min-h-20 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               id="personalExpenseNotes"
               placeholder="Detalle opcional"
               {...register("notes")}
@@ -359,7 +359,7 @@ export function PersonalExpensesPage() {
 
           <div className="flex justify-end">
             <button
-              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
               disabled={isSaving}
               type="submit"
             >
@@ -390,7 +390,7 @@ export function PersonalExpensesPage() {
           </div>
 
           <div className="grid w-full gap-3 sm:grid-cols-3 lg:max-w-3xl">
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <Search className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
@@ -399,7 +399,7 @@ export function PersonalExpensesPage() {
                 value={query.search ?? ""}
               />
             </div>
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <CalendarDays className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
@@ -408,7 +408,7 @@ export function PersonalExpensesPage() {
                 value={query.dateFrom ?? ""}
               />
             </div>
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <CalendarDays className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
@@ -423,7 +423,7 @@ export function PersonalExpensesPage() {
 
       {personalExpensesQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando gastos personales...
         </div>
       ) : null}
@@ -476,7 +476,7 @@ export function PersonalExpensesPage() {
                   <div className="flex gap-2">
                     <button
                       aria-label="Editar gasto personal"
-                      className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                      className="flex h-9 w-9 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
                       disabled={isSaving}
                       onClick={() => handleEditExpense(expense)}
                       type="button"

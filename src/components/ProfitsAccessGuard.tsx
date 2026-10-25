@@ -36,7 +36,7 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
         onSubmit={handleSubmit}
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+          <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
             <LockKeyhole className="h-5 w-5" />
           </div>
           <div>
@@ -57,7 +57,7 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
           <div className="relative mt-2">
             <input
               aria-invalid={Boolean(error)}
-              className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 pr-12 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="h-11 w-full rounded-md border border-slate-300 bg-white px-3 pr-12 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               id="profitsAccessCode"
               inputMode="text"
               onChange={(event) => {
@@ -69,7 +69,7 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
             />
             <button
               aria-label={showCode ? "Ocultar clave" : "Mostrar clave"}
-              className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#4169e1]/30"
+              className="absolute right-1 top-1 flex h-9 w-9 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#B3262D]/30"
               onClick={() => setShowCode((currentValue) => !currentValue)}
               title={showCode ? "Ocultar clave" : "Mostrar clave"}
               type="button"
@@ -93,14 +93,14 @@ export function ProfitsAccessGuard({ children }: ProfitsAccessGuardProps) {
 
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
           <Link
-            className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+            className="flex h-11 items-center justify-center gap-2 rounded-md border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
             to="/dashboard"
           >
             <ArrowLeft className="h-4 w-4" />
             Dashboard
           </Link>
           <button
-            className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+            className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25"
             type="submit"
           >
             <ShieldCheck className="h-4 w-4" />

@@ -23,7 +23,7 @@ export function TiresPage() {
 
       {catalog.isPending ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando catálogo...
         </div>
       ) : null}

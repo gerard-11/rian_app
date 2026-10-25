@@ -24,14 +24,14 @@ export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
 
   return (
     <div className="relative mb-3">
-      <label className="text-sm font-semibold text-[#4169e1]">
+      <label className="text-sm font-semibold text-[#B3262D]">
         Buscar en catálogo
       </label>
-      <div className="mt-2 flex h-11 items-center rounded-md border border-[#4169e1]/40 bg-white px-3 focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+      <div className="mt-2 flex h-11 items-center rounded-md border border-[#B3262D]/40 bg-white px-3 focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
         {catalog.isPending ? (
-          <LoaderCircle className="h-4 w-4 shrink-0 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="h-4 w-4 shrink-0 animate-spin text-[#B3262D]" />
         ) : (
-          <Search className="h-4 w-4 shrink-0 text-[#4169e1]" />
+          <Search className="h-4 w-4 shrink-0 text-[#B3262D]" />
         )}
         <input
           className="h-full min-w-0 flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-slate-400"
@@ -53,7 +53,7 @@ export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
           {matches.length ? (
             matches.map((tire) => (
               <button
-                className="block w-full rounded px-3 py-2 text-left transition hover:bg-[#4169e1]/10 focus:bg-[#4169e1]/10 focus:outline-none"
+                className="block w-full rounded px-3 py-2 text-left transition hover:bg-[#B3262D]/10 focus:bg-[#B3262D]/10 focus:outline-none"
                 key={tire.sku}
                 onClick={() => {
                   onSelect(tire);

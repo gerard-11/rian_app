@@ -40,7 +40,7 @@ const getStatusBadgeClass = (status?: string) => {
   }
 
   if (budgetStatus === "CONVERTED") {
-    return "inline-flex h-9 items-center rounded-md border border-[#4169e1]/30 bg-[#4169e1]/10 px-2 text-xs font-bold text-[#4169e1]";
+    return "inline-flex h-9 items-center rounded-md border border-[#B3262D]/30 bg-[#B3262D]/10 px-2 text-xs font-bold text-[#B3262D]";
   }
 
   if (budgetStatus === "CANCELLED" || budgetStatus === "REJECTED") {
@@ -92,7 +92,7 @@ export function BudgetsPage() {
     <>
       <div className="mb-5 flex flex-col gap-3 rounded-md border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
             <ClipboardList className="h-5 w-5" />
           </div>
           <div>
@@ -105,7 +105,7 @@ export function BudgetsPage() {
           </div>
         </div>
 
-        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15 sm:max-w-sm">
+        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15 sm:max-w-sm">
           <Search className="h-4 w-4 shrink-0 text-slate-400" />
           <input
             className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
@@ -118,7 +118,7 @@ export function BudgetsPage() {
 
       {budgetsQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando presupuestos...
         </div>
       ) : null}
@@ -205,7 +205,7 @@ export function BudgetsPage() {
                       </span>
                       <div className="mt-2 flex flex-wrap gap-2">
                         <Link
-                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#4169e1]/15"
+                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
                           to={"/budgets/" + budget.id + "/note"}
                         >
                           <FileText className="h-4 w-4" />
@@ -224,7 +224,7 @@ export function BudgetsPage() {
                         ) : null}
                         {canConvert ? (
                           <button
-                            className="flex h-9 items-center gap-1.5 rounded-md bg-[#4169e1] px-2.5 text-xs font-bold text-white transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
+                            className="flex h-9 items-center gap-1.5 rounded-md bg-[#B3262D] px-2.5 text-xs font-bold text-white transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                             disabled={isMutating}
                             onClick={() => handleConvert(budget.id)}
                             type="button"

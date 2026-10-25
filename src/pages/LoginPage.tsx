@@ -45,9 +45,9 @@ export function LoginPage() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950">
       <div className="grid min-h-screen lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)]">
-        <section className="hidden bg-[#4169e1] px-10 py-12 text-white lg:flex lg:flex-col lg:justify-between">
+        <section className="hidden bg-[#B3262D] px-10 py-12 text-white lg:flex lg:flex-col lg:justify-between">
           <div>
-            <div className="flex h-11 w-11 items-center justify-center rounded-md bg-white text-xl font-black text-[#4169e1]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-md bg-white text-xl font-black text-[#B3262D]">
               R
             </div>
             <p className="mt-5 max-w-sm text-sm font-medium leading-6 text-blue-50">
@@ -71,7 +71,7 @@ export function LoginPage() {
         <section className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
           <div className="w-full max-w-[440px]">
             <div className="mb-8 lg:hidden">
-              <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#4169e1] text-xl font-black text-white">
+              <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#B3262D] text-xl font-black text-white">
                 R
               </div>
               <div className="mt-4 h-1.5 w-20 rounded-full bg-[#d71920]" />
@@ -97,7 +97,7 @@ export function LoginPage() {
                 >
                   Correo electronico
                 </label>
-                <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 shadow-sm transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+                <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 shadow-sm transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
                   <Mail className="h-5 w-5 shrink-0 text-slate-400" />
                   <input
                     aria-invalid={Boolean(errors.email)}
@@ -123,7 +123,7 @@ export function LoginPage() {
                 >
                   Contrasena
                 </label>
-                <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 shadow-sm transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+                <div className="mt-2 flex h-12 items-center rounded-md border border-slate-300 bg-white px-3 shadow-sm transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
                   <Lock className="h-5 w-5 shrink-0 text-slate-400" />
                   <input
                     aria-invalid={Boolean(errors.password)}
@@ -138,7 +138,7 @@ export function LoginPage() {
                     aria-label={
                       showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
                     }
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                     onClick={() => setShowPassword((current) => !current)}
                     type="button"
                   >
@@ -159,14 +159,14 @@ export function LoginPage() {
               <div className="flex items-center justify-between gap-4">
                 <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <input
-                    className="h-4 w-4 rounded border-slate-300 text-[#4169e1] focus:ring-[#4169e1]"
+                    className="h-4 w-4 rounded border-slate-300 text-[#B3262D] focus:ring-[#B3262D]"
                     type="checkbox"
                     {...register("remember")}
                   />
                   Recordarme
                 </label>
                 <button
-                  className="text-sm font-semibold text-[#4169e1] transition hover:text-[#2e4dbd] focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-4"
+                  className="text-sm font-semibold text-[#B3262D] transition hover:text-[#7A1820] focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-4"
                   type="button"
                 >
                   Olvide mi contrasena
@@ -181,7 +181,7 @@ export function LoginPage() {
               ) : null}
 
               <button
-                className="flex h-12 w-full items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-base font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+                className="flex h-12 w-full items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-base font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
                 disabled={loginMutation.isPending}
                 type="submit"
               >

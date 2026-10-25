@@ -27,7 +27,7 @@ export function DashboardStatusCard({
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-sm font-bold text-slate-950">{title}</h2>
         {isLoading ? (
-          <LoaderCircle className="h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="h-5 w-5 animate-spin text-[#B3262D]" />
         ) : null}
       </div>
 

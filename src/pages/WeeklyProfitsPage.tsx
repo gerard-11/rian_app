@@ -164,7 +164,7 @@ export function WeeklyProfitsPage() {
             >
               Inicio de semana
             </label>
-            <div className="mt-2 flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="mt-2 flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <CalendarDays className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm font-semibold text-slate-800 outline-none"
@@ -180,7 +180,7 @@ export function WeeklyProfitsPage() {
 
       {weeklyProfitQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando ganancias...
         </div>
       ) : null}
@@ -216,7 +216,7 @@ export function WeeklyProfitsPage() {
           <section className="grid gap-4 lg:grid-cols-2">
             <div className={metricCardClass}>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
                   <ClipboardList className="h-5 w-5" />
                 </div>
                 <div>
@@ -258,7 +258,7 @@ export function WeeklyProfitsPage() {
                 </p>
               </div>
               <Link
-                className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                 to="/expenses"
               >
                 Registrar gasto
@@ -267,7 +267,7 @@ export function WeeklyProfitsPage() {
 
             {expensesQuery.isLoading ? (
               <div className="mt-4 flex min-h-32 items-center justify-center rounded-md border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-600">
-                <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+                <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
                 Cargando gastos...
               </div>
             ) : null}

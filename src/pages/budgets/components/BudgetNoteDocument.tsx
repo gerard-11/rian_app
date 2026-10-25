@@ -73,7 +73,7 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
       <div className="relative z-10">
         <header className="flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[#4169e1] text-lg font-black text-white">
+            <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[#B3262D] text-lg font-black text-white">
               RA
             </div>
             <div>
@@ -94,7 +94,7 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
             <p className="mt-1 text-sm text-slate-500">
               Creado por {getBudgetCreatedBy(budget)}
             </p>
-            <p className="mt-1 text-sm font-semibold text-[#4169e1]">
+            <p className="mt-1 text-sm font-semibold text-[#B3262D]">
               {getBudgetStatusLabel(budget.status)}
             </p>
           </div>
@@ -201,7 +201,7 @@ export function BudgetNoteDocument({ budget }: BudgetNoteDocumentProps) {
         <section className="ml-auto grid max-w-sm gap-2 border-t border-slate-200 pt-5">
           <div className="flex items-center justify-between gap-4 text-base">
             <span className="font-bold text-slate-950">Total presupuesto</span>
-            <span className="font-black text-[#4169e1]">
+            <span className="font-black text-[#B3262D]">
               {formatMoney(getBudgetTotal(budget))}
             </span>
           </div>

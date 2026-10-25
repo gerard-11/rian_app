@@ -4,6 +4,7 @@ import { ArrowLeft, ClipboardPlus, FileText, Menu, X } from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ProfitsLockButton } from "../components/ProfitsLockButton";
 import { ThemeToggle } from "../components/ThemeToggle";
+import { capitalizeDisplayText } from "../lib/textFormatters";
 import { queryClient } from "../lib/queryClient";
 import { logout } from "../services/authService";
 import { useAuthUser } from "../hooks/useAuthUser";
@@ -49,12 +50,12 @@ const navItems: Array<{
 
 const getNavLinkClass = (isActive: boolean) =>
   isActive
-    ? "flex h-10 items-center rounded-md bg-[#4169e1]/10 px-3 text-sm font-semibold text-[#4169e1]"
+    ? "flex h-10 items-center rounded-md bg-[#B3262D]/10 px-3 text-sm font-semibold text-[#B3262D]"
     : "flex h-10 items-center rounded-md px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-100 hover:text-slate-950";
 
 const budgetCreateAction = (
   <Link
-    className="flex h-10 items-center gap-2 rounded-md bg-[#4169e1] px-3 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+    className="flex h-10 items-center gap-2 rounded-md bg-[#B3262D] px-3 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25"
     to="/budgets/quick-entry"
   >
     <FileText className="h-4 w-4" />
@@ -64,7 +65,7 @@ const budgetCreateAction = (
 
 const orderCreateAction = (
   <Link
-    className="flex h-10 items-center gap-2 rounded-md bg-[#4169e1] px-3 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25"
+    className="flex h-10 items-center gap-2 rounded-md bg-[#B3262D] px-3 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25"
     to="/work-orders/quick-entry"
   >
     <ClipboardPlus className="h-4 w-4" />
@@ -75,13 +76,13 @@ const orderCreateAction = (
 const quickOrderActions = (
   <div className="flex flex-wrap gap-3">
     <Link
-      className="flex h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+      className="flex h-10 items-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
       to="/work-orders"
     >
       Ver ordenes
     </Link>
     <Link
-      className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+      className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
       to="/dashboard"
     >
       <ArrowLeft className="h-4 w-4" />
@@ -92,7 +93,7 @@ const quickOrderActions = (
 
 const dashboardAction = (
   <Link
-    className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+    className="flex h-10 items-center gap-2 rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
     to="/dashboard"
   >
     <ArrowLeft className="h-4 w-4" />
@@ -210,6 +211,11 @@ export function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
+  const displayName = capitalizeDisplayText(
+    (authData?.user?.name ?? authData?.user?.email ?? "Usuario")
+      .trim()
+      .split(/\s+/)[0],
+  );
   const visibleNavItems = navItems.filter((item) => !item.adminOnly || isAdmin);
   const meta = getRouteMeta(location.pathname);
 
@@ -233,7 +239,7 @@ export function AdminLayout() {
   return (
     <main className="min-h-screen bg-slate-50 text-slate-950 print:bg-white">
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 border-r border-slate-200 bg-white px-5 py-6 print:hidden md:block">
+        <aside className="hidden min-h-screen w-64 flex-col border-r border-slate-200 bg-white px-5 py-6 print:hidden md:flex">
           <div className="px-1">
             <img
               alt="Rian Automotriz"
@@ -242,15 +248,26 @@ export function AdminLayout() {
             />
           </div>
 
-          <nav className="mt-8 space-y-1">
+          <nav className="mt-8 flex-1 space-y-1">
             {visibleNavItems.map((item) => (
-              <Link
-                className={getNavLinkClass(item.page === meta.page)}
-                key={item.to}
-                to={item.to}
-              >
-                {item.label}
-              </Link>
+              <div key={item.to}>
+                <Link
+                  className={getNavLinkClass(item.page === meta.page)}
+                  to={item.to}
+                >
+                  {item.label}
+                </Link>
+                {item.to === "/tires" ? (
+                  <button
+                    className="mt-2 flex h-10 w-full items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={isLoggingOut}
+                    onClick={handleLogout}
+                    type="button"
+                  >
+                    {isLoggingOut ? "Cerrando sesion..." : "Cerrar sesion"}
+                  </button>
+                ) : null}
+              </div>
             ))}
           </nav>
         </aside>
@@ -266,7 +283,7 @@ export function AdminLayout() {
                     ? "Cerrar menu de navegacion"
                     : "Abrir menu de navegacion"
                 }
-                className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                 onClick={() => setIsMobileMenuOpen((current) => !current)}
                 type="button"
               >
@@ -276,29 +293,23 @@ export function AdminLayout() {
                   <Menu className="h-5 w-5" />
                 )}
               </button>
+              <div className="text-right">
+                <p className="text-sm font-bold text-slate-950">{displayName}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#d71920]">
+                  {isAdmin ? "Administrador" : "Mecánico"}
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase text-[#d71920]">
-                  {meta.eyebrow}
+              <div className="hidden md:block">
+                <p className="text-sm font-bold text-slate-950">{displayName}</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#d71920]">
+                  {isAdmin ? "Administrador" : "Mecánico"}
                 </p>
-                <h1 className="mt-1 text-2xl font-bold text-slate-950">
-                  {meta.title}
-                </h1>
               </div>
               <div className="hidden flex-wrap items-center gap-3 sm:flex">
                 {meta.actions}
-                {meta.page === "dashboard" ? (
-                  <button
-                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                    disabled={isLoggingOut}
-                    onClick={handleLogout}
-                    type="button"
-                  >
-                    {isLoggingOut ? "Cerrando sesion..." : "Cerrar sesion"}
-                  </button>
-                ) : null}
                 <ThemeToggle />
               </div>
             </div>
@@ -324,7 +335,7 @@ export function AdminLayout() {
                   />
                   <button
                     aria-label="Cerrar menu de navegacion"
-                    className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+                    className="flex h-10 w-10 items-center justify-center rounded-md border border-slate-300 bg-white text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                     type="button"
                   >
@@ -347,7 +358,7 @@ export function AdminLayout() {
                 <div className="mt-auto flex flex-wrap gap-3 border-t border-slate-200 pt-6">
                   {meta.actions}
                   <button
-                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 hover:text-slate-950 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
                     disabled={isLoggingOut}
                     onClick={handleLogout}
                     type="button"

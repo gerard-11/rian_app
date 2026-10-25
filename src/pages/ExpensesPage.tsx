@@ -119,7 +119,7 @@ export function ExpensesPage() {
       <section className="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
               <ReceiptText className="h-5 w-5" />
             </div>
             <div>
@@ -147,7 +147,7 @@ export function ExpensesPage() {
                 Descripcion
               </label>
               <input
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="expenseDescription"
                 onChange={(event) => setDescription(event.target.value)}
                 placeholder="Compra de insumos"
@@ -164,7 +164,7 @@ export function ExpensesPage() {
                 Monto
               </label>
               <input
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="expenseAmount"
                 inputMode="decimal"
                 onChange={(event) => setAmount(event.target.value)}
@@ -182,7 +182,7 @@ export function ExpensesPage() {
                 Fecha
               </label>
               <input
-                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+                className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-slate-950 outline-none transition focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
                 id="expenseSpentAt"
                 onChange={(event) => setSpentAt(event.target.value)}
                 type="date"
@@ -199,7 +199,7 @@ export function ExpensesPage() {
               Notas
             </label>
             <textarea
-              className="mt-2 min-h-20 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#4169e1] focus:ring-4 focus:ring-[#4169e1]/15"
+              className="mt-2 min-h-20 w-full resize-y rounded-md border border-slate-300 bg-white px-3 py-3 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
               id="expenseNotes"
               onChange={(event) => setNotes(event.target.value)}
               placeholder="Detalle interno opcional"
@@ -216,7 +216,7 @@ export function ExpensesPage() {
 
           <div className="flex justify-end">
             <button
-              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#4169e1] px-4 text-sm font-semibold text-white shadow-lg shadow-[#4169e1]/20 transition hover:bg-[#3658c9] focus:outline-none focus:ring-4 focus:ring-[#4169e1]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
+              className="flex h-11 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
               disabled={createExpense.isPending}
               type="submit"
             >
@@ -243,7 +243,7 @@ export function ExpensesPage() {
           </div>
 
           <div className="grid w-full gap-3 sm:grid-cols-3 lg:max-w-3xl">
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <Search className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-slate-400"
@@ -252,7 +252,7 @@ export function ExpensesPage() {
                 value={query.search ?? ""}
               />
             </div>
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <CalendarDays className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
@@ -261,7 +261,7 @@ export function ExpensesPage() {
                 value={query.dateFrom ?? ""}
               />
             </div>
-            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15">
+            <div className="flex h-11 items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15">
               <CalendarDays className="h-4 w-4 shrink-0 text-slate-400" />
               <input
                 className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm outline-none"
@@ -276,7 +276,7 @@ export function ExpensesPage() {
 
       {expensesQuery.isLoading ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando gastos del negocio...
         </div>
       ) : null}

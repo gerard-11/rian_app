@@ -17,7 +17,7 @@ export function TireCatalogToolbar({
     <section className="mb-5 rounded-md border border-slate-200 bg-white p-4 shadow-sm">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#4169e1]/10 text-[#4169e1]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-[#B3262D]/10 text-[#B3262D]">
             <CircleDot className="h-5 w-5" />
           </div>
           <div>
@@ -30,7 +30,7 @@ export function TireCatalogToolbar({
           </div>
         </div>
 
-        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#4169e1] focus-within:ring-4 focus-within:ring-[#4169e1]/15 sm:max-w-md">
+        <div className="flex h-11 w-full items-center rounded-md border border-slate-300 bg-white px-3 transition focus-within:border-[#B3262D] focus-within:ring-4 focus-within:ring-[#B3262D]/15 sm:max-w-md">
           <Search className="h-4 w-4 shrink-0 text-slate-400" />
           <input
             autoFocus

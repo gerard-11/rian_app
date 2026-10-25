@@ -49,7 +49,7 @@ export function DashboardRecentWorkOrders({
           </p>
         </div>
         <Link
-          className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#4169e1] focus:ring-offset-2"
+          className="flex h-10 items-center justify-center rounded-md border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
           to="/work-orders"
         >
           Ver todas
@@ -58,7 +58,7 @@ export function DashboardRecentWorkOrders({
 
       {isLoading ? (
         <div className="flex min-h-40 items-center justify-center text-sm font-semibold text-slate-600">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#4169e1]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
           Cargando ordenes...
         </div>
       ) : null}

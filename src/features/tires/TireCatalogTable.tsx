@@ -22,7 +22,7 @@ export function TireCatalogTable({ tires }: TireCatalogTableProps) {
             key={tire.sku}
           >
             <div>
-              <p className="text-base font-bold text-[#4169e1]">{tire.size}</p>
+              <p className="text-base font-bold text-[#B3262D]">{tire.size}</p>
               <p className="mt-1 text-xs font-medium text-slate-500">
                 Rin {tire.rim}
               </p>
