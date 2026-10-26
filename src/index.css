@@ -28,6 +28,18 @@ body {
     background-color: #052e24;
   }
 
+  html[data-theme="dark"] .bg-sky-50 {
+    background-color: #082f49;
+  }
+
+  html[data-theme="dark"] .border-sky-200 {
+    border-color: #0369a1;
+  }
+
+  html[data-theme="dark"] .text-sky-700 {
+    color: #bae6fd;
+  }
+
   html[data-theme="dark"] .border-slate-200 {
     border-color: #334155;
   }
