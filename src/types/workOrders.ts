@@ -92,6 +92,7 @@ export type WorkOrder = {
   totalSaleAmount?: number | string;
   grossProfitAmount?: number | string;
   createdBy?: string;
+  cancelledBy?: string;
   items?: WorkOrderItem[];
   createdAt?: string;
   updatedAt?: string;

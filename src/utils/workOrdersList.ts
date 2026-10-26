@@ -94,6 +94,9 @@ export const getCustomerPhone = (workOrder: WorkOrder) =>
 export const getWorkOrderCreatedBy = (workOrder: WorkOrder) =>
   workOrder.createdBy?.trim() || "Sin registro";
 
+export const getWorkOrderCancelledBy = (workOrder: WorkOrder) =>
+  workOrder.cancelledBy?.trim() || "Sin registro";
+
 export const getVehicleLabel = (workOrder: WorkOrder) => {
   const vehicle = workOrder.vehicle;
 

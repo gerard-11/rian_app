@@ -31,6 +31,7 @@ import {
   getWorkOrderCreatedBy,
   getItemSummary,
   getWorkOrderAdvanceAmount,
+  getWorkOrderCancelledBy,
   getWorkOrderPendingBalance,
   getStatusLabel,
   getVehicleLabel,
@@ -257,6 +258,11 @@ export function WorkOrdersPage() {
                       <p className="mt-1 truncate text-xs font-medium text-slate-500">
                         Creado por: {getWorkOrderCreatedBy(workOrder)}
                       </p>
+                      {isCancelled ? (
+                        <p className="mt-1 truncate text-xs font-medium text-slate-500">
+                          Cancelada por: {getWorkOrderCancelledBy(workOrder)}
+                        </p>
+                      ) : null}
                     </div>
 
                     <div className="min-w-0">

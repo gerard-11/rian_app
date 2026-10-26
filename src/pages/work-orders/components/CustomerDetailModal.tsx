@@ -5,6 +5,7 @@ import type { WorkOrder } from "../../../types/workOrders";
 import {
   formatDate,
   formatMoney,
+  getWorkOrderCancelledBy,
   getCustomerName,
   getCustomerPhone,
   getStatusLabel,
@@ -139,6 +140,11 @@ export function CustomerDetailModal({
                       <p className="mt-1 text-xs font-medium text-slate-500">
                         {formatDate(workOrder.createdAt)}
                       </p>
+                      {getWorkOrderStatus(workOrder.status) === "CANCELLED" ? (
+                        <p className="mt-1 text-xs font-medium text-slate-500">
+                          Cancelada por: {getWorkOrderCancelledBy(workOrder)}
+                        </p>
+                      ) : null}
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-slate-950">
