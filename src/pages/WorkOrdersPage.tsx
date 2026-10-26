@@ -15,6 +15,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import { capitalizeDisplayText } from "../lib/textFormatters";
+import { ConfirmationModal } from "../components/ConfirmationModal";
 import { useAuthUser } from "../hooks/useAuthUser";
 import {
   useCancelWorkOrder,
@@ -77,6 +78,9 @@ export function WorkOrdersPage() {
   const [search, setSearch] = useState("");
   const [selectedCustomerWorkOrder, setSelectedCustomerWorkOrder] =
     useState<WorkOrder>();
+  const [workOrderToComplete, setWorkOrderToComplete] = useState<WorkOrder>();
+  const [workOrderToCancel, setWorkOrderToCancel] = useState<WorkOrder>();
+  const [workOrderToDelete, setWorkOrderToDelete] = useState<WorkOrder>();
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const workOrdersQuery = useWorkOrders();
@@ -130,28 +134,60 @@ export function WorkOrdersPage() {
     ? workOrders
     : workOrders.filter(isActiveWorkOrder);
 
-  const handleComplete = (id: WorkOrder["id"]) => {
-    completeWorkOrder.mutate({ id });
+  const handleComplete = (workOrder: WorkOrder) => {
+    setWorkOrderToComplete(workOrder);
   };
 
-  const handleCancel = (id: WorkOrder["id"]) => {
-    cancelWorkOrder.mutate({ id });
+  const confirmComplete = () => {
+    if (!workOrderToComplete) return;
+
+    const code = getWorkOrderCode(workOrderToComplete);
+    completeWorkOrder.mutate(
+      { id: workOrderToComplete.id },
+      {
+        onSuccess: () => {
+          setWorkOrderToComplete(undefined);
+          setSuccessMessage(`La orden ${code} se liquidó correctamente.`);
+        },
+      },
+    );
+  };
+
+  const handleCancel = (workOrder: WorkOrder) => {
+    setWorkOrderToCancel(workOrder);
+  };
+
+  const confirmCancel = () => {
+    if (!workOrderToCancel) return;
+
+    const code = getWorkOrderCode(workOrderToCancel);
+    cancelWorkOrder.mutate(
+      { id: workOrderToCancel.id },
+      {
+        onSuccess: () => {
+          setWorkOrderToCancel(undefined);
+          setSuccessMessage(`La orden ${code} se canceló correctamente.`);
+        },
+      },
+    );
   };
 
   const handleDelete = (workOrder: WorkOrder) => {
     if (!isAdmin) return;
 
-    const code = getWorkOrderCode(workOrder);
-    const confirmed = window.confirm(
-      `¿Eliminar permanentemente la orden ${code}? Esta acción no se puede deshacer.`,
-    );
+    setWorkOrderToDelete(workOrder);
+  };
 
-    if (!confirmed) return;
+  const confirmDelete = () => {
+    if (!workOrderToDelete) return;
+
+    const code = getWorkOrderCode(workOrderToDelete);
 
     deleteWorkOrder.mutate(
-      { id: workOrder.id },
+      { id: workOrderToDelete.id },
       {
         onSuccess: () => {
+          setWorkOrderToDelete(undefined);
           setSuccessMessage(`La orden ${code} se eliminó correctamente.`);
         },
       },
@@ -331,7 +367,7 @@ export function WorkOrdersPage() {
                             <button
                               className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                               disabled={isMutating}
-                              onClick={() => handleComplete(workOrder.id)}
+                              onClick={() => handleComplete(workOrder)}
                               type="button"
                             >
                               <CheckCircle2 className="h-4 w-4" />
@@ -340,7 +376,7 @@ export function WorkOrdersPage() {
                             <button
                               className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
                               disabled={isMutating}
-                              onClick={() => handleCancel(workOrder.id)}
+                              onClick={() => handleCancel(workOrder)}
                               type="button"
                             >
                               <XCircle className="h-4 w-4" />
@@ -391,6 +427,66 @@ export function WorkOrdersPage() {
           onClose={() => setSelectedCustomerWorkOrder(undefined)}
           selectedWorkOrder={selectedCustomerWorkOrder}
           workOrders={visibleWorkOrders}
+        />
+      ) : null}
+      {workOrderToCancel ? (
+        <ConfirmationModal
+          confirmLabel="Sí, cancelar orden"
+          isPending={cancelWorkOrder.isPending}
+          message={
+            <>
+              ¿Quieres cancelar la orden{" "}
+              <strong className="text-slate-900">
+                {getWorkOrderCode(workOrderToCancel)}
+              </strong>
+              ? La orden permanecerá en el historial.
+            </>
+          }
+          onClose={() => {
+            if (!cancelWorkOrder.isPending) setWorkOrderToCancel(undefined);
+          }}
+          onConfirm={confirmCancel}
+          title="Cancelar orden"
+        />
+      ) : null}
+      {workOrderToComplete ? (
+        <ConfirmationModal
+          confirmLabel="Sí, liquidar orden"
+          isPending={completeWorkOrder.isPending}
+          message={
+            <>
+              ¿Quieres marcar como liquidada la orden{" "}
+              <strong className="text-slate-900">
+                {getWorkOrderCode(workOrderToComplete)}
+              </strong>
+              ? Esta acción actualizará su estado.
+            </>
+          }
+          onClose={() => {
+            if (!completeWorkOrder.isPending) setWorkOrderToComplete(undefined);
+          }}
+          onConfirm={confirmComplete}
+          title="Liquidar orden"
+        />
+      ) : null}
+      {workOrderToDelete ? (
+        <ConfirmationModal
+          confirmLabel="Sí, eliminar orden"
+          isPending={deleteWorkOrder.isPending}
+          message={
+            <>
+              ¿Quieres eliminar permanentemente la orden{" "}
+              <strong className="text-slate-900">
+                {getWorkOrderCode(workOrderToDelete)}
+              </strong>
+              ? Esta acción no se puede deshacer.
+            </>
+          }
+          onClose={() => {
+            if (!deleteWorkOrder.isPending) setWorkOrderToDelete(undefined);
+          }}
+          onConfirm={confirmDelete}
+          title="Eliminar orden"
         />
       ) : null}
       {successMessage ? (

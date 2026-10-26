@@ -12,6 +12,7 @@ import {
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { capitalizeDisplayText } from "../lib/textFormatters";
+import { ConfirmationModal } from "../components/ConfirmationModal";
 import { BudgetPreviewModal } from "./budgets/components/BudgetPreviewModal";
 import {
   useAcceptBudget,
@@ -58,6 +59,9 @@ export function BudgetsPage() {
   const [search, setSearch] = useState("");
   const [selectedRejectedBudget, setSelectedRejectedBudget] =
     useState<Budget>();
+  const [budgetToAccept, setBudgetToAccept] = useState<Budget>();
+  const [budgetToConvert, setBudgetToConvert] = useState<Budget>();
+  const [budgetToReject, setBudgetToReject] = useState<Budget>();
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const budgetsQuery = useBudgets();
@@ -89,24 +93,44 @@ export function BudgetsPage() {
     });
   }, [budgets, search]);
 
-  const handleAccept = (id: Budget["id"]) => {
-    acceptBudget.mutate({ id });
+  const handleAccept = (budget: Budget) => {
+    setBudgetToAccept(budget);
   };
 
-  const handleConvert = (id: Budget["id"]) => {
-    convertBudget.mutate({ id });
+  const confirmAccept = () => {
+    if (!budgetToAccept) return;
+
+    acceptBudget.mutate(
+      { id: budgetToAccept.id },
+      { onSuccess: () => setBudgetToAccept(undefined) },
+    );
+  };
+
+  const handleConvert = (budget: Budget) => {
+    setBudgetToConvert(budget);
+  };
+
+  const confirmConvert = () => {
+    if (!budgetToConvert) return;
+
+    convertBudget.mutate(
+      { id: budgetToConvert.id },
+      { onSuccess: () => setBudgetToConvert(undefined) },
+    );
   };
 
   const handleReject = (budget: Budget) => {
     if (!isAdmin) return;
 
-    const confirmed = window.confirm(
-      `¿Rechazar el presupuesto ${getBudgetCode(budget)}? Se conservará en el historial.`,
-    );
+    setBudgetToReject(budget);
+  };
 
-    if (!confirmed) return;
+  const confirmReject = () => {
+    if (!budgetToReject) return;
 
-    rejectBudget.mutate({ id: budget.id });
+    rejectBudget.mutate({ id: budgetToReject.id }, {
+      onSuccess: () => setBudgetToReject(undefined),
+    });
   };
 
   return (
@@ -175,6 +199,7 @@ export function BudgetsPage() {
                 const canAccept = status === "PENDING";
                 const canConvert = status === "ACCEPTED";
                 const isRejected = status === "REJECTED";
+                const isConverted = status === "CONVERTED";
                 const canReject = isAdmin && status === "PENDING";
                 const isMutating =
                   acceptBudget.isPending ||
@@ -229,7 +254,7 @@ export function BudgetsPage() {
                         {getBudgetStatusLabel(budget.status)}
                       </span>
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {isRejected ? (
+                        {isConverted ? null : isRejected ? (
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
                             onClick={() => setSelectedRejectedBudget(budget)}
@@ -251,7 +276,7 @@ export function BudgetsPage() {
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                             disabled={isMutating}
-                            onClick={() => handleAccept(budget.id)}
+                            onClick={() => handleAccept(budget)}
                             type="button"
                           >
                             <CheckCircle2 className="h-4 w-4" />
@@ -273,7 +298,7 @@ export function BudgetsPage() {
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md bg-[#B3262D] px-2.5 text-xs font-bold text-white transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                             disabled={isMutating}
-                            onClick={() => handleConvert(budget.id)}
+                            onClick={() => handleConvert(budget)}
                             type="button"
                           >
                             <Wrench className="h-4 w-4" />
@@ -305,6 +330,66 @@ export function BudgetsPage() {
         <BudgetPreviewModal
           budget={selectedRejectedBudget}
           onClose={() => setSelectedRejectedBudget(undefined)}
+        />
+      ) : null}
+      {budgetToReject ? (
+        <ConfirmationModal
+          confirmLabel="Sí, rechazar presupuesto"
+          isPending={rejectBudget.isPending}
+          message={
+            <>
+              ¿Quieres rechazar el presupuesto{" "}
+              <strong className="text-slate-900">
+                {getBudgetCode(budgetToReject)}
+              </strong>
+              ? Permanecerá disponible en el historial.
+            </>
+          }
+          onClose={() => {
+            if (!rejectBudget.isPending) setBudgetToReject(undefined);
+          }}
+          onConfirm={confirmReject}
+          title="Rechazar presupuesto"
+        />
+      ) : null}
+      {budgetToAccept ? (
+        <ConfirmationModal
+          confirmLabel="Sí, aceptar presupuesto"
+          isPending={acceptBudget.isPending}
+          message={
+            <>
+              ¿Quieres aceptar el presupuesto{" "}
+              <strong className="text-slate-900">
+                {getBudgetCode(budgetToAccept)}
+              </strong>
+              ? Después podrás convertirlo en una orden.
+            </>
+          }
+          onClose={() => {
+            if (!acceptBudget.isPending) setBudgetToAccept(undefined);
+          }}
+          onConfirm={confirmAccept}
+          title="Aceptar presupuesto"
+        />
+      ) : null}
+      {budgetToConvert ? (
+        <ConfirmationModal
+          confirmLabel="Sí, convertir en orden"
+          isPending={convertBudget.isPending}
+          message={
+            <>
+              ¿Quieres convertir el presupuesto{" "}
+              <strong className="text-slate-900">
+                {getBudgetCode(budgetToConvert)}
+              </strong>
+              ? Se creará una orden de trabajo.
+            </>
+          }
+          onClose={() => {
+            if (!convertBudget.isPending) setBudgetToConvert(undefined);
+          }}
+          onConfirm={confirmConvert}
+          title="Convertir presupuesto"
         />
       ) : null}
     </>
