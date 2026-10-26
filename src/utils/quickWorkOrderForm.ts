@@ -3,7 +3,7 @@ import type { CreateQuickWorkOrderInput, ItemType } from "../types/workOrders";
 import { DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
 
 export const emptyQuickWorkOrderItem = {
-  type: "SERVICE" as ItemType,
+  type: "OTHER" as ItemType,
   description: "",
   saleAmount: "",
   costAmount: "",
@@ -27,11 +27,15 @@ export const quickWorkOrderDefaultValues: QuickWorkOrderFormValues = {
   items: [emptyQuickWorkOrderItem],
 };
 
-export const itemTypeLabels: Record<ItemType, string> = {
+export const itemTypeLabels: Record<string, string> = {
   SERVICE: "Servicio",
   LABOR: "Mano de obra",
   PART: "Refaccion",
   TIRE: "Llanta",
+  BALANCE: "Balanceo",
+  ALIGNMENT_BALANCE: "Alineacion y balanceo",
+  ALIGNMENT: "Alineacion",
+  TUNE_UP: "Afinacion",
   OTHER: "Otro",
 };
 
@@ -52,7 +56,14 @@ const amountOrZero = (value?: string) => optionalNumber(value) ?? 0;
 const getItemDescription = (
   item: QuickWorkOrderFormValues["items"][number],
 ) => {
-  if (item.type === "LABOR") return itemTypeLabels.LABOR;
+  if (item.type === "BALANCE") {
+    const quantity = Math.max(1, Number(item.quantity || 1));
+    return `${itemTypeLabels.BALANCE} (${quantity} llantas)`;
+  }
+
+  if (!["OTHER", "PART", "TIRE"].includes(item.type)) {
+    return itemTypeLabels[item.type];
+  }
 
   return item.description.trim();
 };
@@ -77,7 +88,9 @@ export const buildQuickWorkOrderPayload = (
   items: values.items.map((item) => ({
     type: item.type,
     description: getItemDescription(item),
-    saleAmount: Number(item.saleAmount.trim()),
+    saleAmount:
+      Number(item.saleAmount.trim()) *
+      (item.type === "BALANCE" ? Math.max(1, Number(item.quantity || 1)) : 1),
     costAmount:
       item.type === "PART" || item.type === "TIRE"
         ? Number(item.costAmount?.trim())

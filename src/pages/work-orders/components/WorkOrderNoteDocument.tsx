@@ -23,11 +23,14 @@ type WorkOrderNoteDocumentProps = {
 };
 
 const itemTypeLabels: Record<string, string> = {
+  ALIGNMENT: "Alineacion",
+  ALIGNMENT_BALANCE: "Alineacion y balanceo",
+  BALANCE: "Balanceo",
   LABOR: "Mano de obra",
   OTHER: "Otro",
   PART: "Pieza",
-  SERVICE: "Servicio",
   TIRE: "Llanta",
+  TUNE_UP: "Afinacion",
 };
 
 const getItemTypeLabel = (item: WorkOrderItem) =>

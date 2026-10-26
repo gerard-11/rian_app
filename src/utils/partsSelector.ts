@@ -36,13 +36,11 @@ export const isValidAmount = (value: string) => {
 
 export const formatPartDescription = (
   description: string,
-  quantity: number,
   presentation: PartPresentation,
 ) => {
   const cleanDescription = description.trim();
 
   if (presentation === "pair") return `Par de ${cleanDescription}`;
-  if (quantity > 1) return `${quantity} piezas de ${cleanDescription}`;
   return cleanDescription;
 };
 

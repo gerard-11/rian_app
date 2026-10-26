@@ -4,6 +4,7 @@ import { TireCatalogPicker } from "../../../components/TireCatalogPicker";
 import { PartSelector } from "../../../components/PartSelector";
 import { ItemTypeSelect } from "../../../components/ItemTypeSelect";
 import type { EditWorkOrderFormValues } from "../../../schemas/editWorkOrderSchema";
+import { ITEM_SALE_DEFAULTS } from "../../../types/workOrders";
 import {
   emptyQuickWorkOrderItem,
 } from "../../../utils/quickWorkOrderForm";
@@ -39,13 +40,6 @@ export function WorkOrderItemsFields({
             </p>
           </div>
         </div>
-        <button
-          className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
-          onClick={() => append({ ...emptyQuickWorkOrderItem, notes: "" })}
-          type="button"
-        >
-          <Plus className="h-4 w-4" /> Item
-        </button>
       </div>
 
       <div className="space-y-4 px-5 py-5 sm:px-6">
@@ -58,6 +52,10 @@ export function WorkOrderItemsFields({
           const isLabor = items?.[index]?.type === "LABOR";
           const isTire = items?.[index]?.type === "TIRE";
           const isPart = items?.[index]?.type === "PART";
+          const isBalance = items?.[index]?.type === "BALANCE";
+          const isOther = items?.[index]?.type === "OTHER";
+          const showsDescription = isOther || isPart;
+          const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "");
 
           return (
             <div
@@ -89,8 +87,20 @@ export function WorkOrderItemsFields({
                   <label className="text-sm font-semibold text-slate-800">Tipo</label>
                   <input type="hidden" {...register(`items.${index}.type`)} />
                   <ItemTypeSelect
-                    onChange={(type) => setValue(`items.${index}.type`, type, { shouldDirty: true, shouldValidate: true })}
-                    value={items?.[index]?.type ?? "SERVICE"}
+                    onChange={(type) => {
+                      setValue(`items.${index}.type`, type, {
+                        shouldDirty: true,
+                        shouldValidate: true,
+                      });
+                      const defaultSaleAmount = ITEM_SALE_DEFAULTS[type];
+                      if (defaultSaleAmount) {
+                        setValue(`items.${index}.saleAmount`, defaultSaleAmount, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }
+                    }}
+                    value={items?.[index]?.type ?? "OTHER"}
                   />
                 </div>
                 {!isLabor ? <div>
@@ -110,8 +120,22 @@ export function WorkOrderItemsFields({
                           shouldDirty: true,
                           shouldValidate: true,
                         });
+                        setValue(`items.${index}.quantity`, String(part.quantity), {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
                       }}
                     />
+                  ) : null}
+                  {isTire && items?.[index]?.description ? (
+                    <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
+                      Llanta seleccionada: {items[index]?.description}
+                    </p>
+                  ) : null}
+                  {isPart && items?.[index]?.quantity ? (
+                    <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
+                      Piezas: {items[index]?.quantity}
+                    </p>
                   ) : null}
                   {isTire ? (
                     <TireCatalogPicker
@@ -132,16 +156,38 @@ export function WorkOrderItemsFields({
                       }}
                     />
                   ) : null}
-                  <label className="text-sm font-semibold text-slate-800">Descripción</label>
-                  <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" {...register(`items.${index}.description`)} />
-                  {errors.items?.[index]?.description ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.description?.message}</p> : null}
+                  {showsDescription ? (
+                    <>
+                      <label className="text-sm font-semibold text-slate-800">{isPart ? "Descripción de la refacción" : "Descripción"}</label>
+                      <input className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" placeholder={isPart ? "Ej. Balata delantera" : "Describe el cargo"} {...register(`items.${index}.description`)} />
+                      {errors.items?.[index]?.description ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.description?.message}</p> : null}
+                    </>
+                  ) : null}
                 </div> : null}
                 <div>
+                  {isBalance ? (
+                    <>
+                      <label className="text-sm font-semibold text-slate-800">Llantas</label>
+                      <input
+                        className="mt-2 h-12 w-full rounded-md border border-slate-300 bg-white px-3 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
+                        inputMode="numeric"
+                        min="1"
+                        onChange={(event) => {
+                          const quantity = Math.max(1, Number(event.target.value || 1));
+                          setValue(`items.${index}.quantity`, event.target.value, { shouldDirty: true, shouldValidate: true });
+                          setValue(`items.${index}.saleAmount`, String(quantity * 80), { shouldDirty: true, shouldValidate: true });
+                        }}
+                        type="number"
+                        value={items?.[index]?.quantity ?? "1"}
+                      />
+                      {errors.items?.[index]?.quantity ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.quantity?.message}</p> : null}
+                    </>
+                  ) : null}
                   <label className="text-sm font-semibold text-emerald-700">Venta</label>
-                  <input className={`mt-2 h-12 w-full rounded-md border px-3 text-base font-semibold outline-none focus:ring-4 focus:ring-emerald-600/15 ${isPart ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`} inputMode="decimal" readOnly={isPart} {...register(`items.${index}.saleAmount`)} />
+                  <input className={`mt-2 h-12 w-full rounded-md border px-3 text-base font-semibold outline-none focus:ring-4 focus:ring-emerald-600/15 ${isPart || isBalance ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`} inputMode="decimal" readOnly={isPart || isBalance} {...register(`items.${index}.saleAmount`)} />
                   {errors.items?.[index]?.saleAmount ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.saleAmount?.message}</p> : null}
                 </div>
-                {!isLabor ? <div>
+                {!isLabor && !hidesCost ? <div>
                   <label className="text-sm font-semibold text-[#a41218]">Costo</label>
                   <input className="mt-2 h-12 w-full rounded-md border border-[#d71920]/40 bg-[#d71920]/5 px-3 text-base font-semibold text-[#8f1116] outline-none focus:border-[#d71920] focus:ring-4 focus:ring-[#d71920]/15" inputMode="decimal" {...register(`items.${index}.costAmount`)} />
                   {errors.items?.[index]?.costAmount ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.costAmount?.message}</p> : null}
@@ -154,6 +200,13 @@ export function WorkOrderItemsFields({
             </div>
           );
         })}
+          <button
+            className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 sm:w-auto"
+            onClick={() => append({ ...emptyQuickWorkOrderItem, notes: "" })}
+            type="button"
+          >
+            <Plus className="h-4 w-4" /> Agregar item
+          </button>
       </div>
     </section>
   );

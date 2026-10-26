@@ -11,7 +11,7 @@ export const getEditWorkOrderValues = (
   notes: workOrder.notes ?? "",
   advanceAmount: String(workOrder.advanceAmount ?? ""),
   items: (workOrder.items?.length ? workOrder.items : [{
-    type: "SERVICE" as const,
+    type: "OTHER" as const,
     description: "",
     saleAmount: "",
     costAmount: "",
@@ -34,7 +34,9 @@ export const buildUpdateWorkOrderPayload = (
   items: values.items.map((item) => ({
     type: item.type,
     description:
-      item.type === "LABOR" ? itemTypeLabels.LABOR : item.description.trim(),
+      ["OTHER", "PART", "TIRE"].includes(item.type)
+        ? item.description.trim()
+        : itemTypeLabels[item.type],
     saleAmount: amount(item.saleAmount),
     costAmount: amount(item.costAmount),
     notes: item.notes?.trim() ?? "",

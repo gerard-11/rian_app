@@ -4,7 +4,7 @@ import type { ItemType } from "../types/workOrders";
 import { DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
 
 export const emptyQuickBudgetItem = {
-  type: "SERVICE" as ItemType,
+  type: "OTHER" as ItemType,
   description: "",
   saleAmount: "",
   costAmount: "",
@@ -27,12 +27,16 @@ export const quickBudgetDefaultValues: QuickBudgetFormValues = {
   items: [emptyQuickBudgetItem],
 };
 
-export const itemTypeLabels: Record<ItemType, string> = {
+export const itemTypeLabels: Record<string, string> = {
+  SERVICE: "Servicio",
   LABOR: "Mano de obra",
   OTHER: "Otro",
   PART: "Refaccion",
-  SERVICE: "Servicio",
   TIRE: "Llanta",
+  BALANCE: "Balanceo",
+  ALIGNMENT_BALANCE: "Alineacion y balanceo",
+  ALIGNMENT: "Alineacion",
+  TUNE_UP: "Afinacion",
 };
 
 const optionalText = (value?: string) => {
@@ -50,7 +54,14 @@ const optionalNumber = (value?: string) => {
 const amountOrZero = (value?: string) => optionalNumber(value) ?? 0;
 
 const getItemDescription = (item: QuickBudgetFormValues["items"][number]) => {
-  if (item.type === "LABOR") return itemTypeLabels.LABOR;
+  if (item.type === "BALANCE") {
+    const quantity = Math.max(1, Number(item.quantity || 1));
+    return `${itemTypeLabels.BALANCE} (${quantity} llantas)`;
+  }
+
+  if (!["OTHER", "PART", "TIRE"].includes(item.type)) {
+    return itemTypeLabels[item.type];
+  }
 
   return item.description.trim();
 };
@@ -69,7 +80,9 @@ export const buildQuickBudgetPayload = (
         ? Number(item.costAmount?.trim())
         : amountOrZero(item.costAmount),
     description: getItemDescription(item),
-    saleAmount: Number(item.saleAmount.trim()),
+    saleAmount:
+      Number(item.saleAmount.trim()) *
+      (item.type === "BALANCE" ? Math.max(1, Number(item.quantity || 1)) : 1),
     type: item.type,
   })),
   notes: optionalText(values.notes),

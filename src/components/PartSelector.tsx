@@ -87,7 +87,6 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
     onAdd({
       description: formatPartDescription(
         selectedDescription,
-        Number(quantity),
         "piece",
       ),
       quantity: Number(quantity),
@@ -233,7 +232,7 @@ export function PartSelector({ idPrefix = "part", onAdd }: PartSelectorProps) {
           <div className="mt-4 rounded-md border border-slate-200 bg-white p-3">
             <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Resumen antes de agregar</p>
             <dl className="mt-2 grid gap-2 text-sm sm:grid-cols-2 lg:grid-cols-5">
-              <div><dt className="text-slate-500">Descripción</dt><dd className="font-semibold text-slate-900">{formatPartDescription(selectedDescription, Number(quantity) || 0, "piece")}</dd></div>
+              <div><dt className="text-slate-500">Descripción</dt><dd className="font-semibold text-slate-900">{formatPartDescription(selectedDescription, "piece")}</dd></div>
               <div><dt className="text-slate-500">Cantidad</dt><dd className="font-semibold text-slate-900">{quantity}</dd></div>
               <div><dt className="text-slate-500">Costo base total</dt><dd className="font-semibold text-slate-900">${costIsValid ? totalCost.toFixed(2) : "—"}</dd></div>
               <div><dt className="text-slate-500">Margen total</dt><dd className="font-semibold text-slate-900">${marginIsValid ? totalMargin.toFixed(2) : "—"}</dd></div>

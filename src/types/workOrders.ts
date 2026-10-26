@@ -1,12 +1,21 @@
 export const ITEM_TYPES = [
-  "SERVICE",
   "LABOR",
   "PART",
   "TIRE",
+  "BALANCE",
+  "ALIGNMENT_BALANCE",
+  "ALIGNMENT",
+  "TUNE_UP",
   "OTHER",
 ] as const;
 
 export type ItemType = (typeof ITEM_TYPES)[number];
+
+export const ITEM_SALE_DEFAULTS: Partial<Record<ItemType, string>> = {
+  BALANCE: "80",
+  ALIGNMENT: "200",
+  ALIGNMENT_BALANCE: "520",
+};
 
 export type QuickCustomerInput = {
   name: string;
@@ -24,6 +33,7 @@ export type QuickVehicleInput = {
 export type QuickWorkOrderItemInput = {
   type: ItemType;
   description: string;
+  quantity?: number | string;
   saleAmount: number | string;
   costAmount?: number | string;
   notes?: string;

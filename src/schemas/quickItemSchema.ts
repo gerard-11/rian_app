@@ -25,17 +25,26 @@ export const quickItemSchema = z
   .object({
     type: z.enum(ITEM_TYPES),
     description: z.string().trim(),
+    quantity: numericStringSchema.optional(),
     saleAmount: numericStringSchema.refine(isPositiveAmount, {
       message: "El precio de venta debe ser mayor que 0",
     }),
     costAmount: optionalAmountSchema,
   })
   .superRefine((item, context) => {
-    if (item.type !== "LABOR" && item.description.length < 2) {
+    if (["OTHER", "PART", "TIRE"].includes(item.type) && item.description.length < 2) {
       context.addIssue({
         code: "custom",
         message: "Ingresa la descripcion del item",
         path: ["description"],
+      });
+    }
+
+    if (item.type === "BALANCE" && (!item.quantity || Number(item.quantity) < 1)) {
+      context.addIssue({
+        code: "custom",
+        message: "Indica cuántas llantas se van a balancear",
+        path: ["quantity"],
       });
     }
 

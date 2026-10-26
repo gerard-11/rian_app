@@ -7,6 +7,7 @@ import type {
 export type QuickBudgetItemInput = {
   type: ItemType;
   description: string;
+  quantity?: number | string;
   saleAmount: number | string;
   costAmount?: number | string;
 };

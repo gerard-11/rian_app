@@ -24,6 +24,7 @@ import {
   emptyQuickBudgetItem,
   quickBudgetDefaultValues,
 } from "../utils/quickBudgetForm";
+import { ITEM_SALE_DEFAULTS } from "../types/workOrders";
 
 const fieldIconClass = "h-5 w-5 shrink-0 text-slate-400";
 
@@ -199,14 +200,6 @@ export function QuickBudgetPage() {
                 </p>
               </div>
             </div>
-            <button
-              className="flex h-10 items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
-              onClick={() => append({ ...emptyQuickBudgetItem })}
-              type="button"
-            >
-              <Plus className="h-4 w-4" />
-              Agregar item
-            </button>
           </div>
 
           <div className="space-y-4 px-5 py-5 sm:px-6">
@@ -214,6 +207,10 @@ export function QuickBudgetPage() {
               const isLabor = items?.[index]?.type === "LABOR";
               const isTire = items?.[index]?.type === "TIRE";
               const isPart = items?.[index]?.type === "PART";
+              const isBalance = items?.[index]?.type === "BALANCE";
+              const isOther = items?.[index]?.type === "OTHER";
+              const showsDescription = isOther || isPart;
+              const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "");
               const itemErrors = errors.items?.[index];
 
               return (
@@ -235,8 +232,21 @@ export function QuickBudgetPage() {
                     <input type="hidden" {...register(`items.${index}.type`)} />
                     <ItemTypeSelect
                       id={`budget-item-${field.id}-type`}
-                      onChange={(type) => setValue(`items.${index}.type`, type, { shouldDirty: true, shouldValidate: true })}
-                      value={items?.[index]?.type ?? "SERVICE"}
+                      onChange={(type) => {
+                        setValue(`items.${index}.type`, type, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        const defaultSaleAmount = ITEM_SALE_DEFAULTS[type];
+                        if (defaultSaleAmount) {
+                          setValue(
+                            `items.${index}.saleAmount`,
+                            defaultSaleAmount,
+                            { shouldDirty: true, shouldValidate: true },
+                          );
+                        }
+                      }}
+                      value={items?.[index]?.type ?? "OTHER"}
                     />
                   </div>
 
@@ -255,6 +265,10 @@ export function QuickBudgetPage() {
                               shouldValidate: true,
                             });
                             setValue(`items.${index}.saleAmount`, String(part.finalPrice), {
+                              shouldDirty: true,
+                              shouldValidate: true,
+                            });
+                            setValue(`items.${index}.quantity`, String(part.quantity), {
                               shouldDirty: true,
                               shouldValidate: true,
                             });
@@ -280,31 +294,36 @@ export function QuickBudgetPage() {
                           }}
                         />
                       ) : null}
-                      <label
-                        className="text-sm font-semibold text-slate-800"
-                        htmlFor={`budget-item-${field.id}-description`}
-                      >
-                        Descripción
-                      </label>
-                      <input
-                        aria-invalid={Boolean(itemErrors?.description)}
-                        className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
-                        id={`budget-item-${field.id}-description`}
-                        placeholder="Servicio o producto"
-                        {...register(`items.${index}.description`)}
-                      />
-                      {itemErrors?.description ? (
-                        <p
-                          className="mt-2 text-sm font-medium text-[#d71920]"
-                          role="alert"
-                        >
-                          {itemErrors.description.message}
+                      {isTire && items?.[index]?.description ? (
+                        <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
+                          Llanta seleccionada: {items[index]?.description}
                         </p>
+                      ) : null}
+                      {isPart && items?.[index]?.quantity ? (
+                        <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
+                          Piezas: {items[index]?.quantity}
+                        </p>
+                      ) : null}
+                      {showsDescription ? (
+                        <>
+                          <label className="text-sm font-semibold text-slate-800" htmlFor={`budget-item-${field.id}-description`}>
+                            {isPart ? "Descripción de la refacción" : "Descripción"}
+                          </label>
+                          <input aria-invalid={Boolean(itemErrors?.description)} className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" id={`budget-item-${field.id}-description`} placeholder={isPart ? "Ej. Balata delantera" : "Describe el cargo"} {...register(`items.${index}.description`)} />
+                          {itemErrors?.description ? <p className="mt-2 text-sm font-medium text-[#d71920]" role="alert">{itemErrors.description.message}</p> : null}
+                        </>
                       ) : null}
                     </div>
                   ) : null}
 
                   <div>
+                    {isBalance ? (
+                      <>
+                        <label className="text-sm font-semibold text-slate-800" htmlFor={`budget-item-${field.id}-quantity`}>Llantas</label>
+                        <input className="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15" id={`budget-item-${field.id}-quantity`} inputMode="numeric" min="1" onChange={(event) => { const quantity = Math.max(1, Number(event.target.value || 1)); setValue(`items.${index}.quantity`, event.target.value, { shouldDirty: true, shouldValidate: true }); setValue(`items.${index}.saleAmount`, String(quantity * 80), { shouldDirty: true, shouldValidate: true }); }} type="number" value={items?.[index]?.quantity ?? "1"} />
+                        {itemErrors?.quantity ? <p className="mt-2 text-sm font-medium text-[#d71920]" role="alert">{itemErrors.quantity.message}</p> : null}
+                      </>
+                    ) : null}
                     <label
                       className="text-sm font-semibold text-emerald-700"
                       htmlFor={`budget-item-${field.id}-sale`}
@@ -315,8 +334,8 @@ export function QuickBudgetPage() {
                       aria-invalid={Boolean(itemErrors?.saleAmount)}
                       id={`budget-item-${field.id}-sale`}
                       inputMode="decimal"
-                        readOnly={isPart}
-                        className={`mt-2 h-11 w-full rounded-md border px-3 text-sm font-semibold outline-none transition placeholder:text-emerald-700/45 focus:ring-4 focus:ring-emerald-600/15 ${isPart ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`}
+                        readOnly={isPart || isBalance}
+                        className={`mt-2 h-11 w-full rounded-md border px-3 text-sm font-semibold outline-none transition placeholder:text-emerald-700/45 focus:ring-4 focus:ring-emerald-600/15 ${isPart || isBalance ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`}
                       placeholder="0.00"
                       {...register(`items.${index}.saleAmount`)}
                     />
@@ -330,7 +349,7 @@ export function QuickBudgetPage() {
                     ) : null}
                   </div>
 
-                  {!isLabor ? (
+                  {!isLabor && !hidesCost ? (
                     <div>
                       <label
                         className="text-sm font-semibold text-[#a41218]"
@@ -369,6 +388,14 @@ export function QuickBudgetPage() {
                 </div>
               );
             })}
+            <button
+              className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-[#B3262D] bg-white px-3 text-sm font-semibold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2 sm:w-auto"
+              onClick={() => append({ ...emptyQuickBudgetItem })}
+              type="button"
+            >
+              <Plus className="h-4 w-4" />
+              Agregar item
+            </button>
           </div>
         </section>
 
