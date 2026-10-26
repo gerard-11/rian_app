@@ -6,6 +6,7 @@ import {
   formatDate,
   formatMoney,
   getWorkOrderCancelledBy,
+  getWorkOrderCreatedBy,
   getCustomerName,
   getCustomerPhone,
   getStatusLabel,
@@ -140,6 +141,9 @@ export function CustomerDetailModal({
                       <p className="mt-1 text-xs font-medium text-slate-500">
                         {formatDate(workOrder.createdAt)}
                       </p>
+                      <p className="mt-1 text-xs font-medium text-slate-500">
+                        Creada por: {getWorkOrderCreatedBy(workOrder)}
+                      </p>
                       {getWorkOrderStatus(workOrder.status) === "CANCELLED" ? (
                         <p className="mt-1 text-xs font-medium text-slate-500">
                           Cancelada por: {getWorkOrderCancelledBy(workOrder)}
@@ -193,12 +197,9 @@ export function CustomerDetailModal({
                       <div className="mt-2 divide-y divide-slate-200 rounded-md border border-slate-200">
                         {workOrder.items.map((item, index) => (
                           <div
-                            className={`grid gap-2 px-3 py-3 sm:items-center ${isAdmin ? "sm:grid-cols-[80px_minmax(0,1fr)_110px_110px]" : "sm:grid-cols-[80px_minmax(0,1fr)_110px]"}`}
+                            className={`grid gap-2 px-3 py-3 sm:items-center ${isAdmin ? "sm:grid-cols-[minmax(0,1fr)_110px_110px]" : "sm:grid-cols-[minmax(0,1fr)_110px]"}`}
                             key={item.id ?? index}
                           >
-                            <p className="text-xs font-bold uppercase text-slate-500">
-                              {item.type}
-                            </p>
                             <p className="min-w-0 text-sm font-semibold text-slate-800">
                               {item.description}
                             </p>
