@@ -30,7 +30,6 @@ import {
   getCustomerName,
   getCustomerPhone,
   getWorkOrderCreatedBy,
-  getItemSummary,
   getWorkOrderAdvanceAmount,
   getWorkOrderCancelledBy,
   getWorkOrderPendingBalance,
@@ -319,9 +318,6 @@ export function WorkOrdersPage() {
                       <p className="flex items-center gap-1 truncate text-sm font-semibold text-slate-800">
                         <Wrench className="h-4 w-4 shrink-0 text-slate-400" />
                         {getVehicleLabel(workOrder)}
-                      </p>
-                      <p className="mt-1 truncate text-xs font-medium text-slate-500">
-                        {getItemSummary(workOrder.items)}
                       </p>
                     </div>
 
