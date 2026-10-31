@@ -7,7 +7,7 @@ const editableItemSchema = quickItemSchema.extend({
 
 export const editWorkOrderSchema = z
   .object({
-    diagnosis: z.string().trim().min(2, "Ingresa el diagnóstico"),
+    diagnosis: z.string().trim(),
     notes: z.string().trim().optional(),
     advanceAmount: optionalAmountSchema,
     items: z.array(editableItemSchema).min(1, "Agrega al menos un item"),

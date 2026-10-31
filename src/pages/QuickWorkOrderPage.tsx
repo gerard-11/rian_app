@@ -239,7 +239,7 @@ export function QuickWorkOrderPage() {
                 <div>
                   <h2 className="text-lg font-bold text-slate-950">Orden</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Diagnóstico requerido, anticipo opcional y notas generales.
+                    Diagnóstico, anticipo y notas generales opcionales.
                   </p>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 import type { QuickWorkOrderFormValues } from "../schemas/quickWorkOrderSchema";
 import type { CreateQuickWorkOrderInput, ItemType } from "../types/workOrders";
-import { DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
+import { DEFAULT_PUBLIC_NAME, DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
 
 export const emptyQuickWorkOrderItem = {
   type: "OTHER" as ItemType,
@@ -72,7 +72,7 @@ export const buildQuickWorkOrderPayload = (
   values: QuickWorkOrderFormValues,
 ): CreateQuickWorkOrderInput => ({
   customer: {
-    name: values.customer.name.trim(),
+    name: values.customer.name.trim() || DEFAULT_PUBLIC_NAME,
     phone: values.customer.phone.trim() || DEFAULT_PUBLIC_PHONE,
   },
   vehicle: {

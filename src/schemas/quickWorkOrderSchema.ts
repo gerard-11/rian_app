@@ -7,7 +7,7 @@ import {
 
 export const quickWorkOrderSchema = z.object({
   customer: z.object({
-    name: z.string().trim().min(2, "Ingresa el nombre del cliente"),
+    name: z.string().trim().refine((name) => name === "" || name.length >= 2, "Ingresa el nombre del cliente"),
     phone: z.string().trim(),
   }),
   vehicle: z.object({
@@ -26,7 +26,7 @@ export const quickWorkOrderSchema = z.object({
     ),
     color: z.string().trim().optional(),
   }),
-  diagnosis: z.string().trim().min(2, "Ingresa el diagnóstico"),
+  diagnosis: z.string().trim(),
   notes: z.string().trim().optional(),
   advanceAmount: optionalAmountSchema,
   items: z.array(quickItemSchema).min(1, "Agrega al menos un item"),
