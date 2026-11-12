@@ -81,8 +81,7 @@ export const buildQuickBudgetPayload = (
         : amountOrZero(item.costAmount),
     description: getItemDescription(item),
     saleAmount:
-      Number(item.saleAmount.trim()) *
-      (item.type === "BALANCE" ? Math.max(1, Number(item.quantity || 1)) : 1),
+      Number(item.saleAmount.trim()),
     type: item.type,
   })),
   notes: optionalText(values.notes),
