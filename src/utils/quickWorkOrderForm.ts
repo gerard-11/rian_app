@@ -68,9 +68,8 @@ const getItemDescription = (
   return item.description.trim();
 };
 
-export const buildQuickWorkOrderPayload = (
-  values: QuickWorkOrderFormValues,
-): CreateQuickWorkOrderInput => ({
+// Calculo y normalizacion compartidos por ordenes y presupuestos.
+export const buildQuickEntryPayload = (values: QuickWorkOrderFormValues) => ({
   customer: {
     name: values.customer.name.trim() || DEFAULT_PUBLIC_NAME,
     phone: values.customer.phone.trim() || DEFAULT_PUBLIC_PHONE,
@@ -84,7 +83,6 @@ export const buildQuickWorkOrderPayload = (
   },
   diagnosis: optionalText(values.diagnosis),
   notes: optionalText(values.notes),
-  advanceAmount: amountOrZero(values.advanceAmount),
   items: values.items.map((item) => ({
     type: item.type,
     description: getItemDescription(item),
@@ -96,4 +94,11 @@ export const buildQuickWorkOrderPayload = (
         ? Number(item.costAmount?.trim())
         : amountOrZero(item.costAmount),
   })),
+});
+
+export const buildQuickWorkOrderPayload = (
+  values: QuickWorkOrderFormValues,
+): CreateQuickWorkOrderInput => ({
+  ...buildQuickEntryPayload(values),
+  advanceAmount: amountOrZero(values.advanceAmount),
 });
