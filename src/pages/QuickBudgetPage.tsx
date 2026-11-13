@@ -9,7 +9,7 @@ export function QuickBudgetPage() {
 
   return (
     <QuickEntryForm
-      isError={createQuickBudget.isError}
+      error={createQuickBudget.error}
       isPending={createQuickBudget.isPending}
       mode="budget"
       onSubmit={(values) =>

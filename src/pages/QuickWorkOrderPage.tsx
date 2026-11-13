@@ -9,7 +9,7 @@ export function QuickWorkOrderPage() {
 
   return (
     <QuickEntryForm
-      isError={createQuickEntry.isError}
+      error={createQuickEntry.error}
       isPending={createQuickEntry.isPending}
       mode="order"
       onSubmit={(values) =>

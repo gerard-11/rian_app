@@ -14,6 +14,7 @@ import {
   quickWorkOrderSchema,
   type QuickWorkOrderFormValues,
 } from "../../../schemas/quickWorkOrderSchema";
+import { getApiErrorMessage } from "../../../utils/apiError";
 import { quickWorkOrderDefaultValues } from "../../../utils/quickWorkOrderForm";
 import { WorkOrderItemsFields } from "./WorkOrderItemsFields";
 
@@ -25,7 +26,7 @@ export type QuickEntryFormValues = QuickWorkOrderFormValues;
 type QuickEntryFormProps = {
   mode: QuickEntryMode;
   isPending: boolean;
-  isError: boolean;
+  error: unknown;
   onSubmit: (values: QuickEntryFormValues) => void;
 };
 
@@ -58,7 +59,7 @@ const vehicleFields = [
   ["color", "Color", "Color"],
 ] as const;
 
-export function QuickEntryForm({ mode, isPending, isError, onSubmit }: QuickEntryFormProps) {
+export function QuickEntryForm({ mode, isPending, error, onSubmit }: QuickEntryFormProps) {
   const isOrder = mode === "order";
   const text = copy[mode];
   const form = useForm<QuickEntryFormValues>({
@@ -69,7 +70,7 @@ export function QuickEntryForm({ mode, isPending, isError, onSubmit }: QuickEntr
 
   return (
     <div className="w-full max-w-6xl">
-      {isError ? <div className="mb-5 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">{text.error}</div> : null}
+      {error ? <div role="alert" className="mb-5 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">{getApiErrorMessage(error, text.error)}</div> : null}
       <FormProvider {...form}>
         <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
           <section className="rounded-md border border-slate-200 bg-white shadow-sm">
