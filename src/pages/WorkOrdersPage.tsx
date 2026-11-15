@@ -360,6 +360,8 @@ export function WorkOrdersPage() {
                               <Pencil className="h-4 w-4" />
                               Editar
                             </Link>
+                            {isAdmin ? (
+                              <>
                             <button
                               className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
                               disabled={isMutating}
@@ -378,6 +380,8 @@ export function WorkOrdersPage() {
                               <XCircle className="h-4 w-4" />
                               Cancelar
                             </button>
+                              </>
+                            ) : null}
                           </>
                         ) : null}
                         {isCancelled && isAdmin ? (
