@@ -4,6 +4,7 @@ import {
   ClipboardList,
   FileText,
   LoaderCircle,
+  Pencil,
   Phone,
   Search,
   Wrench,
@@ -200,6 +201,7 @@ export function BudgetsPage() {
                 const canConvert = status === "ACCEPTED";
                 const isRejected = status === "REJECTED";
                 const isConverted = status === "CONVERTED";
+                const canEdit = status === "PENDING" || status === "ACCEPTED";
                 const canReject = isAdmin && status === "PENDING";
                 const isMutating =
                   acceptBudget.isPending ||
@@ -272,6 +274,15 @@ export function BudgetsPage() {
                             Crear nota
                           </Link>
                         )}
+                        {canEdit ? (
+                          <Link
+                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
+                            to={"/budgets/" + budget.id + "/edit"}
+                          >
+                            <Pencil className="h-4 w-4" />
+                            Editar
+                          </Link>
+                        ) : null}
                         {canAccept ? (
                           <button
                             className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"

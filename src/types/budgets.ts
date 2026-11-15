@@ -10,6 +10,7 @@ export type QuickBudgetItemInput = {
   quantity?: number | string;
   saleAmount: number | string;
   costAmount?: number | string;
+  notes?: string;
 };
 
 export type CreateQuickBudgetInput = {
@@ -18,6 +19,20 @@ export type CreateQuickBudgetInput = {
   diagnosis?: string;
   notes?: string;
   items: QuickBudgetItemInput[];
+};
+
+export type UpdateBudgetInput = {
+  customer?: QuickCustomerInput;
+  vehicle?: QuickVehicleInput;
+  status?: BudgetStatus;
+  diagnosis?: string;
+  notes?: string;
+  items?: QuickBudgetItemInput[];
+};
+
+export type UpdateBudgetActionInput = {
+  id: number | string;
+  payload: UpdateBudgetInput;
 };
 
 export type BudgetCustomer = QuickCustomerInput & {

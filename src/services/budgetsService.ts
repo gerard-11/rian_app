@@ -5,6 +5,7 @@ import type {
   BudgetsResponse,
   BudgetStatus,
   CreateQuickBudgetInput,
+  UpdateBudgetActionInput,
 } from "../types/budgets";
 
 export const getBudgets = async () => {
@@ -24,6 +25,12 @@ export const createQuickBudget = async (payload: CreateQuickBudgetInput) => {
     "/budgets/quick-entry",
     payload,
   );
+
+  return response.data;
+};
+
+export const updateBudget = async ({ id, payload }: UpdateBudgetActionInput) => {
+  const response = await api.patch<BudgetResponse>("/budgets/" + id, payload);
 
   return response.data;
 };

@@ -6,11 +6,13 @@ import {
   createQuickBudget,
   getBudgetById,
   getBudgets,
+  updateBudget,
   updateBudgetStatus,
 } from "../services/budgetsService";
 import type {
   BudgetActionInput,
   CreateQuickBudgetInput,
+  UpdateBudgetActionInput,
 } from "../types/budgets";
 
 export const budgetsQueryKeys = {
@@ -40,6 +42,20 @@ export const useCreateQuickBudget = () => {
     mutationFn: (payload: CreateQuickBudgetInput) => createQuickBudget(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: budgetsQueryKeys.all });
+    },
+  });
+};
+
+export const useUpdateBudget = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: UpdateBudgetActionInput) => updateBudget(payload),
+    onSuccess: (_data, variables) => {
+      void queryClient.invalidateQueries({ queryKey: budgetsQueryKeys.all });
+      void queryClient.invalidateQueries({
+        queryKey: budgetsQueryKeys.detail(variables.id),
+      });
     },
   });
 };

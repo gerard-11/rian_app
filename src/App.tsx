@@ -15,6 +15,7 @@ import { QuickBudgetPage } from "./pages/QuickBudgetPage";
 import { QuickWorkOrderPage } from "./pages/QuickWorkOrderPage";
 import { WeeklyProfitsPage } from "./pages/WeeklyProfitsPage";
 import { WorkOrderNotePage } from "./pages/WorkOrderNotePage";
+import { EditBudgetPage } from "./pages/EditBudgetPage";
 import { EditWorkOrderPage } from "./pages/EditWorkOrderPage";
 import { WorkOrdersPage } from "./pages/WorkOrdersPage";
 import { UsersPage } from "./pages/UsersPage";
@@ -51,6 +52,7 @@ function App() {
           <Route element={<BudgetsPage />} path="/budgets" />
           <Route element={<QuickBudgetPage />} path="/budgets/quick-entry" />
           <Route element={<BudgetNotePage />} path="/budgets/:id/note" />
+          <Route element={<EditBudgetPage />} path="/budgets/:id/edit" />
           <Route element={<WorkOrdersPage />} path="/work-orders" />
           <Route
             element={<QuickWorkOrderPage />}

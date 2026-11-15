@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { quickEntryBaseSchema } from "./quickEntryBaseSchema";
 import { optionalAmountSchema, quickItemSchema } from "./quickItemSchema";
 
 const editableItemSchema = quickItemSchema.extend({
@@ -7,6 +8,10 @@ const editableItemSchema = quickItemSchema.extend({
 
 export const editWorkOrderSchema = z
   .object({
+    customer: quickEntryBaseSchema.shape.customer,
+    vehicle: quickEntryBaseSchema.shape.vehicle,
+    // Solo lo envia el administrador; vacio = sin cambio de estado.
+    status: z.string().optional(),
     diagnosis: z.string().trim(),
     notes: z.string().trim().optional(),
     advanceAmount: optionalAmountSchema,
