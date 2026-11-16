@@ -26,16 +26,21 @@ export const quickItemSchema = z
     type: z.enum(ITEM_TYPES),
     description: z.string().trim(),
     quantity: numericStringSchema.optional(),
+    // Llanta elegida del catalogo; unitPrice es el precio sugerido por pieza.
+    tireId: z.string().optional(),
+    unitPrice: z.string().optional(),
     saleAmount: numericStringSchema.refine(isPositiveAmount, {
       message: "El precio de venta debe ser mayor que 0",
     }),
     costAmount: optionalAmountSchema,
   })
   .superRefine((item, context) => {
-    if (["OTHER", "PART", "TIRE"].includes(item.type) && item.description.length < 2) {
+    const fromCatalog = item.type === "TIRE" && Boolean(item.tireId);
+
+    if (["OTHER", "PART", "TIRE"].includes(item.type) && !fromCatalog && item.description.length < 2) {
       context.addIssue({
         code: "custom",
-        message: "Ingresa la descripcion del item",
+        message: item.type === "TIRE" ? "Selecciona una llanta del catalogo" : "Ingresa la descripcion del item",
         path: ["description"],
       });
     }
@@ -49,7 +54,7 @@ export const quickItemSchema = z
     }
 
     if (
-      (item.type === "PART" || item.type === "TIRE") &&
+      (item.type === "PART" || (item.type === "TIRE" && !fromCatalog)) &&
       !isPositiveAmount(item.costAmount)
     ) {
       context.addIssue({

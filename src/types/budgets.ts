@@ -1,10 +1,12 @@
 import type {
   ItemType,
+  TireItemInput,
   QuickCustomerInput,
   QuickVehicleInput,
 } from "./workOrders";
 
 export type QuickBudgetItemInput = {
+  tireId?: number | string;
   type: ItemType;
   description: string;
   quantity?: number | string;
@@ -18,7 +20,7 @@ export type CreateQuickBudgetInput = {
   vehicle: QuickVehicleInput;
   diagnosis?: string;
   notes?: string;
-  items: QuickBudgetItemInput[];
+  items: (QuickBudgetItemInput | TireItemInput)[];
 };
 
 export type UpdateBudgetInput = {
@@ -27,7 +29,7 @@ export type UpdateBudgetInput = {
   status?: BudgetStatus;
   diagnosis?: string;
   notes?: string;
-  items?: QuickBudgetItemInput[];
+  items?: (QuickBudgetItemInput | TireItemInput)[];
 };
 
 export type UpdateBudgetActionInput = {

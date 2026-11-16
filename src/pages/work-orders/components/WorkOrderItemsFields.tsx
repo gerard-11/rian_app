@@ -55,7 +55,7 @@ export function WorkOrderItemsFields({
           const isBalance = items?.[index]?.type === "BALANCE";
           const isOther = items?.[index]?.type === "OTHER";
           const showsDescription = isOther || isPart;
-          const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "");
+          const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "") || (isTire && Boolean(items?.[index]?.tireId));
 
           return (
             <div
@@ -92,6 +92,10 @@ export function WorkOrderItemsFields({
                         shouldDirty: true,
                         shouldValidate: true,
                       });
+                      if (type !== "TIRE") {
+                        setValue(`items.${index}.tireId`, "");
+                        setValue(`items.${index}.unitPrice`, "");
+                      }
                       const defaultSaleAmount = ITEM_SALE_DEFAULTS[type];
                       if (defaultSaleAmount) {
                         setValue(`items.${index}.saleAmount`, defaultSaleAmount, {
@@ -179,15 +183,21 @@ export function WorkOrderItemsFields({
                         setValue(`items.${index}.quantity`, "1", {
                           shouldDirty: true,
                         });
-                        setValue(`items.${index}.costAmount`, tire.cost, {
+                        // Se guarda el id; el backend toma descripcion y costo de la llanta.
+                        const unitPrice = String(Number(tire.suggestedPrice));
+                        setValue(`items.${index}.tireId`, String(tire.id), {
                           shouldDirty: true,
                           shouldValidate: true,
                         });
-                        setValue(
-                          `items.${index}.saleAmount`,
-                          tire.suggestedPrice,
-                          { shouldDirty: true, shouldValidate: true },
-                        );
+                        setValue(`items.${index}.unitPrice`, unitPrice);
+                        setValue(`items.${index}.costAmount`, tire.costAmount ?? "", {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                        setValue(`items.${index}.saleAmount`, unitPrice, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
                       }}
                     />
                   ) : null}

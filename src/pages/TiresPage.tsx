@@ -3,22 +3,31 @@ import { useState } from "react";
 import { TireCatalogPagination } from "../features/tires/TireCatalogPagination";
 import { TireCatalogTable } from "../features/tires/TireCatalogTable";
 import { TireCatalogToolbar } from "../features/tires/TireCatalogToolbar";
-import { usePaginatedTires } from "../features/tires/usePaginatedTires";
-import { useTireCatalog } from "../hooks/useTireCatalog";
+import { useDebouncedValue } from "../hooks/useDebouncedValue";
+import { useTires } from "../hooks/useTires";
+
+const PAGE_SIZE = 50;
 
 export function TiresPage() {
   const [search, setSearch] = useState("");
-  const catalog = useTireCatalog();
-  const { filteredTires, page, setPage, totalPages, visibleTires } =
-    usePaginatedTires(catalog.data, search);
+  const [page, setPage] = useState(1);
+  const debouncedSearch = useDebouncedValue(search);
+  const catalog = useTires({ limit: PAGE_SIZE, page, search: debouncedSearch });
+  const tires = catalog.data?.tires ?? [];
+  const total = catalog.data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / (catalog.data?.limit || PAGE_SIZE)));
+  // El costo solo se muestra si el backend lo incluye en la respuesta.
+  const showCost = tires.some((tire) => tire.costAmount !== undefined);
 
   return (
     <>
       <TireCatalogToolbar
-        onSearchChange={setSearch}
-        resultCount={filteredTires.length}
+        onSearchChange={(value) => {
+          setSearch(value);
+          setPage(1);
+        }}
         search={search}
-        tireCount={catalog.data?.length ?? 0}
+        total={total}
       />
 
       {catalog.isPending ? (
@@ -35,9 +44,9 @@ export function TiresPage() {
         </div>
       ) : null}
 
-      {catalog.isSuccess && visibleTires.length ? (
+      {catalog.isSuccess && tires.length ? (
         <>
-          <TireCatalogTable tires={visibleTires} />
+          <TireCatalogTable showCost={showCost} tires={tires} />
           <TireCatalogPagination
             onPageChange={setPage}
             page={page}
@@ -46,7 +55,7 @@ export function TiresPage() {
         </>
       ) : null}
 
-      {catalog.isSuccess && !visibleTires.length ? (
+      {catalog.isSuccess && !tires.length ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white px-4 text-center shadow-sm">
           <div>
             <CircleDot className="mx-auto h-10 w-10 text-slate-300" />

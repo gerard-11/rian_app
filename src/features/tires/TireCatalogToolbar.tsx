@@ -1,16 +1,14 @@
 import { CircleDot, Search } from "lucide-react";
 
 type TireCatalogToolbarProps = {
-  resultCount: number;
   search: string;
-  tireCount: number;
+  total: number;
   onSearchChange: (value: string) => void;
 };
 
 export function TireCatalogToolbar({
-  resultCount,
   search,
-  tireCount,
+  total,
   onSearchChange,
 }: TireCatalogToolbarProps) {
   return (
@@ -22,7 +20,7 @@ export function TireCatalogToolbar({
           </div>
           <div>
             <p className="text-sm font-bold text-slate-950">
-              {tireCount} llantas en el catálogo
+              {total} llantas {search.trim() ? "encontradas" : "en el catálogo"}
             </p>
             <p className="mt-1 text-sm text-slate-500">
               Precios sugeridos al público con IVA incluido.
@@ -42,11 +40,6 @@ export function TireCatalogToolbar({
           />
         </div>
       </div>
-      {search.trim() ? (
-        <p className="mt-3 text-sm font-medium text-slate-600">
-          {resultCount} resultados para “{search.trim()}”
-        </p>
-      ) : null}
     </section>
   );
 }

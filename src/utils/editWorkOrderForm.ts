@@ -6,7 +6,7 @@ import type {
   WorkOrderStatus,
 } from "../types/workOrders";
 import { DEFAULT_PUBLIC_NAME, DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
-import { itemTypeLabels, splitTireQuantity, withTireQuantity } from "./quickWorkOrderForm";
+import { buildTireItem, itemTypeLabels, splitTireQuantity, withTireQuantity } from "./quickWorkOrderForm";
 
 const amount = (value?: string) => Number(value?.trim() || 0);
 
@@ -21,6 +21,9 @@ export type EditableEntry = {
   notes?: string;
   advanceAmount?: number | string;
   items?: {
+    id?: number | string;
+    tireId?: number | string;
+    quantity?: number | string;
     type: ItemType;
     description?: string;
     saleAmount?: number | string;
@@ -69,7 +72,8 @@ export const getEditWorkOrderValues = (
     return {
       type: item.type,
       description: tire ? tire.description : item.description ?? "",
-      ...(tire ? { quantity: tire.quantity } : {}),
+      ...(item.tireId ? { tireId: String(item.tireId) } : {}),
+      ...(tire ? { quantity: item.quantity ? String(item.quantity) : tire.quantity } : {}),
       saleAmount: String(item.saleAmount ?? ""),
       costAmount: String(item.costAmount ?? ""),
       notes: item.notes ?? "",
@@ -92,7 +96,7 @@ export const buildUpdateEntryPayload = (values: EditWorkOrderFormValues) => ({
   },
   diagnosis: values.diagnosis.trim(),
   notes: values.notes?.trim() ?? "",
-  items: values.items.map((item) => ({
+  items: values.items.map((item) => item.type === "TIRE" && item.tireId ? buildTireItem(item, true) : ({
     type: item.type,
     description:
       item.type === "TIRE"

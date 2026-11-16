@@ -30,7 +30,16 @@ export type QuickVehicleInput = {
   color?: string;
 };
 
+// Llanta del catalogo: el backend toma descripcion y costo de `tireId`.
+// `saleAmount` solo se envia si el usuario ajusto el precio.
+export type TireItemInput = {
+  tireId: number | string;
+  quantity?: number | string;
+  saleAmount?: number | string;
+};
+
 export type QuickWorkOrderItemInput = {
+  tireId?: number | string;
   type: ItemType;
   description: string;
   quantity?: number | string;
@@ -44,7 +53,7 @@ export type UpdateWorkOrderInput = {
   notes?: string;
   status?: WorkOrderStatus;
   advanceAmount?: number | string;
-  items?: QuickWorkOrderItemInput[];
+  items?: (QuickWorkOrderItemInput | TireItemInput)[];
 };
 
 export type UpdateWorkOrderActionInput = {
@@ -58,7 +67,7 @@ export type CreateQuickWorkOrderInput = {
   diagnosis?: string;
   notes?: string;
   advanceAmount?: number | string;
-  items: QuickWorkOrderItemInput[];
+  items: (QuickWorkOrderItemInput | TireItemInput)[];
 };
 
 export type WorkOrderCustomer = Omit<QuickCustomerInput, "phone"> & {

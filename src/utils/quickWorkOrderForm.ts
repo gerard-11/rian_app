@@ -1,5 +1,5 @@
 import type { QuickWorkOrderFormValues } from "../schemas/quickWorkOrderSchema";
-import type { CreateQuickWorkOrderInput, ItemType } from "../types/workOrders";
+import type { CreateQuickWorkOrderInput, ItemType, TireItemInput } from "../types/workOrders";
 import { DEFAULT_PUBLIC_NAME, DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
 
 export const emptyQuickWorkOrderItem = {
@@ -92,6 +92,26 @@ const getItemDescription = (
   return item.description.trim();
 };
 
+const toId = (id: string) => (/^\d+$/.test(id) ? Number(id) : id);
+
+// Item de llanta del catalogo: solo viaja el id (y cantidad / precio si cambian).
+// Con `alwaysSendSale` (edicion) se reenvia el precio actual para conservarlo.
+export const buildTireItem = (
+  item: { tireId?: string; quantity?: string; saleAmount: string; unitPrice?: string },
+  alwaysSendSale = false,
+): TireItemInput => {
+  const quantity = Math.max(1, Math.floor(Number(item.quantity || 1)));
+  const saleAmount = Number(item.saleAmount.trim());
+  const expected = Number(item.unitPrice) * quantity;
+  const adjusted = !Number.isFinite(expected) || saleAmount !== expected;
+
+  return {
+    tireId: toId(item.tireId ?? ""),
+    ...(quantity > 1 ? { quantity } : {}),
+    ...(alwaysSendSale || adjusted ? { saleAmount } : {}),
+  };
+};
+
 // Calculo y normalizacion compartidos por ordenes y presupuestos.
 export const buildQuickEntryPayload = (values: QuickWorkOrderFormValues) => ({
   customer: {
@@ -107,7 +127,7 @@ export const buildQuickEntryPayload = (values: QuickWorkOrderFormValues) => ({
   },
   diagnosis: optionalText(values.diagnosis),
   notes: optionalText(values.notes),
-  items: values.items.map((item) => ({
+  items: values.items.map((item) => item.type === "TIRE" && item.tireId ? buildTireItem(item) : ({
     type: item.type,
     description: getItemDescription(item),
     // El campo de venta ya contiene el total (el balanceo lo calcula el formulario).
