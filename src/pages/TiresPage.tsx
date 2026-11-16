@@ -3,12 +3,15 @@ import { useState } from "react";
 import { TireCatalogPagination } from "../features/tires/TireCatalogPagination";
 import { TireCatalogTable } from "../features/tires/TireCatalogTable";
 import { TireCatalogToolbar } from "../features/tires/TireCatalogToolbar";
+import { useAuthUser } from "../hooks/useAuthUser";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { useTires } from "../hooks/useTires";
 
 const PAGE_SIZE = 50;
 
 export function TiresPage() {
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const debouncedSearch = useDebouncedValue(search);
@@ -16,8 +19,8 @@ export function TiresPage() {
   const tires = catalog.data?.tires ?? [];
   const total = catalog.data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / (catalog.data?.limit || PAGE_SIZE)));
-  // El costo solo se muestra si el backend lo incluye en la respuesta.
-  const showCost = tires.some((tire) => tire.costAmount !== undefined);
+  // El costo solo lo ve un admin y solo si el backend lo incluye en la respuesta.
+  const showCost = isAdmin && tires.some((tire) => tire.costAmount !== undefined);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { TireCatalogPicker } from "../../../components/TireCatalogPicker";
 import { PartSelector } from "../../../components/PartSelector";
 import { ItemTypeSelect } from "../../../components/ItemTypeSelect";
 import type { EditWorkOrderFormValues } from "../../../schemas/editWorkOrderSchema";
+import { useAuthUser } from "../../../hooks/useAuthUser";
 import { ITEM_SALE_DEFAULTS } from "../../../types/workOrders";
 import {
   emptyQuickWorkOrderItem,
@@ -24,6 +25,8 @@ export function WorkOrderItemsFields({
   } = useFormContext<EditWorkOrderFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
   const items = useWatch({ control, name: "items" });
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
 
   return (
     <section className="rounded-md border border-slate-200 bg-white shadow-sm">
@@ -55,7 +58,11 @@ export function WorkOrderItemsFields({
           const isBalance = items?.[index]?.type === "BALANCE";
           const isOther = items?.[index]?.type === "OTHER";
           const showsDescription = isOther || isPart;
-          const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "") || (isTire && Boolean(items?.[index]?.tireId));
+          const hidesCost = ["BALANCE", "ALIGNMENT", "ALIGNMENT_BALANCE"].includes(items?.[index]?.type ?? "");
+          const fromCatalog = isTire && Boolean(items?.[index]?.tireId);
+          // Llanta del catalogo: el costo es informativo (lo calcula el backend) y solo se muestra si llego en la respuesta.
+          // El costo de las llantas solo lo ve un administrador.
+          const showsCost = !isLabor && !hidesCost && (isAdmin || !isTire) && (!fromCatalog || Boolean(items?.[index]?.costAmount));
 
           return (
             <div
@@ -232,9 +239,9 @@ export function WorkOrderItemsFields({
                   <input className={`mt-2 h-12 w-full rounded-md border px-3 text-base font-semibold outline-none focus:ring-4 focus:ring-emerald-600/15 ${isPart || isBalance ? "border-emerald-200 bg-emerald-50/40 text-emerald-800" : "border-emerald-300 bg-emerald-50/60 text-emerald-900 focus:border-emerald-600"}`} inputMode="decimal" readOnly={isPart || isBalance} {...register(`items.${index}.saleAmount`)} />
                   {errors.items?.[index]?.saleAmount ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.saleAmount?.message}</p> : null}
                 </div>
-                {!isLabor && !hidesCost ? <div>
+                {showsCost ? <div>
                   <label className="text-sm font-semibold text-[#a41218]">Costo</label>
-                  <input className="mt-2 h-12 w-full rounded-md border border-[#d71920]/40 bg-[#d71920]/5 px-3 text-base font-semibold text-[#8f1116] outline-none focus:border-[#d71920] focus:ring-4 focus:ring-[#d71920]/15" inputMode="decimal" {...register(`items.${index}.costAmount`)} />
+                  <input className="mt-2 h-12 w-full rounded-md border border-[#d71920]/40 bg-[#d71920]/5 px-3 text-base font-semibold text-[#8f1116] outline-none focus:border-[#d71920] focus:ring-4 focus:ring-[#d71920]/15" inputMode="decimal" readOnly={fromCatalog} {...register(`items.${index}.costAmount`)} />
                   {errors.items?.[index]?.costAmount ? <p className="mt-2 text-sm text-[#d71920]">{errors.items[index]?.costAmount?.message}</p> : null}
                 </div> : null}
                 {showItemNotes && !isLabor ? <div className="lg:col-span-4">

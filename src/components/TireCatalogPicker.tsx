@@ -1,6 +1,7 @@
 import { LoaderCircle, Search } from "lucide-react";
 import { useState } from "react";
 import { formatTireMoney } from "../features/tires/tireCatalogUtils";
+import { useAuthUser } from "../hooks/useAuthUser";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { useTires } from "../hooks/useTires";
 import type { TireCatalogItem } from "../types/tireCatalog";
@@ -11,6 +12,8 @@ type TireCatalogPickerProps = {
 
 export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
   const [query, setQuery] = useState("");
+  const { data: authData } = useAuthUser();
+  const isAdmin = authData?.user?.role === "ADMIN";
   const debouncedQuery = useDebouncedValue(query);
   const canSearch = debouncedQuery.trim().length >= 2;
   const catalog = useTires({ limit: 12, search: debouncedQuery }, canSearch);
@@ -59,7 +62,7 @@ export function TireCatalogPicker({ onSelect }: TireCatalogPickerProps) {
                   {tire.size} · {tire.description}
                 </span>
                 <span className="mt-1 block text-xs text-slate-500">
-                  SKU {tire.sku}{tire.costAmount !== undefined ? ` · Costo ${formatTireMoney(tire.costAmount)}` : ""} · Venta {formatTireMoney(tire.suggestedPrice)}
+                  SKU {tire.sku}{isAdmin && tire.costAmount !== undefined ? ` · Costo ${formatTireMoney(tire.costAmount)}` : ""} · Venta {formatTireMoney(tire.suggestedPrice)}
                 </span>
               </button>
             ))
