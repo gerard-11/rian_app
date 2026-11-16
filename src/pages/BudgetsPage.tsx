@@ -58,7 +58,7 @@ const getStatusBadgeClass = (status?: string) => {
 
 export function BudgetsPage() {
   const [search, setSearch] = useState("");
-  const [selectedRejectedBudget, setSelectedRejectedBudget] =
+  const [selectedBudget, setSelectedBudget] =
     useState<Budget>();
   const [budgetToAccept, setBudgetToAccept] = useState<Budget>();
   const [budgetToConvert, setBudgetToConvert] = useState<Budget>();
@@ -226,9 +226,13 @@ export function BudgetsPage() {
                     </div>
 
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-slate-950">
+                      <button
+                        className="block max-w-full truncate text-left text-sm font-semibold text-slate-950 transition hover:text-[#B3262D] focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
+                        onClick={() => setSelectedBudget(budget)}
+                        type="button"
+                      >
                         {capitalizeDisplayText(getBudgetCustomerName(budget))}
-                      </p>
+                      </button>
                       <p className="mt-1 flex items-center gap-1 text-xs font-medium text-slate-500">
                         <Phone className="h-3.5 w-3.5" />
                         {getBudgetCustomerPhone(budget)}
@@ -259,7 +263,7 @@ export function BudgetsPage() {
                         <ActionsMenu
                           actions={[
                             ...(isConverted ? [] : [isRejected
-                              ? { key: "view", label: "Ver presupuesto", icon: <FileText className="h-4 w-4" />, onClick: () => setSelectedRejectedBudget(budget) }
+                              ? { key: "view", label: "Ver presupuesto", icon: <FileText className="h-4 w-4" />, onClick: () => setSelectedBudget(budget) }
                               : { key: "note", label: "Crear nota", icon: <FileText className="h-4 w-4" />, to: "/budgets/" + budget.id + "/note" }]),
                             ...(canEdit ? [{ key: "edit", label: "Editar", icon: <Pencil className="h-4 w-4" />, to: "/budgets/" + budget.id + "/edit" }] : []),
                             ...(canAccept ? [{ key: "accept", label: "Aceptar", icon: <CheckCircle2 className="h-4 w-4" />, tone: "success" as const, disabled: isMutating, onClick: () => handleAccept(budget) }] : []),
@@ -288,10 +292,11 @@ export function BudgetsPage() {
           </div>
         )
       ) : null}
-      {selectedRejectedBudget ? (
+      {selectedBudget ? (
         <BudgetPreviewModal
-          budget={selectedRejectedBudget}
-          onClose={() => setSelectedRejectedBudget(undefined)}
+          budget={selectedBudget}
+          isAdmin={isAdmin}
+          onClose={() => setSelectedBudget(undefined)}
         />
       ) : null}
       {budgetToReject ? (

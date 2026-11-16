@@ -78,6 +78,7 @@ export type Budget = {
   notes?: string;
   totalAmount?: number | string;
   totalSaleAmount?: number | string;
+  grossProfitAmount?: number | string;
   createdBy?: string;
   items?: BudgetItem[];
   createdAt?: string;

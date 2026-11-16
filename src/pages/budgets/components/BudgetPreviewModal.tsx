@@ -14,13 +14,29 @@ import {
 
 type BudgetPreviewModalProps = {
   budget: Budget;
+  // Solo el admin ve costos y ganancia; el resto ve precios de venta y total.
+  isAdmin: boolean;
   onClose: () => void;
+};
+
+// Usa la ganancia del backend; si no viene, la calcula cuando todos los items traen costo.
+const getBudgetProfit = (budget: Budget) => {
+  if (budget.grossProfitAmount !== undefined) return Number(budget.grossProfitAmount);
+  if (!budget.items?.length || budget.items.some((item) => item.costAmount === undefined)) return undefined;
+
+  return budget.items.reduce(
+    (total, item) => total + Number(item.saleAmount || 0) - Number(item.costAmount || 0),
+    0,
+  );
 };
 
 export function BudgetPreviewModal({
   budget,
+  isAdmin,
   onClose,
 }: BudgetPreviewModalProps) {
+  const profit = isAdmin ? getBudgetProfit(budget) : undefined;
+
   return (
     <div
       aria-label="Vista previa del presupuesto"
@@ -32,7 +48,7 @@ export function BudgetPreviewModal({
         <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-[#B3262D]">
-              Presupuesto rechazado
+              Presupuesto
             </p>
             <h2 className="mt-1 text-xl font-bold text-slate-950">
               {getBudgetCode(budget)}
@@ -94,20 +110,22 @@ export function BudgetPreviewModal({
             {budget.items?.length ? (
               budget.items.map((item, index) => (
                 <div
-                  className="flex items-start justify-between gap-4 py-3 first:pt-0 last:pb-0"
+                  className={`grid gap-2 py-3 first:pt-0 last:pb-0 sm:items-center ${isAdmin ? "sm:grid-cols-[minmax(0,1fr)_110px_110px]" : "sm:grid-cols-[minmax(0,1fr)_110px]"}`}
                   key={item.id ?? `${item.description}-${index}`}
                 >
                   <div className="min-w-0">
                     <p className="text-sm font-semibold text-slate-900">
                       {item.description || "Sin descripción"}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">
-                      {item.type}
-                    </p>
                   </div>
-                  <p className="shrink-0 text-sm font-bold text-slate-900">
+                  <p className="text-sm font-bold text-slate-900">
                     {formatMoney(item.saleAmount)}
                   </p>
+                  {isAdmin ? (
+                    <p className="text-xs font-semibold text-slate-500">
+                      Costo {formatMoney(item.costAmount)}
+                    </p>
+                  ) : null}
                 </div>
               ))
             ) : (
@@ -143,6 +161,11 @@ export function BudgetPreviewModal({
             {formatMoney(getBudgetTotal(budget))}
           </span>
         </div>
+        {isAdmin ? (
+          <p className="mt-3 text-right text-sm font-bold text-emerald-700">
+            Ganancia total: {profit !== undefined ? formatMoney(profit) : "No disponible"}
+          </p>
+        ) : null}
       </div>
     </div>
   );
