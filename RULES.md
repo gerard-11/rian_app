@@ -19,18 +19,21 @@ The only package lockfile that should be committed is `pnpm-lock.yaml`.
 
 ## Commit Convention
 
-Use Gitmoji with Conventional Commits:
+Use Conventional Commits, without emojis:
 
 ```text
-<gitmoji> <type>: <short description>
+<type>(<optional scope>): <short description>
 ```
 
 Examples:
 
 ```text
-✨ feat: add auth login service
-🔧 chore: configure pnpm dependencies
+feat(budgets): list rejected and converted budgets last
+fix(ui): clickable customer name hover
+chore: configure pnpm dependencies
 ```
+
+Do not add `Co-Authored-By` trailers or any other attribution lines to commit messages.
 
 ## UI Direction
 
