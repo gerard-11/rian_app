@@ -6,6 +6,7 @@ import {
   createQuickBudget,
   getBudgetById,
   getBudgets,
+  reopenBudget,
   updateBudget,
   updateBudgetStatus,
 } from "../services/budgetsService";
@@ -77,6 +78,17 @@ export const useRejectBudget = () => {
   return useMutation({
     mutationFn: (payload: BudgetActionInput) =>
       updateBudgetStatus({ ...payload, status: "REJECTED" }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: budgetsQueryKeys.all });
+    },
+  });
+};
+
+export const useReopenBudget = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: BudgetActionInput) => reopenBudget(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: budgetsQueryKeys.all });
     },

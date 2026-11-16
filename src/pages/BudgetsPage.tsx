@@ -5,6 +5,7 @@ import {
   FileText,
   LoaderCircle,
   Pencil,
+  RotateCcw,
   Phone,
   Search,
   Wrench,
@@ -19,8 +20,10 @@ import {
   useBudgets,
   useConvertBudget,
   useRejectBudget,
+  useReopenBudget,
 } from "../hooks/useBudgets";
 import { ActionsMenu } from "../components/ActionsMenu";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useAuthUser } from "../hooks/useAuthUser";
 import type { Budget } from "../types/budgets";
 import {
@@ -49,6 +52,10 @@ const getStatusBadgeClass = (status?: string) => {
     return "inline-flex h-9 items-center rounded-md border border-[#B3262D]/30 bg-[#B3262D]/10 px-2 text-xs font-bold text-[#B3262D]";
   }
 
+  if (budgetStatus === "EXPIRED") {
+    return "inline-flex h-9 items-center rounded-md border border-slate-300 bg-slate-200 px-2.5 text-xs font-bold text-slate-700";
+  }
+
   if (budgetStatus === "CANCELLED" || budgetStatus === "REJECTED") {
     return "inline-flex h-9 items-center rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-2 text-xs font-bold text-[#a41218]";
   }
@@ -71,12 +78,16 @@ export function BudgetsPage() {
   const [budgetToAccept, setBudgetToAccept] = useState<Budget>();
   const [budgetToConvert, setBudgetToConvert] = useState<Budget>();
   const [budgetToReject, setBudgetToReject] = useState<Budget>();
+  const [budgetToReopen, setBudgetToReopen] = useState<Budget>();
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const budgetsQuery = useBudgets();
   const acceptBudget = useAcceptBudget();
   const convertBudget = useConvertBudget();
   const rejectBudget = useRejectBudget();
+  const reopenBudget = useReopenBudget();
+  const actionError =
+    acceptBudget.error ?? convertBudget.error ?? rejectBudget.error ?? reopenBudget.error;
   const budgets = useMemo(
     () =>
       budgetsQuery.data ? normalizeBudgetsResponse(budgetsQuery.data) : [],
@@ -134,6 +145,14 @@ export function BudgetsPage() {
     setBudgetToReject(budget);
   };
 
+  const confirmReopen = () => {
+    if (!budgetToReopen) return;
+
+    reopenBudget.mutate({ id: budgetToReopen.id }, {
+      onSuccess: () => setBudgetToReopen(undefined),
+    });
+  };
+
   const confirmReject = () => {
     if (!budgetToReject) return;
 
@@ -184,10 +203,10 @@ export function BudgetsPage() {
         </div>
       ) : null}
 
-      {acceptBudget.isError || convertBudget.isError || rejectBudget.isError ? (
+      {actionError ? (
         <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
-          No se pudo actualizar el presupuesto. Intenta de nuevo.
+          {getApiErrorMessage(actionError, "No se pudo actualizar el presupuesto. Intenta de nuevo.")}
         </div>
       ) : null}
 
@@ -211,10 +230,13 @@ export function BudgetsPage() {
                 const isConverted = status === "CONVERTED";
                 const canEdit = status === "PENDING" || status === "ACCEPTED";
                 const canReject = isAdmin && status === "PENDING";
+                // El backend permite reabrir presupuestos vencidos y rechazados.
+                const canReopen = isAdmin && (status === "EXPIRED" || isRejected);
                 const isMutating =
                   acceptBudget.isPending ||
                   convertBudget.isPending ||
-                  rejectBudget.isPending;
+                  rejectBudget.isPending ||
+                  reopenBudget.isPending;
 
                 return (
                   <article
@@ -276,6 +298,7 @@ export function BudgetsPage() {
                             ...(canEdit ? [{ key: "edit", label: "Editar", icon: <Pencil className="h-4 w-4" />, to: "/budgets/" + budget.id + "/edit" }] : []),
                             ...(canAccept ? [{ key: "accept", label: "Aceptar", icon: <CheckCircle2 className="h-4 w-4" />, tone: "success" as const, disabled: isMutating, onClick: () => handleAccept(budget) }] : []),
                             ...(canConvert ? [{ key: "convert", label: "Convertir en orden", icon: <Wrench className="h-4 w-4" />, disabled: isMutating, onClick: () => handleConvert(budget) }] : []),
+                            ...(canReopen ? [{ key: "reopen", label: "Reabrir", icon: <RotateCcw className="h-4 w-4" />, disabled: isMutating, onClick: () => setBudgetToReopen(budget) }] : []),
                             ...(canReject ? [{ key: "reject", label: "Rechazar", icon: <XCircle className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleReject(budget) }] : []),
                           ]}
                         />
@@ -305,6 +328,26 @@ export function BudgetsPage() {
           budget={selectedBudget}
           isAdmin={isAdmin}
           onClose={() => setSelectedBudget(undefined)}
+        />
+      ) : null}
+      {budgetToReopen ? (
+        <ConfirmationModal
+          confirmLabel="Sí, reabrir presupuesto"
+          isPending={reopenBudget.isPending}
+          message={
+            <>
+              ¿Quieres reabrir el presupuesto{" "}
+              <strong className="text-slate-900">
+                {getBudgetCode(budgetToReopen)}
+              </strong>
+              ? Volverá a estar pendiente.
+            </>
+          }
+          onClose={() => {
+            if (!reopenBudget.isPending) setBudgetToReopen(undefined);
+          }}
+          onConfirm={confirmReopen}
+          title="Reabrir presupuesto"
         />
       ) : null}
       {budgetToReject ? (

@@ -55,6 +55,7 @@ export const BUDGET_STATUSES = [
   "CONVERTED",
   "CANCELLED",
   "REJECTED",
+  "EXPIRED",
 ] as const;
 
 export type BudgetStatus = (typeof BUDGET_STATUSES)[number];
@@ -65,6 +66,7 @@ export const BUDGET_STATUS_LABELS: Record<BudgetStatus, string> = {
   CONVERTED: "Convertido",
   PENDING: "Pendiente",
   REJECTED: "Rechazado",
+  EXPIRED: "Vencido",
 };
 
 export type Budget = {

@@ -53,6 +53,16 @@ export const updateBudgetStatus = async ({
   return response.data;
 };
 
+// Devuelve un presupuesto rechazado o cancelado a pendiente.
+export const reopenBudget = async ({ id }: BudgetActionInput) => {
+  const response = await api.post<BudgetResponse>(
+    "/budgets/" + id + "/reopen",
+    {},
+  );
+
+  return response.data;
+};
+
 export const convertBudget = async ({ id }: BudgetActionInput) => {
   const response = await api.post<BudgetResponse>(
     "/budgets/" + id + "/convert",

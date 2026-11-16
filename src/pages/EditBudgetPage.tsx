@@ -32,7 +32,7 @@ export function EditBudgetPage() {
       initialValues={initialValues}
       isPending={updateBudget.isPending}
       mode="budget"
-      statusOptions={isAdmin ? BUDGET_STATUSES.map((value) => ({ value, label: BUDGET_STATUS_LABELS[value] })) : undefined}
+      statusOptions={isAdmin ? BUDGET_STATUSES.filter((value) => value !== "EXPIRED").map((value) => ({ value, label: BUDGET_STATUS_LABELS[value] })) : undefined}
       onSubmit={(values) => updateBudget.mutate(
         { id: budget.id, payload: { ...buildUpdateEntryPayload(values), ...(isAdmin && values.status && values.status !== initialValues.status ? { status: values.status as BudgetStatus } : {}) } },
         { onSuccess: () => navigate("/budgets", { replace: true }) },
