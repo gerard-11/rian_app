@@ -7,6 +7,7 @@ import {
   deleteWorkOrder,
   getWorkOrderById,
   getWorkOrders,
+  reopenWorkOrder,
   updateWorkOrder,
 } from "../services/workOrdersService";
 import type {
@@ -84,6 +85,22 @@ export const useCancelWorkOrder = () => {
 
   return useMutation({
     mutationFn: (payload: WorkOrderActionInput) => cancelWorkOrder(payload),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: workOrdersQueryKeys.all,
+      });
+      void queryClient.invalidateQueries({
+        queryKey: weeklyProfitsQueryKeys.all,
+      });
+    },
+  });
+};
+
+export const useReopenWorkOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: WorkOrderActionInput) => reopenWorkOrder(payload),
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: workOrdersQueryKeys.all,

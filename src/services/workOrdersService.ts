@@ -53,6 +53,13 @@ export const cancelWorkOrder = async ({ id }: WorkOrderActionInput) => {
   return response.data;
 };
 
+// Pasa una orden completada a activa (solo admin). No recibe body.
+export const reopenWorkOrder = async ({ id }: WorkOrderActionInput) => {
+  const response = await api.post("/work-orders/" + id + "/reopen");
+
+  return response.data;
+};
+
 export const deleteWorkOrder = async ({ id }: WorkOrderActionInput) => {
   const response = await api.delete("/work-orders/" + id);
 

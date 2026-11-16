@@ -4,6 +4,7 @@ import {
   ClipboardList,
   FileText,
   Pencil,
+  RotateCcw,
   LoaderCircle,
   Phone,
   Search,
@@ -17,10 +18,12 @@ import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModa
 import { capitalizeDisplayText } from "../lib/textFormatters";
 import { ConfirmationModal } from "../components/ConfirmationModal";
 import { ActionsMenu } from "../components/ActionsMenu";
+import { getApiErrorMessage } from "../utils/apiError";
 import { useAuthUser } from "../hooks/useAuthUser";
 import {
   useCancelWorkOrder,
   useCompleteWorkOrder,
+  useReopenWorkOrder,
   useDeleteWorkOrder,
   useWorkOrders,
 } from "../hooks/useWorkOrders";
@@ -80,12 +83,14 @@ export function WorkOrdersPage() {
     useState<WorkOrder>();
   const [workOrderToComplete, setWorkOrderToComplete] = useState<WorkOrder>();
   const [workOrderToCancel, setWorkOrderToCancel] = useState<WorkOrder>();
+  const [workOrderToReopen, setWorkOrderToReopen] = useState<WorkOrder>();
   const [workOrderToDelete, setWorkOrderToDelete] = useState<WorkOrder>();
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const workOrdersQuery = useWorkOrders();
   const completeWorkOrder = useCompleteWorkOrder();
   const cancelWorkOrder = useCancelWorkOrder();
+  const reopenWorkOrder = useReopenWorkOrder();
   const deleteWorkOrder = useDeleteWorkOrder();
 
   useEffect(() => {
@@ -155,6 +160,21 @@ export function WorkOrdersPage() {
 
   const handleCancel = (workOrder: WorkOrder) => {
     setWorkOrderToCancel(workOrder);
+  };
+
+  const confirmReopen = () => {
+    if (!workOrderToReopen) return;
+
+    const code = getWorkOrderCode(workOrderToReopen);
+    reopenWorkOrder.mutate(
+      { id: workOrderToReopen.id },
+      {
+        onSuccess: () => {
+          setWorkOrderToReopen(undefined);
+          setSuccessMessage(`La orden ${code} se reabrió correctamente.`);
+        },
+      },
+    );
   };
 
   const confirmCancel = () => {
@@ -244,6 +264,13 @@ export function WorkOrdersPage() {
         </div>
       ) : null}
 
+      {reopenWorkOrder.isError ? (
+        <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+          {getApiErrorMessage(reopenWorkOrder.error, "No se pudo reabrir la orden. Intenta de nuevo.")}
+        </div>
+      ) : null}
+
       {cancelWorkOrder.isError ? (
         <div className="mb-5 flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
@@ -272,11 +299,14 @@ export function WorkOrdersPage() {
             <div className="divide-y divide-slate-200">
               {filteredWorkOrders.map((workOrder) => {
                 const isActive = isActiveWorkOrder(workOrder);
+                const isCompleted =
+                  getWorkOrderStatus(workOrder.status) === "COMPLETED";
                 const isCancelled =
                   getWorkOrderStatus(workOrder.status) === "CANCELLED";
                 const isMutating =
                   completeWorkOrder.isPending ||
                   cancelWorkOrder.isPending ||
+                  reopenWorkOrder.isPending ||
                   deleteWorkOrder.isPending;
 
                 return (
@@ -354,6 +384,7 @@ export function WorkOrdersPage() {
                               { key: "complete", label: "Liquidar", icon: <CheckCircle2 className="h-4 w-4" />, tone: "success" as const, disabled: isMutating, onClick: () => handleComplete(workOrder) },
                               { key: "cancel", label: "Cancelar", icon: <XCircle className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleCancel(workOrder) },
                             ] : []),
+                            ...((isCompleted || isCancelled) && isAdmin ? [{ key: "reopen", label: "Reabrir", icon: <RotateCcw className="h-4 w-4" />, disabled: isMutating, onClick: () => setWorkOrderToReopen(workOrder) }] : []),
                             ...(isCancelled && isAdmin ? [{ key: "delete", label: "Eliminar", icon: <Trash2 className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleDelete(workOrder) }] : []),
                           ]}
                         />
@@ -384,6 +415,26 @@ export function WorkOrdersPage() {
           onClose={() => setSelectedCustomerWorkOrder(undefined)}
           selectedWorkOrder={selectedCustomerWorkOrder}
           workOrders={visibleWorkOrders}
+        />
+      ) : null}
+      {workOrderToReopen ? (
+        <ConfirmationModal
+          confirmLabel="Sí, reabrir orden"
+          isPending={reopenWorkOrder.isPending}
+          message={
+            <>
+              ¿Quieres reabrir la orden{" "}
+              <strong className="text-slate-900">
+                {getWorkOrderCode(workOrderToReopen)}
+              </strong>
+              ? Volverá a estar activa y se registrará quién la reabrió.
+            </>
+          }
+          onClose={() => {
+            if (!reopenWorkOrder.isPending) setWorkOrderToReopen(undefined);
+          }}
+          onConfirm={confirmReopen}
+          title="Reabrir orden"
         />
       ) : null}
       {workOrderToCancel ? (
