@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { capitalizeDisplayText } from "../../../lib/textFormatters";
 import type { WorkOrder } from "../../../types/workOrders";
 import {
-  formatDate,
+  formatDateTime,
   formatMoney,
   getWorkOrderCancelledBy,
   getWorkOrderCreatedBy,
@@ -139,7 +139,7 @@ export function CustomerDetailModal({
                         {getVehicleLabel(workOrder)}
                       </p>
                       <p className="mt-1 text-xs font-medium text-slate-500">
-                        {formatDate(workOrder.createdAt)}
+                        {formatDateTime(workOrder.createdAt)}
                       </p>
                       <p className="mt-1 text-xs font-medium text-slate-500">
                         Creada por: {getWorkOrderCreatedBy(workOrder)}

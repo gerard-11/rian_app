@@ -19,6 +19,14 @@ const dateFormatter = new Intl.DateTimeFormat("es-MX", {
   year: "numeric",
 });
 
+const dateTimeFormatter = new Intl.DateTimeFormat("es-MX", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
 export const normalizeWorkOrderResponse = (
   response: WorkOrderResponse,
 ): WorkOrder | undefined => {
@@ -68,6 +76,16 @@ export const getWorkOrderPendingBalance = (workOrder: WorkOrder) =>
 
 export const formatMoney = (value?: number | string) =>
   currencyFormatter.format(toNumber(value));
+
+export const formatDateTime = (value?: string) => {
+  if (!value) return "Sin fecha";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "Sin fecha";
+
+  return dateTimeFormatter.format(date);
+};
 
 export const formatDate = (value?: string) => {
   if (!value) return "Sin fecha";

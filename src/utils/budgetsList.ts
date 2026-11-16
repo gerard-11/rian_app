@@ -7,7 +7,7 @@ import {
   type BudgetStatus,
   type BudgetsResponse,
 } from "../types/budgets";
-import { formatDate, formatMoney } from "./workOrdersList";
+import { formatDate, formatDateTime, formatMoney } from "./workOrdersList";
 
 const toNumber = (value?: number | string) => {
   if (value === undefined || value === "") return 0;
@@ -113,4 +113,4 @@ export const getBudgetStatusLabel = (status?: string) => {
     .join(" ");
 };
 
-export { formatDate, formatMoney };
+export { formatDate, formatDateTime, formatMoney };

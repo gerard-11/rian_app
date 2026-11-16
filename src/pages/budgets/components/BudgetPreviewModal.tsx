@@ -1,7 +1,7 @@
 import { X } from "lucide-react";
 import type { Budget } from "../../../types/budgets";
 import {
-  formatDate,
+  formatDateTime,
   formatMoney,
   getBudgetCode,
   getBudgetCustomerName,
@@ -97,7 +97,7 @@ export function BudgetPreviewModal({
               Fecha
             </p>
             <p className="mt-1 text-sm font-semibold text-slate-800">
-              {formatDate(budget.createdAt)}
+              {formatDateTime(budget.createdAt)}
             </p>
           </div>
         </div>
