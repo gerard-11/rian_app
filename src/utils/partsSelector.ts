@@ -2,7 +2,10 @@ export const PARTS_STORAGE_KEY = "rian.custom-parts";
 
 export const SUGGESTED_PARTS = [
   "Bujes de horquilla",
-  "Rótula",
+  "Buje chico",
+  "Buje grande",
+  "Rótula inferior",
+  "Rótula superior",
   "Bieleta",
   "Terminal de dirección",
   "Amortiguadores",
