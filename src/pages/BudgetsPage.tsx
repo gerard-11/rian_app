@@ -42,7 +42,7 @@ const getStatusBadgeClass = (status?: string) => {
   const budgetStatus = getBudgetStatus(status) ?? "PENDING";
 
   if (budgetStatus === "ACCEPTED") {
-    return "inline-flex h-9 items-center rounded-md border border-emerald-200 bg-emerald-50 px-2 text-xs font-bold text-emerald-700";
+    return "inline-flex h-9 items-center rounded-md border border-emerald-600 bg-emerald-600 px-2.5 text-xs font-bold text-white";
   }
 
   if (budgetStatus === "CONVERTED") {
@@ -53,7 +53,15 @@ const getStatusBadgeClass = (status?: string) => {
     return "inline-flex h-9 items-center rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-2 text-xs font-bold text-[#a41218]";
   }
 
-  return "inline-flex h-9 items-center rounded-md border border-slate-200 bg-slate-50 px-2 text-xs font-bold text-slate-700";
+  return "inline-flex h-9 items-center rounded-md border border-amber-500 bg-amber-500 px-2.5 text-xs font-bold text-white";
+};
+
+// Pendiente y aceptado se marcan con franja y fondo; el resto queda como estaba.
+const getRowClass = (status: string) => {
+  if (status === "ACCEPTED") return "border-emerald-500 bg-emerald-50";
+  if (status === "PENDING") return "border-amber-400 bg-amber-50";
+
+  return "border-transparent";
 };
 
 export function BudgetsPage() {
@@ -210,7 +218,7 @@ export function BudgetsPage() {
 
                 return (
                   <article
-                    className="grid gap-4 px-4 py-4 lg:grid-cols-[130px_minmax(0,1.2fr)_minmax(0,1fr)_150px_300px] lg:items-center"
+                    className={`grid gap-4 border-l-4 px-4 py-4 lg:grid-cols-[130px_minmax(0,1.2fr)_minmax(0,1fr)_150px_300px] lg:items-center ${getRowClass(status)}`}
                     key={budget.id}
                   >
                     <div>

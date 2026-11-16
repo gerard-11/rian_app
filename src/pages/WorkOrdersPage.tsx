@@ -61,7 +61,7 @@ const getStatusBadgeClass = (status?: string) => {
     return "inline-flex h-9 items-center rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-2 text-xs font-bold text-[#a41218]";
   }
 
-  return "inline-flex h-9 items-center rounded-md border border-slate-200 bg-slate-50 px-2 text-xs font-bold text-slate-700";
+  return "inline-flex h-9 items-center rounded-md border border-emerald-600 bg-emerald-600 px-2.5 text-xs font-bold text-white";
 };
 
 export function WorkOrdersPage() {
@@ -281,7 +281,7 @@ export function WorkOrdersPage() {
 
                 return (
                   <article
-                    className="grid gap-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_260px] lg:items-center"
+                    className={`grid gap-4 border-l-4 px-4 py-4 lg:grid-cols-[120px_minmax(0,1.2fr)_minmax(0,1fr)_190px_260px] lg:items-center ${isActive ? "border-emerald-500 bg-emerald-50" : "border-transparent"}`}
                     key={workOrder.id}
                   >
                     <div>
