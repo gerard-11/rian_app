@@ -39,6 +39,26 @@ export const itemTypeLabels: Record<string, string> = {
   OTHER: "Otro",
 };
 
+// La cantidad de llantas viaja en la descripcion, p. ej. "205/55R16 (4 llantas)",
+// porque el backend solo guarda totales.
+const TIRE_QUANTITY_PATTERN = /\s*\((\d+) llantas?\)$/;
+
+export const withTireQuantity = (description: string, quantity?: string) => {
+  const count = Math.max(1, Math.floor(Number(quantity || 1)));
+  const base = description.trim();
+
+  return count > 1 ? `${base} (${count} llantas)` : base;
+};
+
+export const splitTireQuantity = (description: string) => {
+  const match = description.match(TIRE_QUANTITY_PATTERN);
+
+  return {
+    description: match ? description.replace(TIRE_QUANTITY_PATTERN, "") : description,
+    quantity: match ? match[1] : "1",
+  };
+};
+
 const optionalText = (value?: string) => {
   const trimmed = value?.trim();
 
@@ -59,6 +79,10 @@ const getItemDescription = (
   if (item.type === "BALANCE") {
     const quantity = Math.max(1, Number(item.quantity || 1));
     return `${itemTypeLabels.BALANCE} (${quantity} llantas)`;
+  }
+
+  if (item.type === "TIRE") {
+    return withTireQuantity(item.description, item.quantity);
   }
 
   if (!["OTHER", "PART", "TIRE"].includes(item.type)) {
@@ -86,9 +110,8 @@ export const buildQuickEntryPayload = (values: QuickWorkOrderFormValues) => ({
   items: values.items.map((item) => ({
     type: item.type,
     description: getItemDescription(item),
-    saleAmount:
-      Number(item.saleAmount.trim()) *
-      (item.type === "BALANCE" ? Math.max(1, Number(item.quantity || 1)) : 1),
+    // El campo de venta ya contiene el total (el balanceo lo calcula el formulario).
+    saleAmount: Number(item.saleAmount.trim()),
     costAmount:
       item.type === "PART" || item.type === "TIRE"
         ? Number(item.costAmount?.trim())

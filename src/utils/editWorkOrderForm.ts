@@ -6,7 +6,7 @@ import type {
   WorkOrderStatus,
 } from "../types/workOrders";
 import { DEFAULT_PUBLIC_NAME, DEFAULT_PUBLIC_PHONE } from "./customerDefaults";
-import { itemTypeLabels } from "./quickWorkOrderForm";
+import { itemTypeLabels, splitTireQuantity, withTireQuantity } from "./quickWorkOrderForm";
 
 const amount = (value?: string) => Number(value?.trim() || 0);
 
@@ -63,13 +63,18 @@ export const getEditWorkOrderValues = (
     saleAmount: "",
     costAmount: "",
     notes: "",
-  }]).map((item) => ({
-    type: item.type,
-    description: item.description ?? "",
-    saleAmount: String(item.saleAmount ?? ""),
-    costAmount: String(item.costAmount ?? ""),
-    notes: item.notes ?? "",
-  })),
+  }]).map((item) => {
+    const tire = item.type === "TIRE" || item.type === "BALANCE" ? splitTireQuantity(item.description ?? "") : undefined;
+
+    return {
+      type: item.type,
+      description: tire ? tire.description : item.description ?? "",
+      ...(tire ? { quantity: tire.quantity } : {}),
+      saleAmount: String(item.saleAmount ?? ""),
+      costAmount: String(item.costAmount ?? ""),
+      notes: item.notes ?? "",
+    };
+  }),
 });
 
 // Calculo compartido por ordenes y presupuestos (sin anticipo).
@@ -90,9 +95,13 @@ export const buildUpdateEntryPayload = (values: EditWorkOrderFormValues) => ({
   items: values.items.map((item) => ({
     type: item.type,
     description:
-      ["OTHER", "PART", "TIRE"].includes(item.type)
-        ? item.description.trim()
-        : itemTypeLabels[item.type],
+      item.type === "TIRE"
+        ? withTireQuantity(item.description, item.quantity)
+        : item.type === "BALANCE"
+          ? withTireQuantity(itemTypeLabels.BALANCE, item.quantity)
+        : ["OTHER", "PART"].includes(item.type)
+          ? item.description.trim()
+          : itemTypeLabels[item.type],
     saleAmount: amount(item.saleAmount),
     costAmount: amount(item.costAmount),
     notes: item.notes?.trim() ?? "",

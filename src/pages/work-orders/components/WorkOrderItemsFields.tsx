@@ -128,9 +128,41 @@ export function WorkOrderItemsFields({
                     />
                   ) : null}
                   {isTire && items?.[index]?.description ? (
-                    <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
-                      Llanta seleccionada: {items[index]?.description}
-                    </p>
+                    <div className="mt-2 flex flex-wrap items-center gap-3 rounded-md bg-slate-100 px-3 py-2">
+                      <p className="min-w-0 flex-1 text-sm font-semibold text-slate-700">
+                        Llanta seleccionada: {items[index]?.description}
+                      </p>
+                      <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                        Cantidad de llantas
+                        <input
+                          className="h-10 w-20 rounded-md border border-slate-300 bg-white px-2 text-base outline-none focus:border-[#B3262D] focus:ring-4 focus:ring-[#B3262D]/15"
+                          inputMode="numeric"
+                          min="1"
+                          onChange={(event) => {
+                            const current = items[index];
+                            const previous = Math.max(1, Math.floor(Number(current?.quantity || 1)));
+                            const next = Math.max(1, Math.floor(Number(event.target.value || 1)));
+                            // Los montos se guardan como total: se escala el precio unitario.
+                            const scale = (amount?: string) => {
+                              const value = Number(amount);
+                              return Number.isFinite(value) && amount?.trim()
+                                ? String(Math.round((value / previous) * next * 100) / 100)
+                                : amount ?? "";
+                            };
+                            setValue(`items.${index}.quantity`, String(next), { shouldDirty: true, shouldValidate: true });
+                            setValue(`items.${index}.saleAmount`, scale(current?.saleAmount), { shouldDirty: true, shouldValidate: true });
+                            setValue(`items.${index}.costAmount`, scale(current?.costAmount), { shouldDirty: true, shouldValidate: true });
+                          }}
+                          type="number"
+                          value={items?.[index]?.quantity || "1"}
+                        />
+                      </label>
+                      <p className="w-full text-xs font-semibold text-slate-500">
+                        {Number(items[index]?.quantity || 1) > 1
+                          ? `Venta y costo son el total de ${items[index]?.quantity} llantas.`
+                          : "Venta y costo de 1 llanta."}
+                      </p>
+                    </div>
                   ) : null}
                   {isPart && items?.[index]?.quantity ? (
                     <p className="mt-2 rounded-md bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-700">
@@ -143,6 +175,9 @@ export function WorkOrderItemsFields({
                         setValue(`items.${index}.description`, tire.description, {
                           shouldDirty: true,
                           shouldValidate: true,
+                        });
+                        setValue(`items.${index}.quantity`, "1", {
+                          shouldDirty: true,
                         });
                         setValue(`items.${index}.costAmount`, tire.cost, {
                           shouldDirty: true,
