@@ -257,8 +257,9 @@ export function BudgetsPage() {
 
                     <div className="min-w-0">
                       <button
-                        className="block max-w-full truncate text-left text-sm font-semibold text-slate-950 transition hover:text-[#B3262D] focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
+                        className="block max-w-full cursor-pointer truncate text-left text-sm font-semibold text-slate-950 underline-offset-4 transition hover:text-[#B3262D] hover:underline focus:outline-none focus:ring-2 focus:ring-[#B3262D] focus:ring-offset-2"
                         onClick={() => setSelectedBudget(budget)}
+                        title="Ver detalle"
                         type="button"
                       >
                         {capitalizeDisplayText(getBudgetCustomerName(budget))}

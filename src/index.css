@@ -28,6 +28,10 @@ body {
     background-color: #052e24;
   }
 
+  html[data-theme="dark"] .bg-amber-50 {
+    background-color: #2b2008;
+  }
+
   html[data-theme="dark"] .bg-sky-50 {
     background-color: #082f49;
   }
@@ -75,6 +79,11 @@ body {
   html[data-theme="dark"] .hover\:bg-slate-100:hover,
   html[data-theme="dark"] .hover\:bg-white:hover {
     background-color: #1f2937;
+  }
+
+  /* Nombre del cliente clicable: rojo de marca legible sobre fondo oscuro. */
+  html[data-theme="dark"] .hover\:text-\[\#B3262D\]:hover {
+    color: #fca5a5;
   }
 
   html[data-theme="dark"] .hover\:text-slate-950:hover {
