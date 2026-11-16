@@ -93,12 +93,21 @@ export function BudgetsPage() {
       budgetsQuery.data ? normalizeBudgetsResponse(budgetsQuery.data) : [],
     [budgetsQuery.data],
   );
+  // Rechazados y convertidos van al final; el resto conserva su orden.
+  const sortedBudgets = useMemo(() => {
+    const isClosed = (budget: Budget) =>
+      ["REJECTED", "CONVERTED"].includes(getBudgetStatus(budget.status) ?? "");
+
+    return [...budgets].sort(
+      (first, second) => Number(isClosed(first)) - Number(isClosed(second)),
+    );
+  }, [budgets]);
   const filteredBudgets = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    if (!normalizedSearch) return budgets;
+    if (!normalizedSearch) return sortedBudgets;
 
-    return budgets.filter((budget) => {
+    return sortedBudgets.filter((budget) => {
       const searchableText = [
         getBudgetCode(budget),
         getBudgetCustomerName(budget),
@@ -111,7 +120,7 @@ export function BudgetsPage() {
 
       return searchableText.includes(normalizedSearch);
     });
-  }, [budgets, search]);
+  }, [sortedBudgets, search]);
 
   const handleAccept = (budget: Budget) => {
     setBudgetToAccept(budget);
