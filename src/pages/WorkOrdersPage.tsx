@@ -12,10 +12,11 @@ import {
   XCircle,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CustomerDetailModal } from "./work-orders/components/CustomerDetailModal";
 import { capitalizeDisplayText } from "../lib/textFormatters";
 import { ConfirmationModal } from "../components/ConfirmationModal";
+import { ActionsMenu } from "../components/ActionsMenu";
 import { useAuthUser } from "../hooks/useAuthUser";
 import {
   useCancelWorkOrder,
@@ -343,63 +344,18 @@ export function WorkOrdersPage() {
                       <span className={getStatusBadgeClass(workOrder.status)}>
                         {getStatusLabel(workOrder.status)}
                       </span>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        <Link
-                          className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                          to={"/work-orders/" + workOrder.id + "/note"}
-                        >
-                          <FileText className="h-4 w-4" />
-                          Crear nota
-                        </Link>
-                        {isActive ? (
-                          <>
-                            <Link
-                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                              to={"/work-orders/" + workOrder.id + "/edit"}
-                            >
-                              <Pencil className="h-4 w-4" />
-                              Editar
-                            </Link>
-                            {isAdmin ? (
-                              <>
-                            <button
-                              className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
-                              disabled={isMutating}
-                              onClick={() => handleComplete(workOrder)}
-                              type="button"
-                            >
-                              <CheckCircle2 className="h-4 w-4" />
-                              Liquidar
-                            </button>
-                            <button
-                              className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
-                              disabled={isMutating}
-                              onClick={() => handleCancel(workOrder)}
-                              type="button"
-                            >
-                              <XCircle className="h-4 w-4" />
-                              Cancelar
-                            </button>
-                              </>
-                            ) : null}
-                          </>
-                        ) : null}
-                        {isCancelled && isAdmin ? (
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md bg-[#d71920] px-2.5 text-xs font-bold text-white transition hover:bg-[#b9151b] focus:outline-none focus:ring-4 focus:ring-[#d71920]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleDelete(workOrder)}
-                            type="button"
-                          >
-                            {deleteWorkOrder.isPending &&
-                            deleteWorkOrder.variables?.id === workOrder.id ? (
-                              <LoaderCircle className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="h-4 w-4" />
-                            )}
-                            Eliminar
-                          </button>
-                        ) : null}
+                      <div className="mt-2">
+                        <ActionsMenu
+                          actions={[
+                            { key: "note", label: "Crear nota", icon: <FileText className="h-4 w-4" />, to: "/work-orders/" + workOrder.id + "/note" },
+                            ...(isActive ? [{ key: "edit", label: "Editar", icon: <Pencil className="h-4 w-4" />, to: "/work-orders/" + workOrder.id + "/edit" }] : []),
+                            ...(isActive && isAdmin ? [
+                              { key: "complete", label: "Liquidar", icon: <CheckCircle2 className="h-4 w-4" />, tone: "success" as const, disabled: isMutating, onClick: () => handleComplete(workOrder) },
+                              { key: "cancel", label: "Cancelar", icon: <XCircle className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleCancel(workOrder) },
+                            ] : []),
+                            ...(isCancelled && isAdmin ? [{ key: "delete", label: "Eliminar", icon: <Trash2 className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleDelete(workOrder) }] : []),
+                          ]}
+                        />
                       </div>
                     </div>
                   </article>

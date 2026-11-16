@@ -11,7 +11,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { capitalizeDisplayText } from "../lib/textFormatters";
 import { ConfirmationModal } from "../components/ConfirmationModal";
 import { BudgetPreviewModal } from "./budgets/components/BudgetPreviewModal";
@@ -21,6 +20,7 @@ import {
   useConvertBudget,
   useRejectBudget,
 } from "../hooks/useBudgets";
+import { ActionsMenu } from "../components/ActionsMenu";
 import { useAuthUser } from "../hooks/useAuthUser";
 import type { Budget } from "../types/budgets";
 import {
@@ -255,67 +255,18 @@ export function BudgetsPage() {
                       <span className={getStatusBadgeClass(budget.status)}>
                         {getBudgetStatusLabel(budget.status)}
                       </span>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {isConverted ? null : isRejected ? (
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                            onClick={() => setSelectedRejectedBudget(budget)}
-                            type="button"
-                          >
-                            <FileText className="h-4 w-4" />
-                            Ver presupuesto
-                          </button>
-                        ) : (
-                          <Link
-                            className="flex h-9 items-center gap-1.5 rounded-md border border-slate-300 bg-white px-2.5 text-xs font-bold text-slate-700 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                            to={"/budgets/" + budget.id + "/note"}
-                          >
-                            <FileText className="h-4 w-4" />
-                            Crear nota
-                          </Link>
-                        )}
-                        {canEdit ? (
-                          <Link
-                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#B3262D]/40 bg-white px-2.5 text-xs font-bold text-[#B3262D] transition hover:bg-[#B3262D]/10 focus:outline-none focus:ring-4 focus:ring-[#B3262D]/15"
-                            to={"/budgets/" + budget.id + "/edit"}
-                          >
-                            <Pencil className="h-4 w-4" />
-                            Editar
-                          </Link>
-                        ) : null}
-                        {canAccept ? (
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md bg-emerald-600 px-2.5 text-xs font-bold text-white transition hover:bg-emerald-700 focus:outline-none focus:ring-4 focus:ring-emerald-600/20 disabled:cursor-not-allowed disabled:bg-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleAccept(budget)}
-                            type="button"
-                          >
-                            <CheckCircle2 className="h-4 w-4" />
-                            Aceptar
-                          </button>
-                        ) : null}
-                        {canReject ? (
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md border border-[#d71920]/30 bg-white px-2.5 text-xs font-bold text-[#a41218] transition hover:bg-[#d71920]/10 focus:outline-none focus:ring-4 focus:ring-[#d71920]/15 disabled:cursor-not-allowed disabled:border-slate-200 disabled:text-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleReject(budget)}
-                            type="button"
-                          >
-                            <XCircle className="h-4 w-4" />
-                            Rechazar
-                          </button>
-                        ) : null}
-                        {canConvert ? (
-                          <button
-                            className="flex h-9 items-center gap-1.5 rounded-md bg-[#B3262D] px-2.5 text-xs font-bold text-white transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/20 disabled:cursor-not-allowed disabled:bg-slate-300"
-                            disabled={isMutating}
-                            onClick={() => handleConvert(budget)}
-                            type="button"
-                          >
-                            <Wrench className="h-4 w-4" />
-                            Convertir
-                          </button>
-                        ) : null}
+                      <div className="mt-2">
+                        <ActionsMenu
+                          actions={[
+                            ...(isConverted ? [] : [isRejected
+                              ? { key: "view", label: "Ver presupuesto", icon: <FileText className="h-4 w-4" />, onClick: () => setSelectedRejectedBudget(budget) }
+                              : { key: "note", label: "Crear nota", icon: <FileText className="h-4 w-4" />, to: "/budgets/" + budget.id + "/note" }]),
+                            ...(canEdit ? [{ key: "edit", label: "Editar", icon: <Pencil className="h-4 w-4" />, to: "/budgets/" + budget.id + "/edit" }] : []),
+                            ...(canAccept ? [{ key: "accept", label: "Aceptar", icon: <CheckCircle2 className="h-4 w-4" />, tone: "success" as const, disabled: isMutating, onClick: () => handleAccept(budget) }] : []),
+                            ...(canConvert ? [{ key: "convert", label: "Convertir en orden", icon: <Wrench className="h-4 w-4" />, disabled: isMutating, onClick: () => handleConvert(budget) }] : []),
+                            ...(canReject ? [{ key: "reject", label: "Rechazar", icon: <XCircle className="h-4 w-4" />, tone: "danger" as const, disabled: isMutating, onClick: () => handleReject(budget) }] : []),
+                          ]}
+                        />
                       </div>
                     </div>
                   </article>
