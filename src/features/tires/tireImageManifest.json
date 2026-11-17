@@ -1,0 +1,35 @@
+{
+  "tq-02": [
+    "/tires/torque/tq-02.webp"
+  ],
+  "tq-05": [
+    "/tires/torque/tq-05.webp"
+  ],
+  "tq-at701": [
+    "/tires/torque/tq-at701.webp",
+    "/tires/torque/tq-at701-2.webp",
+    "/tires/torque/tq-at701-3.webp"
+  ],
+  "tq-hp701": [
+    "/tires/torque/tq-hp701.webp",
+    "/tires/torque/tq-hp701-2.webp"
+  ],
+  "tq-ht701": [
+    "/tires/torque/tq-ht701.webp",
+    "/tires/torque/tq-ht701-2.webp",
+    "/tires/torque/tq-ht701-3.webp"
+  ],
+  "tq-mt701": [
+    "/tires/torque/tq-mt701.webp"
+  ],
+  "tq021": [
+    "/tires/torque/tq021.webp",
+    "/tires/torque/tq021-2.webp",
+    "/tires/torque/tq021-3.webp"
+  ],
+  "tq901": [
+    "/tires/torque/tq901.webp",
+    "/tires/torque/tq901-2.webp",
+    "/tires/torque/tq901-3.webp"
+  ]
+}
