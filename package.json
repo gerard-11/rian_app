@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "tire-images": "node scripts/tire-images.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.0",
@@ -32,6 +33,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "oxlint": "^1.75.0",
+    "sharp": "^0.35.5",
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
     "vite-plugin-pwa": "^2.0.0"
