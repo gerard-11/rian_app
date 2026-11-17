@@ -9,6 +9,9 @@ import { BudgetsPage } from "./pages/BudgetsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { ExpensesPage } from "./pages/ExpensesPage";
 import { LoginPage } from "./pages/LoginPage";
+import { PublicLayout } from "./layouts/PublicLayout";
+import { PublicTireDetailPage } from "./pages/PublicTireDetailPage";
+import { PublicTiresPage } from "./pages/PublicTiresPage";
 import { TiresPage } from "./pages/TiresPage";
 import { PersonalExpensesPage } from "./pages/PersonalExpensesPage";
 import { QuickBudgetPage } from "./pages/QuickBudgetPage";
@@ -46,6 +49,10 @@ function App() {
       <Routes>
         <Route element={<Navigate replace to="/login" />} path="/" />
         <Route element={<LoginPage />} path="/login" />
+        <Route element={<PublicLayout />}>
+          <Route element={<PublicTiresPage />} path="/catalog" />
+          <Route element={<PublicTireDetailPage />} path="/catalog/:id" />
+        </Route>
         <Route element={<RequireAuth />}>
           <Route element={<DashboardPage />} path="/dashboard" />
           <Route element={<TiresPage />} path="/tires" />
