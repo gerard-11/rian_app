@@ -10,6 +10,18 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/tires/'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'tire-images',
+              expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 30 },
+            },
+          },
+        ],
+      },
       includeAssets: ['logo-rian.jpeg', 'pwa-192.png', 'pwa-512.png'],
       manifest: {
         name: 'Rian Automotriz',
