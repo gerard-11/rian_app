@@ -47,10 +47,10 @@ function App() {
     <>
       <AuthEvents />
       <Routes>
-        <Route element={<Navigate replace to="/login" />} path="/" />
         <Route element={<LoginPage />} path="/login" />
         <Route element={<PublicLayout />}>
-          <Route element={<PublicTiresPage />} path="/catalog" />
+          <Route element={<PublicTiresPage />} path="/" />
+          <Route element={<Navigate replace to="/" />} path="/catalog" />
           <Route element={<PublicTireDetailPage />} path="/catalog/:id" />
         </Route>
         <Route element={<RequireAuth />}>
@@ -81,7 +81,7 @@ function App() {
             <Route element={<UsersPage />} path="/users" />
           </Route>
         </Route>
-        <Route element={<Navigate replace to="/login" />} path="*" />
+        <Route element={<Navigate replace to="/" />} path="*" />
       </Routes>
     </>
   );

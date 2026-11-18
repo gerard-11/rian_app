@@ -13,7 +13,7 @@ const QUANTITIES = [1, 2, 4];
 const backLink = (
   <Link
     className="mb-4 inline-flex h-10 items-center gap-2 rounded-md px-2 text-sm font-semibold text-[#1D4ED8] transition hover:bg-[#1D4ED8]/10"
-    to="/catalog"
+    to="/"
   >
     <ArrowLeft className="h-4 w-4" />
     Volver al catálogo

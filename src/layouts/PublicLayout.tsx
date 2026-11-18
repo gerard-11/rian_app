@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, UserRound } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
 import logoRian from "../assets/logo-rian.jpeg";
 import { GENERAL_WHATSAPP_URL } from "../features/tires/tireWhatsapp";
@@ -31,7 +31,7 @@ export function PublicLayout() {
       <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="h-1 bg-gradient-to-r from-[#B3262D] via-[#B3262D] to-[#1D4ED8]" />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 md:py-3">
-          <Link aria-label="Rian Automotriz, inicio del catálogo" to="/catalog">
+          <Link aria-label="Rian Automotriz, inicio del catálogo" to="/">
             <img
               alt="Rian Automotriz - Alineación y balanceo"
               className="h-14 w-auto mix-blend-multiply md:h-24"
@@ -57,6 +57,13 @@ export function PublicLayout() {
         <div className="mx-auto max-w-6xl px-4 py-6 text-sm">
           <p className="font-bold">Rian Automotriz</p>
           <p className="mt-1 text-white/80">Llantas, alineación y balanceo.</p>
+          <Link
+            className="mt-4 inline-flex items-center gap-1.5 text-xs text-white/50 transition hover:text-white/90 focus:text-white/90 focus:outline-none"
+            to="/login"
+          >
+            <UserRound className="h-3.5 w-3.5" />
+            Acceso personal
+          </Link>
         </div>
       </footer>
 
