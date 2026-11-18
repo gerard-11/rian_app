@@ -20,19 +20,19 @@ export function PublicCatalogHero({
 }: PublicCatalogHeroProps) {
   return (
     <section className="mb-6">
-      <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-[#1D4ED8] via-[#1E40AF] to-[#172554] px-5 py-7 text-white shadow-lg md:px-10 md:py-12">
+      <div className="relative overflow-hidden rounded-lg border border-slate-200 bg-white px-5 py-7 text-slate-950 shadow-sm md:px-10 md:py-12">
         <div className="absolute inset-y-0 right-0 hidden w-2 bg-[#B3262D] md:block" />
-        <p className="inline-block rounded bg-[#B3262D] px-2 py-1 text-xs font-bold uppercase tracking-wider">
+        <p className="inline-block rounded bg-[#B3262D] px-2 py-1 text-xs font-bold uppercase tracking-wider text-white">
           Catálogo de llantas
         </p>
         <h1 className="mt-3 text-3xl font-black uppercase leading-tight md:text-5xl">
           Llantas Torque
         </h1>
-        <p className="mt-2 max-w-xl text-sm text-white/85 md:text-base">
+        <p className="mt-2 max-w-xl text-sm text-slate-600 md:text-base">
           Encuentra tu medida, revisa el precio y cotiza directo por WhatsApp.
         </p>
 
-        <div className="mt-5 flex h-12 w-full max-w-xl items-center rounded-md bg-white px-3 text-slate-950 shadow-md focus-within:ring-4 focus-within:ring-[#B3262D]/40">
+        <div className="mt-5 flex h-12 w-full max-w-xl items-center rounded-md border border-slate-300 bg-white px-3 text-slate-950 shadow-sm focus-within:border-[#1D4ED8] focus-within:ring-4 focus-within:ring-[#1D4ED8]/20">
           <Search className="h-5 w-5 shrink-0 text-slate-400" />
           <input
             aria-label="Buscar llanta"
@@ -43,7 +43,7 @@ export function PublicCatalogHero({
             value={search}
           />
         </div>
-        <p className="mt-3 text-sm font-semibold text-white/85">
+        <p className="mt-3 text-sm font-semibold text-slate-600">
           {total} llantas {search.trim() || selectedModel ? "encontradas" : "disponibles"}
         </p>
       </div>

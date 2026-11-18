@@ -7,6 +7,7 @@ import { ThemeToggle } from "../components/ThemeToggle";
 import { capitalizeDisplayText } from "../lib/textFormatters";
 import { queryClient } from "../lib/queryClient";
 import { logout } from "../services/authService";
+import { useApplyTheme } from "../hooks/useApplyTheme";
 import { useAuthUser } from "../hooks/useAuthUser";
 
 type AdminLayoutPage =
@@ -205,6 +206,7 @@ const getRouteMeta = (pathname: string): AdminRouteMeta => {
 };
 
 export function AdminLayout() {
+  useApplyTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);

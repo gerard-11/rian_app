@@ -48,9 +48,9 @@ type ThemeProviderProps = {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeMode>(getPreferredTheme);
 
+  // Solo guarda la preferencia; el panel autenticado la aplica al documento
+  // con useApplyTheme, para que las páginas públicas siempre sean claras.
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
     setStoredTheme(theme);
   }, [theme]);
 
