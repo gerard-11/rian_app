@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { ProfitsAccessGuard } from "./components/ProfitsAccessGuard";
 import { RequireAuth } from "./components/RequireAuth";
 import { RequireRole } from "./components/RequireRole";
+import { UpdatePrompt } from "./components/UpdatePrompt";
 import { queryClient } from "./lib/queryClient";
 import { BudgetNotePage } from "./pages/BudgetNotePage";
 import { BudgetsPage } from "./pages/BudgetsPage";
@@ -46,6 +47,7 @@ function App() {
   return (
     <>
       <AuthEvents />
+      <UpdatePrompt />
       <Routes>
         <Route element={<LoginPage />} path="/login" />
         <Route element={<PublicLayout />}>
