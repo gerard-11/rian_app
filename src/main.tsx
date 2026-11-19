@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { hydrate, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import "./index.css";
@@ -23,6 +23,17 @@ const app = (
 );
 
 const container = document.getElementById("root")!;
+
+// Datos del API que el pre-render dejó en el HTML (fichas de llantas, catálogo).
+declare global {
+  interface Window {
+    __RQ_STATE__?: unknown;
+  }
+}
+if (window.__RQ_STATE__) {
+  hydrate(queryClient, window.__RQ_STATE__);
+  delete window.__RQ_STATE__;
+}
 const normalizePath = (path: string) => path.replace(/\/+$/, "") || "/";
 
 // Las páginas públicas llegan pre-renderizadas (scripts/prerender.mjs): el
