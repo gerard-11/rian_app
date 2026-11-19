@@ -5,10 +5,13 @@ import { PublicTireCard } from "../features/tires/PublicTireCard";
 import { TireCatalogPagination } from "../features/tires/TireCatalogPagination";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
 import { usePublicTires } from "../hooks/usePublicTires";
+import { PAGES } from "../site/seo";
+import { usePageSeo } from "../site/usePageSeo";
 
 const PAGE_SIZE = 24;
 
 export function PublicTiresPage() {
+  usePageSeo(PAGES.tires);
   const [search, setSearch] = useState("");
   const [model, setModel] = useState<string | null>(null);
   const [page, setPage] = useState(1);
@@ -22,7 +25,7 @@ export function PublicTiresPage() {
   const totalPages = Math.max(1, Math.ceil(total / (catalog.data?.limit || PAGE_SIZE)));
 
   return (
-    <>
+    <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-5 md:pt-8">
       <PublicCatalogHero
         onModelChange={(value) => {
           setModel(value);
@@ -39,7 +42,7 @@ export function PublicTiresPage() {
 
       {catalog.isPending ? (
         <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-brand-red" />
           Cargando catálogo...
         </div>
       ) : null}
@@ -80,6 +83,6 @@ export function PublicTiresPage() {
           </div>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

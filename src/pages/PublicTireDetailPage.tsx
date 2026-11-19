@@ -1,5 +1,5 @@
 import { AlertCircle, ArrowLeft, LoaderCircle } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { formatTireMoney } from "../features/tires/tireCatalogUtils";
 import { getTireImages, TIRE_IMAGE_DISCLAIMER } from "../features/tires/tireImages";
@@ -7,13 +7,15 @@ import { TireImage } from "../features/tires/TireImage";
 import { buildTireWhatsappUrl, WHATSAPP_INTENTS } from "../features/tires/tireWhatsapp";
 import { WhatsappButton } from "../features/tires/WhatsappButton";
 import { usePublicTire } from "../hooks/usePublicTires";
+import { PAGES } from "../site/seo";
+import { usePageSeo } from "../site/usePageSeo";
 
 const QUANTITIES = [1, 2, 4];
 
 const backLink = (
   <Link
-    className="mb-4 inline-flex h-10 items-center gap-2 rounded-md px-2 text-sm font-semibold text-[#1D4ED8] transition hover:bg-[#1D4ED8]/10"
-    to="/"
+    className="mb-4 inline-flex h-10 items-center gap-2 rounded-md px-2 text-sm font-semibold text-brand-sky-dark transition hover:bg-brand-sky-dark/10"
+    to="/llantas"
   >
     <ArrowLeft className="h-4 w-4" />
     Volver al catálogo
@@ -25,25 +27,39 @@ export function PublicTireDetailPage() {
   const { data: tire, isError, isPending } = usePublicTire(id);
   const [imageIndex, setImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(4);
+  const seo = useMemo(
+    () =>
+      tire
+        ? {
+            path: `/llantas/${tire.id}`,
+            title: `Llanta Torque ${tire.model ?? ""} ${tire.size} | Rian Automotriz`.replace(/\s+/g, " "),
+            description: `${tire.description}. Precio ${formatTireMoney(tire.suggestedPrice)} por llanta. Cotiza con instalación, alineación y balanceo en San Matías Tlalancaleca, Puebla.`,
+          }
+        : PAGES.tires,
+    [tire],
+  );
+  usePageSeo(seo);
 
   if (isPending) {
     return (
-      <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
-        <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-[#B3262D]" />
-        Cargando llanta...
+      <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-5 md:pt-8">
+        <div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-semibold text-slate-600 shadow-sm">
+          <LoaderCircle className="mr-2 h-5 w-5 animate-spin text-brand-red" />
+          Cargando llanta...
+        </div>
       </div>
     );
   }
 
   if (isError || !tire) {
     return (
-      <>
+      <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-5 md:pt-8">
         {backLink}
         <div className="flex items-start gap-3 rounded-md border border-[#d71920]/30 bg-[#d71920]/10 px-4 py-3 text-sm font-medium text-[#a41218]">
           <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
           Esta llanta no existe o ya no está disponible.
         </div>
-      </>
+      </div>
     );
   }
 
@@ -57,7 +73,7 @@ export function PublicTireDetailPage() {
   ];
 
   return (
-    <>
+    <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-5 md:pt-8">
       {backLink}
       <section className="grid gap-6 overflow-hidden rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:grid-cols-2 md:p-8">
         <figure>
@@ -77,7 +93,7 @@ export function PublicTireDetailPage() {
                 <button
                   aria-label={`Ver imagen ${index + 1}`}
                   className={`shrink-0 rounded-md border-2 bg-slate-100 p-1 ${
-                    index === imageIndex ? "border-[#1D4ED8]" : "border-transparent"
+                    index === imageIndex ? "border-brand-sky-dark" : "border-transparent"
                   }`}
                   key={image}
                   onClick={() => setImageIndex(index)}
@@ -92,13 +108,13 @@ export function PublicTireDetailPage() {
         </figure>
 
         <div>
-          <span className="inline-block rounded bg-[#1D4ED8] px-2 py-1 text-xs font-bold uppercase tracking-wider text-white">
+          <span className="inline-block rounded bg-brand-sky-dark px-2 py-1 text-xs font-bold uppercase tracking-wider text-white">
             Torque {tire.model}
           </span>
           <h1 className="mt-2 text-3xl font-black text-slate-950 md:text-4xl">{tire.size}</h1>
           <p className="mt-2 text-sm text-slate-500">{tire.description}</p>
 
-          <p className="mt-5 text-4xl font-black text-[#B3262D]">
+          <p className="mt-5 text-4xl font-black text-brand-red">
             {formatTireMoney(tire.suggestedPrice)}
           </p>
           <p className="mt-1 text-xs text-slate-500">Precio por llanta, sugerido al público con IVA incluido.</p>
@@ -121,7 +137,7 @@ export function PublicTireDetailPage() {
                   aria-pressed={quantity === value}
                   className={`h-9 w-11 rounded-md border text-sm font-bold transition ${
                     quantity === value
-                      ? "border-[#1D4ED8] bg-[#1D4ED8] text-white"
+                      ? "border-brand-sky-dark bg-brand-sky-dark text-white"
                       : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
                   }`}
                   key={value}
@@ -147,6 +163,6 @@ export function PublicTireDetailPage() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

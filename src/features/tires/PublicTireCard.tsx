@@ -11,15 +11,15 @@ type PublicTireCardProps = {
 
 export function PublicTireCard({ tire }: PublicTireCardProps) {
   return (
-    <article className="flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm transition hover:border-[#1D4ED8]/40 hover:shadow-md">
+    <article className="flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm transition hover:border-brand-sky-dark/40 hover:shadow-md">
       <Link
-        className="flex flex-1 flex-col p-3 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#1D4ED8]/20 md:p-4"
-        to={`/catalog/${tire.id}`}
+        className="flex flex-1 flex-col p-3 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sky-dark/20 md:p-4"
+        to={`/llantas/${tire.id}`}
       >
         <div className="relative rounded-md bg-slate-100 p-2">
           <TireImage className="mx-auto w-full max-w-44" model={tire.model} seed={tire.id} />
           {tire.model ? (
-            <span className="absolute left-1.5 top-1.5 rounded bg-[#1D4ED8] px-1.5 py-0.5 text-[10px] font-bold text-white md:text-xs">
+            <span className="absolute left-1.5 top-1.5 rounded bg-brand-sky-dark px-1.5 py-0.5 text-[10px] font-bold text-white md:text-xs">
               {tire.model}
             </span>
           ) : null}
@@ -30,7 +30,7 @@ export function PublicTireCard({ tire }: PublicTireCardProps) {
         <p className="text-base font-black text-slate-950 md:text-lg">{tire.size}</p>
         <p className="mt-0.5 line-clamp-2 text-xs text-slate-500 md:text-sm">{tire.description}</p>
 
-        <p className="mt-auto pt-2 text-lg font-black text-[#B3262D] md:text-xl">
+        <p className="mt-auto pt-2 text-lg font-black text-brand-red md:text-xl">
           {formatTireMoney(tire.suggestedPrice)}
         </p>
       </Link>

@@ -1,9 +1,10 @@
 import type { PublicTire } from "../../types/publicTires";
+import { BUSINESS, SITE_URL } from "../../site/siteConfig";
 import { formatTireMoney } from "./tireCatalogUtils";
 
 // Número del taller en formato internacional sin "+" ni espacios (52 + 10 dígitos).
-// Si no está configurado, WhatsApp abre el selector de contacto con el mensaje listo.
-const WHATSAPP_NUMBER = (import.meta.env.VITE_WHATSAPP_NUMBER ?? "").replace(/\D/g, "");
+// Si no está configurado se usa el teléfono del negocio.
+const WHATSAPP_NUMBER = (import.meta.env.VITE_WHATSAPP_NUMBER || BUSINESS.phone).replace(/\D/g, "");
 
 export type WhatsappIntent = "quote" | "tomorrow" | "install";
 
@@ -39,12 +40,12 @@ export const buildTireWhatsappUrl = (
     `• SKU: ${tire.sku}`,
     `• Precio en catálogo: ${formatTireMoney(tire.suggestedPrice)} c/u`,
     "",
-    `${window.location.origin}/catalog/${tire.id}`,
+    `${SITE_URL}/llantas/${tire.id}`,
   ];
 
   return buildWhatsappUrl(lines.join("\n"));
 };
 
 export const GENERAL_WHATSAPP_URL = buildWhatsappUrl(
-  "Hola, vi su catálogo de llantas Torque y quiero información.",
+  "Hola, vi su página y quiero información.",
 );

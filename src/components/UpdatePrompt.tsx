@@ -1,14 +1,10 @@
 import { RefreshCw, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useRegisterSW } from "virtual:pwa-register/react";
+import { isPublicPath } from "../site/seo";
 
 // Cada cuánto se pregunta al servidor si hay un deploy nuevo, aunque la app siga abierta.
 const UPDATE_CHECK_INTERVAL_MS = 10 * 60 * 1000;
-
-// Páginas públicas: ahí no se muestra el aviso; la versión nueva se activa
-// sola la próxima vez que el cliente abra el sitio.
-const isPublicPath = (pathname: string) =>
-  pathname === "/" || pathname === "/login" || pathname.startsWith("/catalog");
 
 // Registra el service worker y avisa al personal cuando hay una versión nueva.
 export function UpdatePrompt() {
@@ -28,6 +24,8 @@ export function UpdatePrompt() {
     },
   });
 
+  // Páginas públicas: ahí no se muestra el aviso; la versión nueva se activa
+  // sola la próxima vez que el cliente abra el sitio.
   if (!needRefresh || isPublicPath(pathname)) return null;
 
   return (
