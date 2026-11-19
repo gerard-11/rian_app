@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "tire-images": "node scripts/tire-images.mjs"
+    "tire-images": "node scripts/tire-images.mjs",
+    "brand-assets": "node scripts/brand-assets.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.0",
