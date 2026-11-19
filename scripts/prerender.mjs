@@ -19,7 +19,8 @@ if (!template.includes("<!--app-html-->") || !template.includes("<!-- seo:start 
   throw new Error("dist/index.html no tiene los marcadores <!--app-html--> / <!-- seo:start -->");
 }
 
-// Shell del CRM: sin contenido ni canonical (Vercel lo usa como fallback).
+// Shell del CRM: sin contenido ni canonical. El Worker (worker/index.ts) lo
+// sirve para las rutas que no tienen archivo propio.
 await writeFile(path.join(DIST, "app.html"), template.replace("<!--app-html-->", ""));
 
 for (const page of PRERENDER_PAGES) {
@@ -37,7 +38,7 @@ for (const page of PRERENDER_PAGES) {
 // Fichas de llantas para el sitemap (si el API responde al compilar).
 const fetchTireIds = async () => {
   const env = loadEnv("production", process.cwd(), "");
-  // Mismo backend al que Vercel redirige /api (ver vercel.json).
+  // Mismo backend al que el Worker redirige /api (ver wrangler.jsonc).
   const apiUrl = (env.PRERENDER_API_URL || "https://backend-rian-automotriz-production.up.railway.app").replace(/\/$/, "");
   if (!apiUrl.startsWith("http")) return [];
 

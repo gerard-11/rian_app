@@ -36,3 +36,6 @@ PENDIENTES.md
 *.njsproj
 *.sln
 *.sw?
+
+# Cloudflare Wrangler
+.wrangler

@@ -1,0 +1,3 @@
+# Enlaces viejos del catálogo (reemplaza "redirects" de vercel.json).
+/catalog       /llantas      301
+/catalog/:id   /llantas/:id  301

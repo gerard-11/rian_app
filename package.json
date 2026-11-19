@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "tire-images": "node scripts/tire-images.mjs",
-    "brand-assets": "node scripts/brand-assets.mjs"
+    "brand-assets": "node scripts/brand-assets.mjs",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "pnpm build && wrangler deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.0",
@@ -38,6 +40,7 @@
     "typescript": "~6.0.2",
     "vite": "^8.2.0",
     "vite-plugin-pwa": "^2.0.0",
-    "workbox-window": "^7.4.1"
+    "workbox-window": "^7.4.1",
+    "wrangler": "^4.164.0"
   }
 }

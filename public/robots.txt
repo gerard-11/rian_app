@@ -12,6 +12,7 @@ Disallow: /personal-expenses
 Disallow: /users
 Disallow: /tires$
 Disallow: /app.html
+Disallow: /app$
 Disallow: /api/
 
 Sitemap: https://rianautomotriz.com.mx/sitemap.xml

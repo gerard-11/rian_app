@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rian-app",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // /mecanica → mecanica/index.html, y /mecanica/ redirige a /mecanica
+    // (así coincide con las URLs canónicas del SEO).
+    "html_handling": "drop-trailing-slash",
+    // Rutas sin archivo las resuelve el Worker (shell del CRM).
+    "not_found_handling": "none",
+    // /api nunca debe resolverse como archivo estático.
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "API_ORIGIN": "https://backend-rian-automotriz-production.up.railway.app"
+  },
+  "observability": { "enabled": true }
+}
