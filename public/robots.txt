@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Panel interno (CRM): no indexar.
+Disallow: /login
+Disallow: /dashboard
+Disallow: /budgets
+Disallow: /work-orders
+Disallow: /profits
+Disallow: /expenses
+Disallow: /personal-expenses
+Disallow: /users
+Disallow: /tires$
+Disallow: /app.html
+Disallow: /api/
+
+Sitemap: https://rianautomotriz.com.mx/sitemap.xml
