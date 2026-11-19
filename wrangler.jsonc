@@ -14,6 +14,9 @@
     // /api nunca debe resolverse como archivo estático.
     "run_worker_first": ["/api/*"]
   },
+  // Dominio propio: Cloudflare crea el DNS y el certificado SSL.
+  // www → raíz se resuelve con una Redirect Rule de la zona.
+  "routes": [{ "pattern": "rianautomotriz.com.mx", "custom_domain": true }],
   "vars": {
     "API_ORIGIN": "https://backend-rian-automotriz-production.up.railway.app"
   },
