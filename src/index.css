@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* Paleta de marca del sitio público. El rojo y el azul cielo de la paleta no
+   alcanzan contraste AA como texto chico sobre blanco: para eso se usan sus
+   variantes "-dark". El gris carbón es el del logo. */
+@theme {
+  --color-brand-red: #f20505;
+  --color-brand-red-dark: #c80404;
+  --color-brand-sky: #58b7d2;
+  --color-brand-sky-dark: #1a7591;
+  --color-brand-ice: #c1faff;
+  --color-brand-ink: #2e302f;
+  --color-brand-ink-dark: #1f2121;
+  --color-whatsapp: #1faf54;
+  --color-whatsapp-dark: #178a42;
+}
+
 body {
   margin: 0;
   min-width: 320px;
