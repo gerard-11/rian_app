@@ -43,8 +43,8 @@ export function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950">
-      <div className="grid min-h-screen lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)]">
+    <main className="min-h-dvh bg-slate-50 text-slate-950">
+      <div className="grid min-h-dvh grid-cols-1 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,1.05fr)]">
         <section className="hidden bg-[#B3262D] px-10 py-12 text-white lg:flex lg:flex-col lg:justify-between">
           <div>
             <div className="flex h-11 w-11 items-center justify-center rounded-md bg-white text-xl font-black text-[#B3262D]">
@@ -68,7 +68,7 @@ export function LoginPage() {
           </div>
         </section>
 
-        <section className="flex min-h-screen items-center justify-center px-5 py-10 sm:px-8">
+        <section className="flex min-h-dvh min-w-0 items-center justify-center px-5 py-10 sm:px-8">
           <div className="w-full max-w-[440px]">
             <div className="mb-8 lg:hidden">
               <div className="flex h-11 w-11 items-center justify-center rounded-md bg-[#B3262D] text-xl font-black text-white">
@@ -156,7 +156,7 @@ export function LoginPage() {
                 ) : null}
               </div>
 
-              <div className="flex items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                 <label className="flex items-center gap-2 text-sm font-medium text-slate-700">
                   <input
                     className="h-4 w-4 rounded border-slate-300 text-[#B3262D] focus:ring-[#B3262D]"
