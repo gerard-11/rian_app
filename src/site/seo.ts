@@ -132,10 +132,12 @@ export const PAGES = {
 /** Páginas que se pre-renderizan a HTML y van al sitemap. */
 export const PRERENDER_PAGES: PageSeo[] = Object.values(PAGES);
 
-/** Rutas públicas (sin login): no muestran el aviso de actualización de la PWA. */
+/**
+ * Rutas del sitio público para clientes: ahí no se muestra el aviso de
+ * actualización de la PWA. El login no cuenta: lo usa el personal.
+ */
 export const isPublicPath = (pathname: string) =>
   pathname === "/" ||
-  pathname === "/login" ||
   pathname.startsWith("/llantas") ||
   pathname.startsWith("/catalog") ||
   PRERENDER_PAGES.some((page) => page.path === pathname.replace(/\/$/, ""));
