@@ -1,9 +1,11 @@
 import { AlertCircle, ArrowLeft, LoaderCircle } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { formatTireMoney } from "../features/tires/tireCatalogUtils";
 import { getTireImages, TIRE_IMAGE_DISCLAIMER } from "../features/tires/tireImages";
 import { TireImage } from "../features/tires/TireImage";
+import { tireSeo } from "../features/tires/tireSeo";
+import { tireSlug } from "../features/tires/tireSlug";
 import { buildTireWhatsappUrl, WHATSAPP_INTENTS } from "../features/tires/tireWhatsapp";
 import { WhatsappButton } from "../features/tires/WhatsappButton";
 import { usePublicTire } from "../hooks/usePublicTires";
@@ -27,17 +29,7 @@ export function PublicTireDetailPage() {
   const { data: tire, isError, isPending } = usePublicTire(id);
   const [imageIndex, setImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(4);
-  const seo = useMemo(
-    () =>
-      tire
-        ? {
-            path: `/llantas/${tire.id}`,
-            title: `Llanta Torque ${tire.model ?? ""} ${tire.size} | Rian Automotriz`.replace(/\s+/g, " "),
-            description: `${tire.description}. Precio ${formatTireMoney(tire.suggestedPrice)} por llanta. Cotiza con instalación, alineación y balanceo en San Matías Tlalancaleca, Puebla.`,
-          }
-        : PAGES.tires,
-    [tire],
-  );
+  const seo = useMemo(() => (tire ? tireSeo(tire) : PAGES.tires), [tire]);
   usePageSeo(seo);
 
   if (isPending) {
@@ -49,6 +41,11 @@ export function PublicTireDetailPage() {
         </div>
       </div>
     );
+  }
+
+  // Enlaces viejos (/llantas/<id>) o slug desactualizado → URL canónica.
+  if (tire && id !== tireSlug(tire)) {
+    return <Navigate replace to={tireSeo(tire).path} />;
   }
 
   if (isError || !tire) {

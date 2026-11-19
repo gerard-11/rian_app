@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import type { PublicTire } from "../../types/publicTires";
 import { formatTireMoney } from "./tireCatalogUtils";
 import { TireImage } from "./TireImage";
+import { tirePath } from "./tireSlug";
 import { buildTireWhatsappUrl } from "./tireWhatsapp";
 import { WhatsappButton } from "./WhatsappButton";
 
@@ -14,7 +15,7 @@ export function PublicTireCard({ tire }: PublicTireCardProps) {
     <article className="flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm transition hover:border-brand-sky-dark/40 hover:shadow-md">
       <Link
         className="flex flex-1 flex-col p-3 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sky-dark/20 md:p-4"
-        to={`/llantas/${tire.id}`}
+        to={tirePath(tire)}
       >
         <div className="relative rounded-md bg-slate-100 p-2">
           <TireImage className="mx-auto w-full max-w-44" model={tire.model} seed={tire.id} />

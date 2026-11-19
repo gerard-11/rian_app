@@ -4,11 +4,11 @@ import { PublicCatalogHero } from "../features/tires/PublicCatalogHero";
 import { PublicTireCard } from "../features/tires/PublicTireCard";
 import { TireCatalogPagination } from "../features/tires/TireCatalogPagination";
 import { useDebouncedValue } from "../hooks/useDebouncedValue";
-import { usePublicTires } from "../hooks/usePublicTires";
+import { PUBLIC_CATALOG_PAGE_SIZE, usePublicTires } from "../hooks/usePublicTires";
 import { PAGES } from "../site/seo";
 import { usePageSeo } from "../site/usePageSeo";
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = PUBLIC_CATALOG_PAGE_SIZE;
 
 export function PublicTiresPage() {
   usePageSeo(PAGES.tires);

@@ -1,6 +1,7 @@
 import type { PublicTire } from "../../types/publicTires";
 import { BUSINESS, SITE_URL } from "../../site/siteConfig";
 import { formatTireMoney } from "./tireCatalogUtils";
+import { tirePath } from "./tireSlug";
 
 // Número del taller en formato internacional sin "+" ni espacios (52 + 10 dígitos).
 // Si no está configurado se usa el teléfono del negocio.
@@ -40,7 +41,7 @@ export const buildTireWhatsappUrl = (
     `• SKU: ${tire.sku}`,
     `• Precio en catálogo: ${formatTireMoney(tire.suggestedPrice)} c/u`,
     "",
-    `${SITE_URL}/llantas/${tire.id}`,
+    `${SITE_URL}${tirePath(tire)}`,
   ];
 
   return buildWhatsappUrl(lines.join("\n"));

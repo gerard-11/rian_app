@@ -23,3 +23,11 @@ export const getPublicTireById = async (id: string) => {
 
   return response.data.tire;
 };
+
+/** Busca por SKU (el backend lo incluye en la búsqueda) y exige coincidencia exacta. */
+export const getPublicTireBySku = async (sku: string) => {
+  const { tires } = await getPublicTires({ search: sku, page: 1, limit: 10 });
+  const tire = tires.find((item) => item.sku.toLowerCase() === sku.toLowerCase());
+  if (!tire) throw new Error(`Llanta ${sku} no encontrada`);
+  return tire;
+};
