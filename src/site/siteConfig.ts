@@ -4,7 +4,7 @@
 
 export const SITE_URL = "https://rianautomotriz.com.mx";
 
-const MOBILE_E164 = "+522482084881";
+const MOBILE_E164 = "+522482084481";
 const LANDLINE_E164 = "+522482918300";
 
 export const BUSINESS = {
@@ -12,7 +12,7 @@ export const BUSINESS = {
   tagline: "Llantas, alineación y balanceo y mecánica automotriz",
   // Celular / WhatsApp.
   phone: MOBILE_E164,
-  phoneDisplay: "248 208 4881",
+  phoneDisplay: "248 208 4481",
   phoneHref: `tel:${MOBILE_E164}`,
   // Teléfono fijo: el número para llamadas.
   landline: LANDLINE_E164,
