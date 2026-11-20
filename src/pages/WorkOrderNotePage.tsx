@@ -1,6 +1,11 @@
-import { AlertCircle, ArrowLeft, LoaderCircle, Printer } from "lucide-react";
+import { AlertCircle, ArrowLeft, LoaderCircle } from "lucide-react";
+import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { WorkOrderNoteDocument } from "./work-orders/components/WorkOrderNoteDocument";
+import { NoteActions } from "../features/notes/NoteActions";
+import { buildWorkOrderNoteData } from "../features/notes/noteData";
+import { buildNoteFileName, buildNoteWhatsappUrl } from "../features/notes/noteSharing";
+import { useNotePdf } from "../features/notes/useNotePdf";
 import { useAuthUser } from "../hooks/useAuthUser";
 import { useWorkOrder } from "../hooks/useWorkOrders";
 import {
@@ -13,15 +18,20 @@ export function WorkOrderNotePage() {
   const { data: authData } = useAuthUser();
   const isAdmin = authData?.user?.role === "ADMIN";
   const workOrderQuery = useWorkOrder(id);
-  const workOrder = workOrderQuery.data
-    ? normalizeWorkOrderResponse(workOrderQuery.data)
-    : undefined;
+  const workOrder = useMemo(
+    () =>
+      workOrderQuery.data
+        ? normalizeWorkOrderResponse(workOrderQuery.data)
+        : undefined,
+    [workOrderQuery.data],
+  );
   const canViewNote = Boolean(workOrder) &&
     (isAdmin || getWorkOrderStatus(workOrder?.status) === "ACTIVE");
-
-  const handlePrint = () => {
-    window.print();
-  };
+  const noteData = useMemo(
+    () => (workOrder && canViewNote ? buildWorkOrderNoteData(workOrder) : undefined),
+    [workOrder, canViewNote],
+  );
+  const notePdf = useNotePdf(noteData);
 
   return (
     <>
@@ -34,15 +44,13 @@ export function WorkOrderNotePage() {
           Volver a ordenes
         </Link>
 
-        <button
-          className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
-          disabled={!workOrder}
-          onClick={handlePrint}
-          type="button"
-        >
-          <Printer className="h-4 w-4" />
-          Imprimir / Guardar PDF
-        </button>
+        {workOrder && canViewNote ? (
+          <NoteActions
+            fileName={buildNoteFileName(workOrder)}
+            pdf={notePdf}
+            whatsappUrl={buildNoteWhatsappUrl("workOrder", workOrder)}
+          />
+        ) : null}
       </div>
 
       {workOrderQuery.isLoading ? (

@@ -1,19 +1,27 @@
-import { AlertCircle, ArrowLeft, LoaderCircle, Printer } from "lucide-react";
+import { AlertCircle, ArrowLeft, LoaderCircle } from "lucide-react";
+import { useMemo } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BudgetNoteDocument } from "./budgets/components/BudgetNoteDocument";
+import { NoteActions } from "../features/notes/NoteActions";
+import { buildBudgetNoteData } from "../features/notes/noteData";
+import { buildNoteFileName, buildNoteWhatsappUrl } from "../features/notes/noteSharing";
+import { useNotePdf } from "../features/notes/useNotePdf";
 import { useBudget } from "../hooks/useBudgets";
 import { normalizeBudgetResponse } from "../utils/budgetsList";
 
 export function BudgetNotePage() {
   const { id } = useParams<{ id: string }>();
   const budgetQuery = useBudget(id);
-  const budget = budgetQuery.data
-    ? normalizeBudgetResponse(budgetQuery.data)
-    : undefined;
-
-  const handlePrint = () => {
-    window.print();
-  };
+  const budget = useMemo(
+    () =>
+      budgetQuery.data ? normalizeBudgetResponse(budgetQuery.data) : undefined,
+    [budgetQuery.data],
+  );
+  const noteData = useMemo(
+    () => (budget ? buildBudgetNoteData(budget) : undefined),
+    [budget],
+  );
+  const notePdf = useNotePdf(noteData);
 
   return (
     <>
@@ -25,15 +33,13 @@ export function BudgetNotePage() {
           <ArrowLeft className="h-4 w-4" />
           Volver a presupuestos
         </Link>
-        <button
-          className="flex h-10 items-center justify-center gap-2 rounded-md bg-[#B3262D] px-4 text-sm font-semibold text-white shadow-lg shadow-[#B3262D]/20 transition hover:bg-[#8F1D24] focus:outline-none focus:ring-4 focus:ring-[#B3262D]/25 disabled:cursor-not-allowed disabled:bg-slate-400 disabled:shadow-none"
-          disabled={!budget}
-          onClick={handlePrint}
-          type="button"
-        >
-          <Printer className="h-4 w-4" />
-          Imprimir / Guardar PDF
-        </button>
+        {budget ? (
+          <NoteActions
+            fileName={buildNoteFileName(budget)}
+            pdf={notePdf}
+            whatsappUrl={buildNoteWhatsappUrl("budget", budget)}
+          />
+        ) : null}
       </div>
 
       {budgetQuery.isLoading ? (
